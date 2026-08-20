@@ -1,52 +1,103 @@
-name: Deploy GitHub Pages
+name: Publish Botland Gallery
 
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - deployment-status.json
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: botland-pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main
         uses: actions/checkout@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
         with:
-          node-version: 24
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund
+      - name: Validate standalone gallery
+        run: |
+          set -euo pipefail
+          test -s standalone/index.html
+          grep -q "BOTLAND GALLERY" standalone/index.html
+          grep -q "10,000" standalone/index.html
 
-      - name: Build
-        run: npm run build
+      - name: Publish the standalone site to gh-pages
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          rm -rf /tmp/botland-pages
+          git worktree add -B gh-pages /tmp/botland-pages origin/gh-pages
+          find /tmp/botland-pages -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp standalone/index.html /tmp/botland-pages/index.html
+          cp standalone/index.html /tmp/botland-pages/404.html
+          touch /tmp/botland-pages/.nojekyll
+          printf '{"status":"published","source_commit":"%s"}\n' "$GITHUB_SHA" > /tmp/botland-pages/health.json
+          cd /tmp/botland-pages
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "deploy: publish ${GITHUB_SHA::12}"
+            git push origin gh-pages
+          fi
+          cd "$GITHUB_WORKSPACE"
+          git worktree remove /tmp/botland-pages --force
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v6
+      - name: Request a Pages build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/pages-build.json -w "%{http_code}" \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages/builds")
+          cat /tmp/pages-build.json
+          if [ "$code" != "201" ] && [ "$code" != "409" ]; then
+            echo "Unexpected Pages build response: HTTP $code" >&2
+            exit 1
+          fi
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: dist
+      - name: Verify the public gallery
+        env:
+          SITE_URL: https://beerandnacho.github.io/botlandgallary/
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 45); do
+            code=$(curl -sS -L --connect-timeout 10 --max-time 20 \
+              -o /tmp/site.html -w "%{http_code}" \
+              "$SITE_URL?verify=$GITHUB_RUN_ID-$attempt" || true)
+            if [ "$code" = "200" ] \
+              && grep -q "BOTLAND GALLERY" /tmp/site.html \
+              && grep -q "10,000" /tmp/site.html; then
+              echo "Verified $SITE_URL"
+              exit 0
+            fi
+            echo "Attempt $attempt: HTTP ${code:-000}"
+            sleep 4
+          done
+          echo "The public gallery did not pass verification." >&2
+          exit 1
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Record successful deployment
+        run: |
+          set -euo pipefail
+          printf '{\n  "status": "ok",\n  "url": "https://beerandnacho.github.io/botlandgallary/",\n  "source_commit": "%s",\n  "verified_at": "%s"\n}\n' \
+            "$GITHUB_SHA" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > deployment-status.json
+          git add deployment-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: record successful Pages deployment [skip ci]"
+            git push origin HEAD:main
+          fi
