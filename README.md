@@ -1,11 +1,9 @@
 # Botland Gallery
 
 [![CI](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml)
-[![Deploy GitHub Pages](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
+[![Publish Botland Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
 
-> **Open the gallery now:** [Botland Gallery live preview](https://raw.githack.com/beerAndNacho/botlandgallary/main/standalone/index.html)
->
-> This preview serves the dependency-free edition directly from the repository while GitHub Pages is disabled.
+> **Live gallery:** [https://beerandnacho.github.io/botlandgallary/](https://beerandnacho.github.io/botlandgallary/)
 
 A static gallery that deterministically generates **10,000 original pixel robots** in the browser. The project takes inspiration from the layered-parts idea in [shevenionov/botlab](https://github.com/shevenionov/botlab), while using a new rendering engine, new shapes, new palettes, and a gallery-first interface.
 
@@ -21,7 +19,7 @@ A static gallery that deterministically generates **10,000 original pixel robots
 - 1024×1024 PNG and original SVG downloads
 - Responsive light/dark UI with reduced-motion support
 - Catalog validation in CI
-- GitHub Pages deployment workflow
+- Automatic publication to the `gh-pages` branch
 - A dependency-free, single-file edition at [`standalone/index.html`](standalone/index.html)
 
 ## Why there are not 10,000 image files
@@ -65,15 +63,16 @@ npm run build
 npm run preview
 ```
 
-## Deploy
+## Deployment
 
-Pushes to `main` run CI and the Pages workflow. GitHub Pages needs one repository setting enabled once:
+The repository uses two branches for publication:
 
-1. Open **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
-3. Re-run the Pages workflow or push another commit.
+- `main`: application source and the canonical standalone gallery
+- `gh-pages`: deployable `index.html`, `404.html`, `.nojekyll`, and deployment health metadata
 
-The expected Pages address is `https://beerandnacho.github.io/botlandgallary/`.
+A push to `main` runs `.github/workflows/pages.yml`, refreshes `gh-pages`, requests a Pages build, and verifies the public gallery before recording success.
+
+Official address: `https://beerandnacho.github.io/botlandgallary/`
 
 ## Project structure
 
