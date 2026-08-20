@@ -1,21 +1,1017 @@
 <!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#080b12" />
-    <meta name="description" content="10,000개의 고유한 오리지널 픽셀 로봇을 검색하고 SVG·PNG로 저장하는 Botland Gallery." />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Botland Gallery — 10,000 Pixel Robots" />
-    <meta property="og:description" content="하나도 겹치지 않는 10,000개의 오리지널 픽셀 로봇 컬렉션." />
-    <meta property="og:image" content="./og-image.svg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <title>Botland Gallery — 10,000 Pixel Robots</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <noscript>Botland Gallery를 보려면 JavaScript를 활성화해 주세요.</noscript>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090b12" />
+  <meta name="description" content="부품과 색상을 조합해 만든 10,000개의 고유 픽셀 로봇을 검색하고 내려받는 Botland Gallery." />
+  <meta property="og:title" content="Botland Gallery — 10,000 Pixel Robots" />
+  <meta property="og:description" content="하나도 겹치지 않는 10,000개의 결정론적 픽셀 로봇 컬렉션." />
+  <meta property="og:type" content="website" />
+  <title>Botland Gallery — 10,000 Pixel Robots</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090b12;
+      --bg-soft: #10141f;
+      --panel: rgba(20, 25, 38, 0.82);
+      --panel-strong: #151b29;
+      --text: #f4f7ff;
+      --muted: #98a4bb;
+      --line: rgba(255, 255, 255, 0.11);
+      --accent: #65f2d2;
+      --accent-2: #8b7cff;
+      --danger: #ff668f;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      --radius: 22px;
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f2f5fb;
+      --bg-soft: #e9eef8;
+      --panel: rgba(255, 255, 255, 0.86);
+      --panel-strong: #ffffff;
+      --text: #121827;
+      --muted: #5b6679;
+      --line: rgba(18, 24, 39, 0.12);
+      --accent: #087e6e;
+      --accent-2: #5b4bd8;
+      --danger: #d52d5d;
+      --shadow: 0 24px 70px rgba(55, 68, 99, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 15% -10%, rgba(101, 242, 210, 0.12), transparent 36rem),
+        radial-gradient(circle at 95% 3%, rgba(139, 124, 255, 0.13), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button, input, select { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: -60px;
+      z-index: 1000;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--text);
+      color: var(--bg);
+      transition: top .2s ease;
+    }
+    .skip-link:focus { top: 16px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 70px;
+      padding: 12px clamp(18px, 4vw, 64px);
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(20px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .brand-mark {
+      display: grid;
+      grid-template-columns: repeat(2, 8px);
+      gap: 3px;
+      width: 25px;
+      height: 25px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: var(--panel-strong);
+    }
+    .brand-mark span { background: var(--accent); border-radius: 2px; }
+    .brand-mark span:nth-child(2), .brand-mark span:nth-child(3) { background: var(--accent-2); }
+    .brand-sub { color: var(--muted); font-size: .72rem; font-weight: 700; }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .pill-button, .primary-button, .secondary-button, .page-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel);
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .icon-button { width: 42px; height: 42px; font-size: 1.05rem; }
+    .icon-button:hover, .pill-button:hover, .secondary-button:hover, .page-button:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); transform: translateY(-1px); }
+    .icon-button:focus-visible, .pill-button:focus-visible, .primary-button:focus-visible, .secondary-button:focus-visible, .page-button:focus-visible, input:focus-visible, select:focus-visible, .bot-card__open:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 48%, transparent);
+      outline-offset: 2px;
+    }
+
+    .favorite-count {
+      min-width: 18px;
+      padding: 1px 5px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+    }
+
+    main { width: min(1480px, 100%); margin: 0 auto; padding: 0 clamp(16px, 3.4vw, 52px) 80px; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr);
+      align-items: center;
+      gap: clamp(36px, 6vw, 100px);
+      min-height: 620px;
+      padding: 72px 0 54px;
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; }
+    h1 { margin: 0; font-size: clamp(3rem, 7.2vw, 7rem); line-height: .92; letter-spacing: -.065em; }
+    h1 strong { color: var(--accent); font-weight: 900; }
+    .hero-description { max-width: 680px; margin: 28px 0 0; color: var(--muted); font-size: clamp(1rem, 1.45vw, 1.2rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .primary-button, .secondary-button { min-height: 48px; padding: 0 18px; font-weight: 850; }
+    .primary-button { border-color: transparent; background: var(--accent); color: #061410; box-shadow: 0 12px 34px rgba(101, 242, 210, .18); }
+    .primary-button:hover { transform: translateY(-2px); filter: brightness(1.04); }
+
+    .hero-stage {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 490px;
+      isolation: isolate;
+    }
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 5% 7%;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      transform: rotate(-10deg);
+    }
+    .hero-stage::after {
+      content: "";
+      position: absolute;
+      width: 74%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent-2) 23%, transparent), transparent 68%);
+      filter: blur(12px);
+      z-index: -1;
+    }
+    .hero-bot {
+      position: absolute;
+      width: clamp(180px, 22vw, 300px);
+      aspect-ratio: 1;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: var(--panel-strong);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    .hero-bot svg { display: block; width: 100%; height: 100%; }
+    .hero-bot--main { z-index: 3; transform: rotate(2deg); }
+    .hero-bot--left { z-index: 1; transform: translate(-42%, 18%) rotate(-12deg) scale(.72); opacity: .8; }
+    .hero-bot--right { z-index: 2; transform: translate(45%, -17%) rotate(12deg) scale(.64); opacity: .9; }
+    .hero-label {
+      position: absolute;
+      bottom: 7%;
+      z-index: 5;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      backdrop-filter: blur(12px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      overflow: hidden;
+      margin-bottom: 76px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .stat { padding: 25px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat strong { display: block; font-size: clamp(1.45rem, 3vw, 2.25rem); letter-spacing: -.04em; }
+    .stat span { color: var(--muted); font-size: .84rem; }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 22px; }
+    .section-head h2 { margin: 2px 0 0; font-size: clamp(2rem, 4vw, 3.4rem); letter-spacing: -.05em; }
+    .section-head p { margin: 0 0 8px; color: var(--muted); }
+
+    .filter-panel {
+      position: sticky;
+      top: 82px;
+      z-index: 35;
+      display: grid;
+      grid-template-columns: minmax(220px, 1.6fr) repeat(3, minmax(125px, .7fr)) auto;
+      gap: 10px;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel-strong) 88%, transparent);
+      box-shadow: 0 14px 44px rgba(0,0,0,.14);
+      backdrop-filter: blur(18px);
+    }
+    .field { position: relative; display: flex; align-items: center; }
+    .field input, .field select {
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--bg-soft);
+      color: var(--text);
+    }
+    .field input { padding: 0 14px 0 40px; }
+    .field select { padding: 0 34px 0 12px; appearance: none; cursor: pointer; }
+    .field__icon { position: absolute; left: 14px; color: var(--muted); pointer-events: none; }
+    .field--select::after { content: "⌄"; position: absolute; right: 13px; color: var(--muted); pointer-events: none; }
+    .filter-actions { display: flex; gap: 8px; }
+    .pill-button { min-height: 44px; padding: 0 13px; white-space: nowrap; font-size: .84rem; font-weight: 800; }
+    .pill-button.is-active { border-color: color-mix(in srgb, var(--danger) 70%, var(--line)); color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, var(--panel)); }
+
+    .gallery-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 42px; margin: 8px 2px 16px; }
+    .gallery-toolbar p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .toolbar-right { display: flex; align-items: center; gap: 8px; }
+    .toolbar-right select { height: 38px; padding: 0 32px 0 10px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel); color: var(--text); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px;
+      min-height: 420px;
+    }
+    .bot-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: var(--panel);
+      box-shadow: 0 10px 28px rgba(0,0,0,.10);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .bot-card:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--accent) 48%, var(--line)); box-shadow: 0 18px 45px rgba(0,0,0,.18); }
+    .bot-card__open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .bot-art { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--bg-soft); }
+    .bot-art svg { display: block; width: 100%; height: 100%; transition: transform .25s ease; }
+    .bot-card:hover .bot-art svg { transform: scale(1.035); }
+    .bot-card__body { padding: 14px 14px 15px; }
+    .serial { color: var(--accent); font-size: .7rem; font-weight: 900; letter-spacing: .1em; }
+    .bot-card h3 { margin: 4px 0 7px; overflow: hidden; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
+    .bot-meta { display: flex; gap: 6px; color: var(--muted); font-size: .72rem; }
+    .bot-meta span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rarity {
+      position: absolute;
+      top: 11px;
+      left: 11px;
+      z-index: 3;
+      padding: 5px 8px;
+      border: 1px solid rgba(255,255,255,.17);
+      border-radius: 999px;
+      background: rgba(5,7,12,.62);
+      color: #fff;
+      font-size: .64rem;
+      font-weight: 900;
+      letter-spacing: .05em;
+      backdrop-filter: blur(8px);
+    }
+    .rarity[data-rank="4"] { color: #ffe684; box-shadow: inset 0 0 0 1px rgba(255,230,132,.24); }
+    .rarity[data-rank="3"] { color: #d7a8ff; }
+    .rarity[data-rank="2"] { color: #7ed7ff; }
+    .card-favorite {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      z-index: 4;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 50%;
+      background: rgba(5,7,12,.62);
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+    .card-favorite.is-active { color: #ff7199; }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      padding: 32px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+    }
+    .empty-state strong { display: block; margin-bottom: 7px; color: var(--text); font-size: 1.2rem; }
+
+    .pagination { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 7px; margin-top: 28px; }
+    .page-button { min-width: 40px; height: 40px; padding: 0 12px; }
+    .page-button[aria-current="page"] { border-color: transparent; background: var(--accent); color: #061410; font-weight: 900; }
+    .page-button:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+    .site-footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 76px; padding: 28px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .82rem; }
+    .site-footer strong { color: var(--text); }
+
+    dialog {
+      width: min(980px, calc(100% - 24px));
+      max-height: calc(100dvh - 24px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: var(--panel-strong);
+      color: var(--text);
+      box-shadow: 0 40px 120px rgba(0,0,0,.55);
+    }
+    dialog::backdrop { background: rgba(4, 6, 10, .76); backdrop-filter: blur(7px); }
+    .detail-shell { position: relative; display: grid; grid-template-columns: minmax(300px, .95fr) minmax(320px, 1.05fr); }
+    .detail-art { position: sticky; top: 0; align-self: start; min-height: 520px; background: var(--bg-soft); }
+    .detail-art svg { display: block; width: 100%; height: 100%; min-height: 520px; }
+    .detail-content { padding: clamp(28px, 5vw, 52px); }
+    .dialog-close { position: absolute; top: 15px; right: 15px; z-index: 10; }
+    .detail-content h2 { margin: 8px 0 10px; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.055em; }
+    .detail-description { margin: 0 0 24px; color: var(--muted); }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 24px; }
+    .tag { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: .72rem; }
+    .spec-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 0 0 25px; }
+    .spec-list div { padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .spec-list dt { color: var(--muted); font-size: .7rem; }
+    .spec-list dd { margin: 2px 0 0; font-weight: 850; }
+    .detail-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+    .detail-actions button { min-height: 44px; }
+    .detail-nav { display: flex; justify-content: space-between; margin-top: 24px; }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      z-index: 100;
+      transform: translate(-50%, 24px);
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-strong);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 1040px) {
+      .hero { grid-template-columns: 1fr; padding-top: 62px; }
+      .hero-copy { max-width: 850px; }
+      .hero-stage { min-height: 430px; }
+      .filter-panel { grid-template-columns: 1fr 1fr 1fr; }
+      .field--search { grid-column: 1 / -1; }
+      .filter-actions { justify-content: flex-end; }
+    }
+    @media (max-width: 760px) {
+      .site-header { min-height: 62px; padding: 10px 14px; }
+      .brand-sub { display: none; }
+      main { padding-inline: 13px; }
+      .hero { min-height: auto; padding: 52px 4px 36px; gap: 16px; }
+      h1 { font-size: clamp(2.7rem, 11vw, 3.4rem); line-height: 1; letter-spacing: -.07em; }
+      h1 strong { display: block; margin-top: .08em; font-size: .96em; }
+      .hero-stage { min-height: 350px; }
+      .hero-bot { width: min(58vw, 230px); border-radius: 22px; }
+      .stats { grid-template-columns: repeat(2, 1fr); margin-bottom: 58px; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .section-head { align-items: start; flex-direction: column; }
+      .filter-panel { position: static; grid-template-columns: 1fr 1fr; }
+      .field--search { grid-column: 1 / -1; }
+      .filter-actions { grid-column: 1 / -1; }
+      .filter-actions .pill-button { flex: 1; }
+      .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .bot-card__body { padding: 11px; }
+      .bot-card h3 { font-size: .9rem; }
+      .detail-shell { grid-template-columns: 1fr; }
+      .detail-art { position: static; min-height: auto; }
+      .detail-art svg { min-height: auto; }
+      .detail-content { padding: 25px 19px 22px; }
+      .site-footer { flex-direction: column; }
+    }
+    @media (max-width: 430px) {
+      .filter-panel { grid-template-columns: 1fr; }
+      .field--search, .filter-actions { grid-column: 1; }
+      .gallery-toolbar { align-items: flex-start; flex-direction: column; }
+      .gallery-grid { gap: 8px; }
+      .bot-meta { display: none; }
+      .detail-actions { grid-template-columns: 1fr; }
+      .hero-actions > * { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .001ms !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#gallery-grid">갤러리로 바로가기</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Botland Gallery 홈">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+      <span>BOTLAND</span><span class="brand-sub">GALLERY</span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-button" id="favorite-filter-header" type="button" aria-label="즐겨찾기만 보기">♥<span class="favorite-count" id="favorite-count">0</span></button>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="테마 전환">◐</button>
+      <a class="icon-button" href="https://github.com/beerAndNacho/botlandgallary" target="_blank" rel="noreferrer" aria-label="GitHub 저장소">⌘</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">DETERMINISTIC PIXEL ROBOTS</p>
+        <h1 id="hero-title">하나도 겹치지 않는<br><strong>10,000개의 봇</strong></h1>
+        <p class="hero-description">10종 몸체 × 10종 머리 × 10종 눈 × 10종 상단 장비를 일대일 조합하고, 색상·표정·배경을 추가해 만든 오리지널 로봇 컬렉션입니다. 검색하고, 모으고, SVG 또는 PNG로 저장할 수 있습니다.</p>
+        <div class="hero-actions">
+          <button class="primary-button" id="random-bot" type="button">⤨ 랜덤 봇 만나기</button>
+          <a class="secondary-button" href="#gallery">컬렉션 둘러보기 →</a>
+        </div>
+      </div>
+      <div class="hero-stage" aria-label="대표 봇 미리보기">
+        <button class="hero-bot hero-bot--left" id="hero-left" type="button"></button>
+        <button class="hero-bot hero-bot--right" id="hero-right" type="button"></button>
+        <button class="hero-bot hero-bot--main" id="hero-main" type="button"></button>
+        <span class="hero-label">LIVE SPECIMENS</span>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="컬렉션 통계">
+      <div class="stat"><strong>10,000</strong><span>총 로봇 수</span></div>
+      <div class="stat"><strong>10,000</strong><span>고유 핵심 조합</span></div>
+      <div class="stat"><strong>20</strong><span>컬러 팔레트</span></div>
+      <div class="stat"><strong>0</strong><span>핵심 조합 중복</span></div>
+    </section>
+
+    <section id="gallery" aria-labelledby="gallery-title">
+      <div class="section-head">
+        <div><p class="eyebrow">THE FULL CATALOG</p><h2 id="gallery-title">봇 아카이브</h2></div>
+        <p>모든 결과는 번호만으로 다시 생성됩니다.</p>
+      </div>
+
+      <form class="filter-panel" id="filters" role="search">
+        <label class="field field--search">
+          <span class="sr-only">봇 검색</span><span class="field__icon">⌕</span>
+          <input id="query" type="search" autocomplete="off" placeholder="번호, 이름, 부품, 색상 검색" />
+        </label>
+        <label class="field field--select"><span class="sr-only">몸체 필터</span><select id="body-filter"></select></label>
+        <label class="field field--select"><span class="sr-only">색상 필터</span><select id="color-filter"></select></label>
+        <label class="field field--select"><span class="sr-only">희귀도 필터</span><select id="rarity-filter"></select></label>
+        <div class="filter-actions">
+          <button class="pill-button" id="favorite-filter" type="button">♥ 즐겨찾기</button>
+          <button class="pill-button" id="reset-filters" type="button">초기화</button>
+        </div>
+      </form>
+
+      <div class="gallery-toolbar">
+        <p id="result-summary" aria-live="polite"></p>
+        <div class="toolbar-right">
+          <label><span class="sr-only">정렬</span><select id="sort-select">
+            <option value="id-asc">번호 오름차순</option>
+            <option value="id-desc">번호 내림차순</option>
+            <option value="rarity">희귀도 높은 순</option>
+            <option value="name">이름순</option>
+            <option value="shuffle">랜덤 정렬</option>
+          </select></label>
+          <label><span class="sr-only">페이지 크기</span><select id="page-size">
+            <option value="48">48개</option><option value="72" selected>72개</option><option value="96">96개</option>
+          </select></label>
+        </div>
+      </div>
+
+      <div class="gallery-grid" id="gallery-grid" tabindex="-1"></div>
+      <nav class="pagination" id="pagination" aria-label="갤러리 페이지"></nav>
+    </section>
+
+    <footer class="site-footer">
+      <div><strong>Botland Gallery</strong><br>결정론적 10,000 로봇 아카이브</div>
+      <div>외부 이미지·추적 스크립트 없이 브라우저에서 생성됩니다.</div>
+    </footer>
+  </main>
+
+  <dialog id="detail-dialog" aria-labelledby="detail-title"></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const BOT_COUNT = 10000;
+    const BODY_NAMES = ["크레이트", "탱크", "호버", "스트라이더", "캡슐", "드럼", "스카우트", "포지", "스피더", "오브"];
+    const HEAD_NAMES = ["큐브", "돔", "CRT", "웨지", "타워", "캣", "모니터", "프리즘", "실린더", "버블"];
+    const EYE_NAMES = ["듀얼", "바이저", "사이클롭스", "트라이", "슬립", "크로스", "링", "스캔", "비대칭", "스타"];
+    const TOP_NAMES = ["안테나", "혼", "비콘", "위성", "크라운", "프로펠러", "이어", "헤일로", "솔라", "모호크"];
+    const MOUTH_NAMES = ["그릴", "스마일", "펄스", "포트", "라인", "팽", "메시", "노치"];
+    const SIDE_NAMES = ["암", "클로", "실드", "툴", "윙", "코일", "포드", "미니멀"];
+    const ADJECTIVES = ["빛나는", "고요한", "민첩한", "따뜻한", "기민한", "용감한", "장난스런", "정교한", "느긋한", "단단한", "푸른", "황금빛", "작은", "은밀한", "반짝이는", "호기심 많은", "씩씩한", "부드러운", "빠른", "낙천적인"];
+    const NOUNS = ["정찰자", "수리공", "항해사", "정원사", "기록관", "탐험가", "우편부", "연구원", "경비원", "조종사", "관측자", "연주자", "요리사", "설계자", "수집가", "메신저", "지도사", "채굴자", "등대지기", "친구"];
+    const COLOR_FAMILIES = ["코발트", "민트", "앰버", "마젠타", "라임", "코랄", "바이올렛", "실버", "시안", "루비"];
+    const RARITIES = ["커먼", "언커먼", "레어", "에픽", "레전더리"];
+    const PALETTES = [
+      ["Deep Current",0,"#071827","#0d2a42","#06101a","#2d7fc7","#18558f","#b9e8ff","#ff8b59","#69f2ff"],
+      ["Signal Blue",0,"#0d1533","#1c2a62","#090d1d","#4c63e8","#2c3aa2","#d9e2ff","#ffc857","#73f0ff"],
+      ["Mint Circuit",1,"#08241f","#0c3b32","#051511","#34b99a","#1b7f68","#c7f7e8","#ffcb66","#7bffd9"],
+      ["Sea Glass",1,"#dff8ef","#b9ead8","#19392f","#67c7a9","#3c9278","#f7fffc","#ef6f6c","#d5fff1"],
+      ["Amber Forge",2,"#241405","#4a2b09","#160c03","#d98a22","#9f5c10","#ffe3a6","#2cc9b6","#fff07a"],
+      ["Solar Dust",2,"#fff0c7","#ffd584","#422b0c","#ed9a2f","#b66a12","#fff9e7","#6c5ce7","#fff3a6"],
+      ["Magenta Core",3,"#25091e","#4c123f","#160611","#d33d98","#92236a","#ffd4ef","#51d6ff","#ff8bd7"],
+      ["Sakura Byte",3,"#fff0f7","#fac9df","#3d1f31","#e77caf","#b84e82","#fffafd","#4d9de0","#ffe279"],
+      ["Lime Terminal",4,"#101d05","#263e0a","#091003","#80bd20","#4f7c10","#e5ffb8","#ff7b54","#caff70"],
+      ["Game Matrix",4,"#0f380f","#306230","#081d08","#8bac0f","#306230","#9bbc0f","#c8e35d","#e0f8d0"],
+      ["Coral Workshop",5,"#2b1010","#56201f","#180808","#df6558","#9f3d37","#ffd8cd","#44c7b0","#ffb08a"],
+      ["Peach Module",5,"#fff0e5","#ffcbb7","#49281f","#f08a72","#ba5f4d","#fffaf7","#3f8efc","#ffd2a8"],
+      ["Violet Orbit",6,"#140c2f","#2c1c61","#0b061b","#7255d9","#49349d","#e2dbff","#f7b32b","#b39cff"],
+      ["Ultraviolet",6,"#0c0618","#21113e","#05020a","#6f2dbd","#461878","#dcc4ff","#00d9c0","#b85cff"],
+      ["Moon Alloy",7,"#10151d","#26303c","#080b0f","#8c98a5","#5c6670","#eef2f7","#ff6b35","#bcecff"],
+      ["Paper Chrome",7,"#edf1f5","#cbd4dd","#27313a","#9ca8b3","#6c7782","#ffffff","#1a9f8c","#f6ff9a"],
+      ["Cyan Relay",8,"#051f27","#0d3b49","#031217","#11a9c2","#08748b","#c9f7ff","#ffb703","#62efff"],
+      ["Ice Terminal",8,"#e6fbff","#bdeef7","#163941","#56b9ca","#2f8494","#fbffff","#f15b5d","#d5fbff"],
+      ["Ruby Signal",9,"#26060d","#51101e","#160307","#c9284d","#861832","#ffd3dc","#50d5b7","#ff7590"],
+      ["Rose Quartz",9,"#fff0f2","#f8c8d1","#441f28","#d86b82","#a64057","#fffafa","#4267df","#ffc6d2"]
+    ].map(([name,family,bg,bg2,ink,surface,shade,panel,accent,glow]) => ({name,family,bg,bg2,ink,surface,shade,panel,accent,glow}));
+
+    const state = { query:"", body:null, color:null, rarity:null, favoritesOnly:false, sort:"id-asc", page:1, pageSize:72, shuffleSalt:Date.now()>>>0 };
+    const favoriteKey = "botland:standalone:favorites:v1";
+    const themeKey = "botland:standalone:theme:v1";
+    let favorites = loadFavorites();
+    let selectedId = null;
+    let toastTimer = 0;
+
+    function hash32(input) {
+      let x = input >>> 0;
+      x ^= x >>> 16; x = Math.imul(x, 0x7feb352d);
+      x ^= x >>> 15; x = Math.imul(x, 0x846ca68b);
+      x ^= x >>> 16;
+      return x >>> 0;
+    }
+    function pick(seed, salt, count) { return hash32(seed + Math.imul(salt + 1, 0x9e3779b9)) % count; }
+    function rarityFor(seed) {
+      const roll = hash32(seed ^ 0xa511e9b3) % 10000;
+      if (roll < 80) return {name:"레전더리", rank:4};
+      if (roll < 450) return {name:"에픽", rank:3};
+      if (roll < 1500) return {name:"레어", rank:2};
+      if (roll < 4200) return {name:"언커먼", rank:1};
+      return {name:"커먼", rank:0};
+    }
+    function specFor(id) {
+      const body = id % 10;
+      const head = Math.floor(id / 10) % 10;
+      const eyes = Math.floor(id / 100) % 10;
+      const top = Math.floor(id / 1000) % 10;
+      const seed = hash32(id + 0x6d2b79f5);
+      const palette = pick(seed, 1, PALETTES.length);
+      const mouth = pick(seed, 2, MOUTH_NAMES.length);
+      const side = pick(seed, 3, SIDE_NAMES.length);
+      const pattern = pick(seed, 4, 8);
+      const rarity = rarityFor(seed);
+      const adjective = ADJECTIVES[pick(seed, 5, ADJECTIVES.length)];
+      const noun = NOUNS[pick(seed, 6, NOUNS.length)];
+      const serial = `BOT-${String(id + 1).padStart(5,"0")}`;
+      return { id, serial, name:`${adjective} ${noun}`, seed, body, head, eyes, top, palette, mouth, side, pattern, rarity, signature:`${body}-${head}-${eyes}-${top}` };
+    }
+    const catalog = Array.from({length:BOT_COUNT}, (_,id) => specFor(id));
+    const searchIndex = catalog.map(bot => {
+      const p = PALETTES[bot.palette];
+      return [bot.serial, bot.name, BODY_NAMES[bot.body], HEAD_NAMES[bot.head], EYE_NAMES[bot.eyes], TOP_NAMES[bot.top], MOUTH_NAMES[bot.mouth], SIDE_NAMES[bot.side], p.name, COLOR_FAMILIES[p.family], bot.rarity.name].join(" ").toLowerCase();
+    });
+
+    function backgroundPattern(spec, p) {
+      const s = spec.pattern;
+      if (s === 0) return `<path d="M0 24H160M0 56H160M0 88H160M0 120H160" stroke="${p.bg2}" stroke-width="2" opacity=".7"/>`;
+      if (s === 1) return `<path d="M-20 20 140 180M20-20 180 140M-60 20 100 180M60-20 180 100" stroke="${p.bg2}" stroke-width="5" opacity=".42"/>`;
+      if (s === 2) return `<g fill="${p.bg2}" opacity=".55"><circle cx="24" cy="25" r="4"/><circle cx="136" cy="36" r="7"/><circle cx="31" cy="126" r="7"/><circle cx="126" cy="124" r="4"/></g>`;
+      if (s === 3) return `<path d="M80 8 94 38l32-6-18 28 24 21-33 5 4 33-23-24-23 24 4-33-33-5 24-21-18-28 32 6Z" fill="${p.bg2}" opacity=".48"/>`;
+      if (s === 4) return `<g stroke="${p.bg2}" stroke-width="3" opacity=".55"><circle cx="80" cy="80" r="61"/><circle cx="80" cy="80" r="48"/><circle cx="80" cy="80" r="34"/></g>`;
+      if (s === 5) return `<path d="M0 130 42 88l27 25 39-57 52 74v30H0Z" fill="${p.bg2}" opacity=".62"/>`;
+      if (s === 6) return `<g fill="${p.bg2}" opacity=".5"><rect x="12" y="12" width="18" height="18"/><rect x="130" y="20" width="12" height="12"/><rect x="20" y="125" width="12" height="12"/><rect x="124" y="118" width="22" height="22"/></g>`;
+      return `<path d="M0 0h80v80H0zM80 80h80v80H80z" fill="${p.bg2}" opacity=".42"/>`;
+    }
+
+    function bodyShape(i,p) {
+      const base = `fill="${p.surface}" stroke="${p.ink}" stroke-width="5" stroke-linejoin="round"`;
+      const shade = `fill="${p.shade}"`;
+      const panel = `fill="${p.panel}" stroke="${p.ink}" stroke-width="4"`;
+      const accent = `fill="${p.accent}" stroke="${p.ink}" stroke-width="4"`;
+      switch(i) {
+        case 0: return `<rect x="43" y="82" width="74" height="52" rx="5" ${base}/><path d="M43 101h74v33H43z" ${shade}/><rect x="58" y="96" width="44" height="22" rx="3" ${panel}/>`;
+        case 1: return `<path d="M45 91q0-13 13-13h44q13 0 13 13v38H45Z" ${base}/><path d="M45 112h70v17H45z" ${shade}/><rect x="59" y="94" width="42" height="17" rx="8" ${accent}/>`;
+        case 2: return `<path d="m47 84 66 0 10 37-19 14H56l-19-14Z" ${base}/><path d="m42 107 76 0 5 14-19 14H56l-19-14Z" ${shade}/><rect x="61" y="95" width="38" height="18" rx="4" ${panel}/>`;
+        case 3: return `<path d="M57 78h46l9 56H48Z" ${base}/><path d="M52 111h56l4 23H48Z" ${shade}/><rect x="65" y="92" width="30" height="24" ${accent}/>`;
+        case 4: return `<rect x="48" y="76" width="64" height="62" rx="30" ${base}/><path d="M48 107h64v11q0 20-20 20H68q-20 0-20-20Z" ${shade}/><circle cx="80" cy="104" r="14" ${panel}/>`;
+        case 5: return `<rect x="42" y="82" width="76" height="43" rx="8" ${base}/><rect x="35" y="119" width="90" height="19" rx="8" ${shade} stroke="${p.ink}" stroke-width="5"/><path d="M48 128h64" stroke="${p.panel}" stroke-width="4" stroke-dasharray="8 5"/>`;
+        case 6: return `<path d="M50 83h60l10 44-18 10H58l-18-10Z" ${base}/><path d="M42 120h76l2 7-18 10H58l-18-10Z" ${shade}/><path d="M52 142h56" stroke="${p.glow}" stroke-width="7" stroke-linecap="round"/>`;
+        case 7: return `<path d="M40 94 54 78h52l14 16-8 44H48Z" ${base}/><path d="M46 113h68l-2 25H48Z" ${shade}/><path d="m61 91 19 13 19-13v28H61Z" ${panel}/>`;
+        case 8: return `<path d="M38 91h34v46H48l-10-12Zm84 0H88v46h24l10-12Z" ${base}/><rect x="69" y="78" width="22" height="62" rx="5" ${accent}/><path d="M74 91h12v35H74z" ${panel}/>`;
+        default: return `<circle cx="80" cy="108" r="34" ${base}/><path d="M49 113q7 29 31 29t31-29Z" ${shade}/><circle cx="80" cy="108" r="16" ${panel}/><circle cx="80" cy="108" r="7" fill="${p.accent}"/>`;
+      }
+    }
+
+    function headShape(i,p) {
+      const base = `fill="${p.surface}" stroke="${p.ink}" stroke-width="5" stroke-linejoin="round"`;
+      const shade = `fill="${p.shade}"`;
+      switch(i) {
+        case 0: return `<rect x="48" y="39" width="64" height="53" rx="6" ${base}/><path d="M48 72h64v20H48z" ${shade}/>`;
+        case 1: return `<path d="M46 77q2-42 34-42t34 42v15H46Z" ${base}/><path d="M46 74h68v18H46z" ${shade}/>`;
+        case 2: return `<rect x="43" y="39" width="74" height="54" rx="15" ${base}/><path d="M48 73h64v15H48z" ${shade}/>`;
+        case 3: return `<path d="m43 49 73-13-9 57H51Z" ${base}/><path d="m49 74 61-9-3 28H51Z" ${shade}/>`;
+        case 4: return `<path d="M57 27h46l8 66H49Z" ${base}/><path d="M52 70h56l3 23H49Z" ${shade}/>`;
+        case 5: return `<path d="m45 50 9-20 17 14h18l17-14 9 20-7 43H52Z" ${base}/><path d="M49 73h62l-3 20H52Z" ${shade}/>`;
+        case 6: return `<rect x="40" y="40" width="80" height="52" rx="4" ${base}/><path d="M40 76h80v16H40z" ${shade}/><rect x="47" y="47" width="66" height="25" fill="${p.ink}" rx="3"/>`;
+        case 7: return `<path d="m80 28 40 64H40Z" ${base}/><path d="m80 55 24 37H56Z" ${shade}/>`;
+        case 8: return `<path d="M51 35h58l7 12-7 46H51l-7-46Z" ${base}/><path d="M48 72h64l-3 21H51Z" ${shade}/>`;
+        default: return `<path d="M43 70q0-35 37-35t37 35q0 23-37 23T43 70Z" ${base}/><path d="M48 72q7 21 32 21t32-21Z" ${shade}/>`;
+      }
+    }
+
+    function eyesShape(i,p) {
+      const glow = p.glow, ink = p.ink, panel = p.panel;
+      switch(i) {
+        case 0: return `<rect x="57" y="55" width="12" height="12" fill="${glow}" stroke="${ink}" stroke-width="3"/><rect x="91" y="55" width="12" height="12" fill="${glow}" stroke="${ink}" stroke-width="3"/>`;
+        case 1: return `<rect x="53" y="54" width="54" height="14" rx="3" fill="${ink}"/><rect x="58" y="58" width="44" height="6" fill="${glow}"/>`;
+        case 2: return `<circle cx="80" cy="60" r="12" fill="${ink}"/><circle cx="80" cy="60" r="7" fill="${glow}"/><rect x="77" y="48" width="6" height="24" fill="${panel}" opacity=".45"/>`;
+        case 3: return `<circle cx="61" cy="60" r="7" fill="${glow}" stroke="${ink}" stroke-width="3"/><circle cx="80" cy="56" r="7" fill="${glow}" stroke="${ink}" stroke-width="3"/><circle cx="99" cy="60" r="7" fill="${glow}" stroke="${ink}" stroke-width="3"/>`;
+        case 4: return `<path d="M55 61h16M89 61h16" stroke="${glow}" stroke-width="5" stroke-linecap="round"/><path d="M55 65h16M89 65h16" stroke="${ink}" stroke-width="2"/>`;
+        case 5: return `<path d="m56 54 14 14m0-14L56 68m34-14 14 14m0-14L90 68" stroke="${glow}" stroke-width="5" stroke-linecap="square"/>`;
+        case 6: return `<circle cx="62" cy="60" r="9" fill="none" stroke="${glow}" stroke-width="5"/><circle cx="98" cy="60" r="9" fill="none" stroke="${glow}" stroke-width="5"/>`;
+        case 7: return `<g fill="${glow}"><rect x="52" y="57" width="8" height="8"/><rect x="64" y="57" width="8" height="8"/><rect x="76" y="57" width="8" height="8"/><rect x="88" y="57" width="8" height="8"/><rect x="100" y="57" width="8" height="8"/></g>`;
+        case 8: return `<rect x="54" y="54" width="22" height="14" rx="3" fill="${glow}" stroke="${ink}" stroke-width="3"/><circle cx="98" cy="61" r="7" fill="${glow}" stroke="${ink}" stroke-width="3"/>`;
+        default: return `<path d="m62 49 3 8 9 1-7 6 2 9-7-5-8 5 3-9-7-6 9-1Zm36 0 3 8 9 1-7 6 2 9-7-5-8 5 3-9-7-6 9-1Z" fill="${glow}" stroke="${ink}" stroke-width="2"/>`;
+      }
+    }
+
+    function topShape(i,p) {
+      const stroke = `stroke="${p.ink}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`;
+      const fill = `fill="${p.accent}" stroke="${p.ink}" stroke-width="4"`;
+      switch(i) {
+        case 0: return `<path d="M80 39V16" ${stroke}/><circle cx="80" cy="13" r="6" ${fill}/>`;
+        case 1: return `<path d="m59 42-12-22 23 13m31 9 12-22-23 13" ${stroke}/>`;
+        case 2: return `<path d="M72 39V24h16v15" ${stroke}/><path d="M70 24h20l-4-10H74Z" ${fill}/>`;
+        case 3: return `<path d="M80 39V23" ${stroke}/><path d="M80 24q19-14 31 0-15 13-31 0Z" ${fill}/>`;
+        case 4: return `<path d="m55 40-5-18 17 8 13-18 13 18 17-8-5 18Z" ${fill}/>`;
+        case 5: return `<path d="M80 39V25M55 24h50" ${stroke}/><rect x="71" y="20" width="18" height="8" rx="4" ${fill}/>`;
+        case 6: return `<path d="m54 45-15-18 22 7m45 11 15-18-22 7" ${stroke}/><path d="m39 27 7-8 15 15m60-7-7-8-15 15" fill="none" ${stroke}/>`;
+        case 7: return `<ellipse cx="80" cy="29" rx="31" ry="10" fill="none" stroke="${p.glow}" stroke-width="5"/><path d="M80 39V31" ${stroke}/>`;
+        case 8: return `<path d="M80 40V25" ${stroke}/><path d="M45 17h28v15H45zm42 0h28v15H87z" ${fill}/><path d="M73 24h14" ${stroke}/>`;
+        default: return `<path d="M58 42V16h9v26m8 0V8h10v34m8 0V20h9v22" ${fill}/>`;
+      }
+    }
+
+    function mouthShape(i,p) {
+      const y = 77;
+      switch(i) {
+        case 0: return `<rect x="62" y="${y}" width="36" height="10" fill="${p.ink}"/><path d="M68 ${y+2}v6m8-6v6m8-6v6m8-6v6" stroke="${p.panel}" stroke-width="3"/>`;
+        case 1: return `<path d="M66 ${y}q14 14 28 0" fill="none" stroke="${p.ink}" stroke-width="5" stroke-linecap="round"/>`;
+        case 2: return `<path d="m61 ${y+5} 7-6 8 11 8-11 8 11 7-6" fill="none" stroke="${p.glow}" stroke-width="4" stroke-linejoin="round"/>`;
+        case 3: return `<circle cx="80" cy="${y+4}" r="7" fill="${p.ink}"/><circle cx="80" cy="${y+4}" r="3" fill="${p.accent}"/>`;
+        case 4: return `<rect x="65" y="${y+2}" width="30" height="5" fill="${p.ink}"/>`;
+        case 5: return `<path d="M65 ${y}h30l-7 12-8-7-8 7Z" fill="${p.ink}"/>`;
+        case 6: return `<rect x="60" y="${y-2}" width="40" height="14" rx="3" fill="${p.ink}"/><path d="M64 ${y+2}h32M64 ${y+7}h32" stroke="${p.panel}" stroke-width="2"/>`;
+        default: return `<path d="M64 ${y+3}h11v-5h10v5h11" fill="none" stroke="${p.ink}" stroke-width="5"/>`;
+      }
+    }
+
+    function sideShape(i,p) {
+      const stroke = `fill="${p.surface}" stroke="${p.ink}" stroke-width="5" stroke-linejoin="round"`;
+      switch(i) {
+        case 0: return `<path d="M44 94 28 103v28h14l12-22m62-15 16 9v28h-14l-12-22" ${stroke}/>`;
+        case 1: return `<path d="m45 99-21 6 8 9-10 9 18 4 12-16m63-12 21 6-8 9 10 9-18 4-12-16" ${stroke}/>`;
+        case 2: return `<path d="M47 91 23 100v32l21 8 9-29m60-20 24 9v32l-21 8-9-29" ${stroke}/>`;
+        case 3: return `<path d="M46 98 29 111v28m85-41 17 13v28" fill="none" stroke="${p.ink}" stroke-width="7" stroke-linecap="round"/><circle cx="29" cy="141" r="7" fill="${p.accent}"/><rect x="125" y="136" width="13" height="10" fill="${p.accent}"/>`;
+        case 4: return `<path d="m47 91-29 2 24 22m71-24 29 2-24 22" ${stroke}/>`;
+        case 5: return `<path d="M48 101H29v34h19m64-34h19v34h-19" fill="none" stroke="${p.ink}" stroke-width="7"/><path d="M22 111h14m88 0h14" stroke="${p.glow}" stroke-width="4"/>`;
+        case 6: return `<rect x="25" y="96" width="24" height="32" rx="5" ${stroke}/><rect x="111" y="96" width="24" height="32" rx="5" ${stroke}/>`;
+        default: return `<path d="M46 104H35m79 0h11" stroke="${p.ink}" stroke-width="7" stroke-linecap="round"/>`;
+      }
+    }
+
+    function svgFor(spec, options={}) {
+      const p = PALETTES[spec.palette];
+      const label = `${spec.serial} ${spec.name}`;
+      const rounded = options.rounded !== false;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="${label}" shape-rendering="geometricPrecision">
+        <title>${label}</title>
+        <rect width="160" height="160" rx="${rounded ? 24 : 0}" fill="${p.bg}"/>
+        ${backgroundPattern(spec,p)}
+        <circle cx="80" cy="82" r="62" fill="${p.glow}" opacity=".055"/>
+        <g shape-rendering="crispEdges">${sideShape(spec.side,p)}${bodyShape(spec.body,p)}${headShape(spec.head,p)}${topShape(spec.top,p)}${eyesShape(spec.eyes,p)}${mouthShape(spec.mouth,p)}</g>
+        <path d="M16 145h128" stroke="${p.glow}" stroke-width="2" opacity=".45"/>
+        <rect x="18" y="18" width="7" height="7" fill="${p.accent}" opacity=".75"/>
+        <rect x="135" y="135" width="7" height="7" fill="${p.glow}" opacity=".75"/>
+      </svg>`;
+    }
+
+    function loadFavorites() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(favoriteKey) || "[]");
+        return new Set(Array.isArray(parsed) ? parsed.filter(id => Number.isInteger(id) && id >= 0 && id < BOT_COUNT) : []);
+      } catch { return new Set(); }
+    }
+    function saveFavorites() { localStorage.setItem(favoriteKey, JSON.stringify([...favorites].sort((a,b)=>a-b))); }
+    function setTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem(themeKey, theme);
+      document.querySelector("meta[name='theme-color']").content = theme === "dark" ? "#090b12" : "#f2f5fb";
+    }
+    function initialTheme() {
+      const saved = localStorage.getItem(themeKey);
+      if (saved === "dark" || saved === "light") return saved;
+      return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("is-visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 1800);
+    }
+
+    function optionMarkup(values, label) { return `<option value="">${label}</option>${values.map((v,i)=>`<option value="${i}">${v}</option>`).join("")}`; }
+    document.getElementById("body-filter").innerHTML = optionMarkup(BODY_NAMES,"모든 몸체");
+    document.getElementById("color-filter").innerHTML = optionMarkup(COLOR_FAMILIES,"모든 색상");
+    document.getElementById("rarity-filter").innerHTML = `<option value="">모든 희귀도</option>${RARITIES.map(v=>`<option value="${v}">${v}</option>`).join("")}`;
+
+    function filteredCatalog() {
+      const q = state.query.trim().toLowerCase();
+      let items = catalog.filter(bot => {
+        const p = PALETTES[bot.palette];
+        if (q && !searchIndex[bot.id].includes(q)) return false;
+        if (state.body !== null && bot.body !== state.body) return false;
+        if (state.color !== null && p.family !== state.color) return false;
+        if (state.rarity !== null && bot.rarity.name !== state.rarity) return false;
+        if (state.favoritesOnly && !favorites.has(bot.id)) return false;
+        return true;
+      });
+      if (state.sort === "id-desc") items.sort((a,b)=>b.id-a.id);
+      else if (state.sort === "rarity") items.sort((a,b)=>b.rarity.rank-a.rarity.rank || a.id-b.id);
+      else if (state.sort === "name") items.sort((a,b)=>a.name.localeCompare(b.name,"ko") || a.id-b.id);
+      else if (state.sort === "shuffle") items.sort((a,b)=>hash32(a.seed^state.shuffleSalt)-hash32(b.seed^state.shuffleSalt));
+      return items;
+    }
+
+    function cardMarkup(bot) {
+      const p = PALETTES[bot.palette];
+      const active = favorites.has(bot.id);
+      return `<article class="bot-card">
+        <button class="bot-card__open" type="button" data-open="${bot.id}" aria-label="${bot.serial} ${bot.name} 상세 보기">
+          <div class="bot-art">${svgFor(bot)}<span class="rarity" data-rank="${bot.rarity.rank}">${bot.rarity.name}</span></div>
+          <div class="bot-card__body"><span class="serial">${bot.serial}</span><h3>${bot.name}</h3><div class="bot-meta"><span>${BODY_NAMES[bot.body]}</span><span>·</span><span>${COLOR_FAMILIES[p.family]}</span></div></div>
+        </button>
+        <button class="card-favorite ${active?"is-active":""}" type="button" data-favorite="${bot.id}" aria-label="${active?"즐겨찾기 해제":"즐겨찾기 추가"}" aria-pressed="${active}">♥</button>
+      </article>`;
+    }
+
+    function paginationMarkup(page,totalPages) {
+      if (totalPages <= 1) return "";
+      const pages = new Set([1,totalPages,page-2,page-1,page,page+1,page+2].filter(v=>v>=1&&v<=totalPages));
+      const sorted = [...pages].sort((a,b)=>a-b);
+      let html = `<button class="page-button" type="button" data-page="${page-1}" ${page===1?"disabled":""}>←</button>`;
+      let previous = 0;
+      for (const p of sorted) {
+        if (previous && p-previous>1) html += `<span aria-hidden="true">…</span>`;
+        html += `<button class="page-button" type="button" data-page="${p}" ${p===page?'aria-current="page"':''}>${p}</button>`;
+        previous = p;
+      }
+      html += `<button class="page-button" type="button" data-page="${page+1}" ${page===totalPages?"disabled":""}>→</button>`;
+      return html;
+    }
+
+    function renderGallery({focus=false}={}) {
+      const items = filteredCatalog();
+      const totalPages = Math.max(1, Math.ceil(items.length/state.pageSize));
+      state.page = Math.min(Math.max(1,state.page),totalPages);
+      const start = (state.page-1)*state.pageSize;
+      const pageItems = items.slice(start,start+state.pageSize);
+      const grid = document.getElementById("gallery-grid");
+      grid.innerHTML = pageItems.length ? pageItems.map(cardMarkup).join("") : `<div class="empty-state"><div><strong>조건에 맞는 봇이 없습니다.</strong>검색어나 필터를 바꿔 보세요.</div></div>`;
+      document.getElementById("result-summary").textContent = `${items.length.toLocaleString("ko-KR")}개 결과 · ${state.page}/${totalPages} 페이지`;
+      document.getElementById("pagination").innerHTML = paginationMarkup(state.page,totalPages);
+      document.getElementById("favorite-count").textContent = String(favorites.size);
+      const favButton = document.getElementById("favorite-filter");
+      favButton.classList.toggle("is-active",state.favoritesOnly);
+      favButton.setAttribute("aria-pressed",String(state.favoritesOnly));
+      document.getElementById("favorite-filter-header").setAttribute("aria-pressed",String(state.favoritesOnly));
+      if (focus) { grid.scrollIntoView({behavior:"smooth",block:"start"}); grid.focus({preventScroll:true}); }
+    }
+
+    function detailMarkup(bot) {
+      const p = PALETTES[bot.palette];
+      const active = favorites.has(bot.id);
+      const tags = [BODY_NAMES[bot.body],HEAD_NAMES[bot.head],EYE_NAMES[bot.eyes],TOP_NAMES[bot.top],COLOR_FAMILIES[p.family],bot.rarity.name];
+      return `<div class="detail-shell">
+        <button class="icon-button dialog-close" type="button" data-close aria-label="닫기">×</button>
+        <div class="detail-art">${svgFor(bot,{rounded:false})}</div>
+        <div class="detail-content">
+          <span class="serial">${bot.serial} · ${bot.rarity.name}</span>
+          <h2 id="detail-title">${bot.name}</h2>
+          <p class="detail-description">번호 ${bot.id+1}로 언제든 동일하게 재생성되는 오리지널 픽셀 로봇입니다. 핵심 조합 서명은 <strong>${bot.signature}</strong>입니다.</p>
+          <div class="detail-tags">${tags.map(tag=>`<span class="tag">${tag}</span>`).join("")}</div>
+          <dl class="spec-list">
+            <div><dt>몸체</dt><dd>${BODY_NAMES[bot.body]}</dd></div><div><dt>머리</dt><dd>${HEAD_NAMES[bot.head]}</dd></div>
+            <div><dt>눈</dt><dd>${EYE_NAMES[bot.eyes]}</dd></div><div><dt>상단 장비</dt><dd>${TOP_NAMES[bot.top]}</dd></div>
+            <div><dt>입</dt><dd>${MOUTH_NAMES[bot.mouth]}</dd></div><div><dt>측면 장비</dt><dd>${SIDE_NAMES[bot.side]}</dd></div>
+            <div><dt>팔레트</dt><dd>${p.name}</dd></div><div><dt>고유 서명</dt><dd>${bot.signature}</dd></div>
+          </dl>
+          <div class="detail-actions">
+            <button class="primary-button" type="button" data-detail-favorite="${bot.id}">${active?"♥ 즐겨찾기 해제":"♡ 즐겨찾기 추가"}</button>
+            <button class="secondary-button" type="button" data-copy="${bot.id}">링크 복사</button>
+            <button class="secondary-button" type="button" data-svg="${bot.id}">SVG 저장</button>
+            <button class="secondary-button" type="button" data-png="${bot.id}">PNG 저장</button>
+          </div>
+          <div class="detail-nav">
+            <button class="pill-button" type="button" data-nav="${(bot.id-1+BOT_COUNT)%BOT_COUNT}">← 이전</button>
+            <button class="pill-button" type="button" data-nav="${(bot.id+1)%BOT_COUNT}">다음 →</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function openDetail(id,{updateHash=true}={}) {
+      if (!Number.isInteger(id)||id<0||id>=BOT_COUNT) return;
+      selectedId = id;
+      const dialog = document.getElementById("detail-dialog");
+      dialog.innerHTML = detailMarkup(catalog[id]);
+      if (!dialog.open) dialog.showModal();
+      if (updateHash) history.replaceState(null,"",`#bot-${String(id+1).padStart(5,"0")}`);
+    }
+    function closeDetail({clearHash=true}={}) {
+      const dialog = document.getElementById("detail-dialog");
+      if (dialog.open) dialog.close();
+      selectedId = null;
+      if (clearHash && location.hash.startsWith("#bot-")) history.replaceState(null,"",location.pathname+location.search);
+    }
+    function syncHash() {
+      const match = location.hash.match(/^#bot-(\d{1,5})$/);
+      if (!match) return;
+      const id = Number(match[1])-1;
+      if (id>=0&&id<BOT_COUNT) openDetail(id,{updateHash:false});
+    }
+
+    function toggleFavorite(id) {
+      favorites.has(id) ? favorites.delete(id) : favorites.add(id);
+      saveFavorites();
+      renderGallery();
+      if (selectedId === id) document.getElementById("detail-dialog").innerHTML = detailMarkup(catalog[id]);
+      showToast(favorites.has(id)?"즐겨찾기에 추가했습니다.":"즐겨찾기에서 제거했습니다.");
+    }
+    function downloadText(filename,text,type) {
+      const url = URL.createObjectURL(new Blob([text],{type}));
+      const a = document.createElement("a"); a.href=url; a.download=filename; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+    }
+    function downloadSvg(id) { const bot=catalog[id]; downloadText(`${bot.serial.toLowerCase()}.svg`,svgFor(bot,{rounded:false}),"image/svg+xml"); }
+    async function downloadPng(id) {
+      const bot=catalog[id];
+      const blob = new Blob([svgFor(bot,{rounded:false})],{type:"image/svg+xml"});
+      const url = URL.createObjectURL(blob);
+      try {
+        const image = new Image();
+        await new Promise((resolve,reject)=>{ image.onload=resolve; image.onerror=reject; image.src=url; });
+        const canvas=document.createElement("canvas"); canvas.width=1024; canvas.height=1024;
+        const ctx=canvas.getContext("2d"); ctx.imageSmoothingEnabled=false; ctx.drawImage(image,0,0,1024,1024);
+        const png=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));
+        if (!png) throw new Error("PNG conversion failed");
+        const pngUrl=URL.createObjectURL(png); const a=document.createElement("a"); a.href=pngUrl; a.download=`${bot.serial.toLowerCase()}.png`; a.click(); setTimeout(()=>URL.revokeObjectURL(pngUrl),1000);
+      } finally { URL.revokeObjectURL(url); }
+    }
+    async function copyLink(id) {
+      const url = new URL(location.href); url.hash=`bot-${String(id+1).padStart(5,"0")}`;
+      try { await navigator.clipboard.writeText(url.href); showToast("상세 링크를 복사했습니다."); }
+      catch { const input=document.createElement("input"); input.value=url.href; document.body.append(input); input.select(); document.execCommand("copy"); input.remove(); showToast("상세 링크를 복사했습니다."); }
+    }
+
+    function updateFilterState() {
+      state.body = document.getElementById("body-filter").value === "" ? null : Number(document.getElementById("body-filter").value);
+      state.color = document.getElementById("color-filter").value === "" ? null : Number(document.getElementById("color-filter").value);
+      state.rarity = document.getElementById("rarity-filter").value || null;
+      state.sort = document.getElementById("sort-select").value;
+      state.pageSize = Number(document.getElementById("page-size").value);
+      state.page=1;
+      if (state.sort==="shuffle") state.shuffleSalt=Date.now()>>>0;
+      renderGallery();
+    }
+
+    let queryTimer=0;
+    document.getElementById("query").addEventListener("input",event=>{
+      clearTimeout(queryTimer);
+      queryTimer=setTimeout(()=>{state.query=event.target.value; state.page=1; renderGallery();},120);
+    });
+    ["body-filter","color-filter","rarity-filter","sort-select","page-size"].forEach(id=>document.getElementById(id).addEventListener("change",updateFilterState));
+    document.getElementById("filters").addEventListener("submit",event=>event.preventDefault());
+    function toggleFavoriteFilter(){state.favoritesOnly=!state.favoritesOnly;state.page=1;renderGallery();}
+    document.getElementById("favorite-filter").addEventListener("click",toggleFavoriteFilter);
+    document.getElementById("favorite-filter-header").addEventListener("click",()=>{toggleFavoriteFilter();document.getElementById("gallery").scrollIntoView({behavior:"smooth"});});
+    document.getElementById("reset-filters").addEventListener("click",()=>{
+      Object.assign(state,{query:"",body:null,color:null,rarity:null,favoritesOnly:false,sort:"id-asc",page:1,pageSize:72});
+      document.getElementById("query").value=""; document.getElementById("body-filter").value=""; document.getElementById("color-filter").value=""; document.getElementById("rarity-filter").value=""; document.getElementById("sort-select").value="id-asc"; document.getElementById("page-size").value="72"; renderGallery();
+    });
+    document.getElementById("theme-toggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    document.getElementById("random-bot").addEventListener("click",()=>openDetail(Math.floor(Math.random()*BOT_COUNT)));
+
+    document.getElementById("gallery-grid").addEventListener("click",event=>{
+      const favorite=event.target.closest("[data-favorite]"); if(favorite){toggleFavorite(Number(favorite.dataset.favorite));return;}
+      const open=event.target.closest("[data-open]"); if(open) openDetail(Number(open.dataset.open));
+    });
+    document.getElementById("pagination").addEventListener("click",event=>{
+      const button=event.target.closest("[data-page]"); if(!button||button.disabled)return; state.page=Number(button.dataset.page); renderGallery({focus:true});
+    });
+    document.getElementById("detail-dialog").addEventListener("click",event=>{
+      const dialog=event.currentTarget;
+      if(event.target===dialog){closeDetail();return;}
+      const target=event.target.closest("button"); if(!target)return;
+      if(target.hasAttribute("data-close")) closeDetail();
+      else if(target.dataset.detailFavorite) toggleFavorite(Number(target.dataset.detailFavorite));
+      else if(target.dataset.copy) copyLink(Number(target.dataset.copy));
+      else if(target.dataset.svg) downloadSvg(Number(target.dataset.svg));
+      else if(target.dataset.png) downloadPng(Number(target.dataset.png)).catch(()=>showToast("PNG 생성에 실패했습니다."));
+      else if(target.dataset.nav) openDetail(Number(target.dataset.nav));
+    });
+    document.getElementById("detail-dialog").addEventListener("cancel",event=>{event.preventDefault();closeDetail();});
+    addEventListener("hashchange",syncHash);
+    addEventListener("keydown",event=>{
+      if(selectedId===null)return;
+      if(event.key==="ArrowLeft")openDetail((selectedId-1+BOT_COUNT)%BOT_COUNT);
+      if(event.key==="ArrowRight")openDetail((selectedId+1)%BOT_COUNT);
+    });
+
+    function renderHero() {
+      const ids=[1420,6387,924];
+      [["hero-left",ids[0]],["hero-right",ids[1]],["hero-main",ids[2]]].forEach(([elementId,id])=>{
+        const el=document.getElementById(elementId); el.innerHTML=svgFor(catalog[id]); el.dataset.id=id; el.setAttribute("aria-label",`${catalog[id].serial} 상세 보기`); el.addEventListener("click",()=>openDetail(id));
+      });
+    }
+
+    setTheme(initialTheme());
+    renderHero();
+    renderGallery();
+    syncHash();
+
+    const uniqueSignatures = new Set(catalog.map(bot=>bot.signature));
+    if (uniqueSignatures.size !== BOT_COUNT) throw new Error(`Catalog uniqueness check failed: ${uniqueSignatures.size}`);
+  </script>
+</body>
 </html>
