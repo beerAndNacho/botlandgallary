@@ -1,0 +1,69 @@
+# Botland Gallery
+
+A static gallery that deterministically generates **10,000 original pixel robots** in the browser. The project takes inspiration from the layered-parts idea in [shevenionov/botlab](https://github.com/shevenionov/botlab), while using a new rendering engine, new shapes, new palettes, and a gallery-first interface.
+
+## What is included
+
+- Exactly 10,000 catalog entries with 10,000 distinct core signatures
+- 12 bodies, 16 heads, 12 eye systems, 14 top modules, 10 mouths, and 10 side modules
+- 24 palettes across 8 color families
+- Search by serial, Korean name, palette, part, mood, and rarity
+- Body, color, mood, rarity, favorites, and sort filters
+- Persistent browser favorites
+- Detail links such as `#bot-04243`
+- 1024×1024 PNG and original SVG downloads
+- Responsive light/dark UI with reduced-motion support
+- Catalog validation in CI
+- GitHub Pages deployment workflow
+
+## Why there are not 10,000 image files
+
+Every bot is reconstructed from its numeric ID. A coprime permutation maps each ID to a unique body/head/eye/top signature, while a stable 32-bit hash supplies the remaining visual traits. This keeps the repository small, makes every result reproducible, and still produces the full 10,000-item collection.
+
+The validation script checks:
+
+1. The catalog contains exactly 10,000 entries.
+2. All 10,000 core signatures are unique.
+3. Every palette is represented.
+4. Repeated generation from the same ID is deterministic.
+5. Representative bots produce valid SVG documents.
+
+## Run locally
+
+Requires Node.js 22.12+ or Node.js 24.
+
+```bash
+npm install
+npm run dev
+```
+
+Then open the local URL printed by Vite.
+
+## Validate and build
+
+```bash
+npm run check
+npm run build
+npm run preview
+```
+
+## Deploy
+
+Pushes to `main` run CI and the Pages workflow. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once. The workflow builds `dist/` and publishes it to GitHub Pages.
+
+## Project structure
+
+```text
+src/bot-engine.ts       deterministic catalog + SVG renderer
+src/main.ts             gallery state, search, filters, dialog, downloads
+src/styles.css          responsive visual system
+scripts/validate-catalog.ts
+.github/workflows/ci.yml
+.github/workflows/pages.yml
+```
+
+## License
+
+- Website source: [MIT](LICENSE)
+- Generated Botland robot outputs: free for personal and commercial use
+- Inspiration notice: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
