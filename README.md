@@ -8,8 +8,8 @@ A static gallery that deterministically generates **10,000 original pixel robots
 ## What is included
 
 - Exactly 10,000 catalog entries with 10,000 distinct core signatures
-- 12 bodies, 16 heads, 12 eye systems, 14 top modules, 10 mouths, and 10 side modules
-- 24 palettes across 8 color families
+- 12 bodies, 16 heads, 12 eye systems, 14 top modules, 10 mouths, and 10 side modules in the main Vite app
+- 24 palettes across 8 color families in the main Vite app
 - Search by serial, Korean name, palette, part, mood, and rarity
 - Body, color, mood, rarity, favorites, and sort filters
 - Persistent browser favorites
@@ -18,6 +18,7 @@ A static gallery that deterministically generates **10,000 original pixel robots
 - Responsive light/dark UI with reduced-motion support
 - Catalog validation in CI
 - GitHub Pages deployment workflow
+- A dependency-free, single-file edition at [`standalone/index.html`](standalone/index.html)
 
 ## Why there are not 10,000 image files
 
@@ -42,6 +43,16 @@ npm run dev
 
 Then open the local URL printed by Vite.
 
+## Open the standalone edition
+
+The standalone edition contains its CSS, catalog generator, SVG renderer, filters, favorites, detail dialog, and download tools in one HTML file.
+
+```bash
+python3 -m http.server 8000 --directory standalone
+```
+
+Then open `http://localhost:8000`.
+
 ## Validate and build
 
 ```bash
@@ -52,7 +63,13 @@ npm run preview
 
 ## Deploy
 
-Pushes to `main` run CI and the Pages workflow. In the repository settings, set **Pages → Build and deployment → Source** to **GitHub Actions** once. The workflow builds `dist/` and publishes it to GitHub Pages.
+Pushes to `main` run CI and the Pages workflow. GitHub Pages needs one repository setting enabled once:
+
+1. Open **Settings → Pages**.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Re-run the Pages workflow or push another commit.
+
+The expected Pages address is `https://beerandnacho.github.io/botlandgallary/`.
 
 ## Project structure
 
@@ -61,6 +78,7 @@ src/bot-engine.ts       deterministic catalog + SVG renderer
 src/main.ts             gallery state, search, filters, dialog, downloads
 src/styles.css          responsive visual system
 scripts/validate-catalog.ts
+standalone/index.html   dependency-free single-file gallery
 .github/workflows/ci.yml
 .github/workflows/pages.yml
 ```
