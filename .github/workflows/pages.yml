@@ -96,3 +96,71 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+  record:
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Query Pages and write deployment status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          DEPLOY_RESULT: ${{ needs.deploy.result }}
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B main origin/main
+          code=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages" || true)
+          export PAGES_HTTP_CODE="$code"
+          python3 - <<'PY'
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import json
+          import os
+
+          raw = Path("/tmp/pages.json").read_text(encoding="utf-8") if Path("/tmp/pages.json").exists() else ""
+          try:
+              payload = json.loads(raw) if raw else {}
+          except json.JSONDecodeError:
+              payload = {"raw": raw[:1000]}
+
+          status = {
+              "observed_at": datetime.now(timezone.utc).isoformat(),
+              "workflow_commit": os.environ.get("GITHUB_SHA"),
+              "build_result": os.environ.get("BUILD_RESULT"),
+              "deploy_result": os.environ.get("DEPLOY_RESULT"),
+              "pages_api_http_status": os.environ.get("PAGES_HTTP_CODE"),
+              "expected_url": "https://beerandnacho.github.io/botlandgallary/",
+              "html_url": payload.get("html_url"),
+              "status": payload.get("status"),
+              "build_type": payload.get("build_type"),
+              "source": payload.get("source"),
+              "error": payload.get("message") or payload.get("error"),
+          }
+          Path("deployment-status.json").write_text(
+              json.dumps(status, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(status, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Commit deployment status
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deployment-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: record Pages deployment status [skip ci]"
+            git push origin HEAD:main
+          fi
