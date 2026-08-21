@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-08-21T23:02:58.677097+00:00",
+  "workflow_commit": "f4f0d35e0397fe5e7da04b09d65f3b8768130536",
+  "build_result": "failure",
+  "deploy_result": "skipped",
+  "pages_api_http_status": "200",
+  "expected_url": "https://beerandnacho.github.io/botlandgallary/",
+  "html_url": "https://beerandnacho.github.io/botlandgallary/",
+  "status": "built",
+  "build_type": "legacy",
+  "source": {
+    "branch": "gh-pages",
+    "path": "/"
+  },
+  "error": null
+}
