@@ -1,22 +1,23 @@
-name: Publish Botland Hologram Gallery
+name: Validate Botland Hologram Gallery
 
 on:
   push:
     branches: [main]
     paths-ignore:
       - deployment-status.json
+  pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
+  contents: read
+  pages: read
 
 concurrency:
-  group: pages
+  group: botland-gallery-validation-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  publish:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
@@ -24,33 +25,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Materialize the hologram edition
-        run: |
-          set -euo pipefail
-          payload=.holo-upgrade/site.html.gz.b64
-          test -s "$payload"
-          tr -d '\n\r ' < "$payload" | base64 --decode | gzip --decompress > /tmp/botland-hologram.html
-          grep -q "32 SILHOUETTES" /tmp/botland-hologram.html
-          grep -q "10,000 홀로그램" /tmp/botland-hologram.html
-          cp /tmp/botland-hologram.html index.html
-          mkdir -p standalone
-          cp /tmp/botland-hologram.html standalone/index.html
-          cp /tmp/botland-hologram.html standalone/404.html
-          touch standalone/.nojekyll
-          printf '{"status":"ok","edition":"hologram-v3","characters":10000,"silhouettes":32,"source_commit":"%s"}\n' "$(git rev-parse HEAD)" > standalone/health.json
-
-      - name: Validate catalog and browser script
+      - name: Validate the 10,000-character payload
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          html = Path("index.html").read_text(encoding="utf-8")
-          match = re.search(r"<script>([\s\S]*?)</script>", html)
-          if not match:
-              raise SystemExit("inline gallery script was not found")
-          Path("/tmp/botland-hologram.js").write_text(match.group(1), encoding="utf-8")
+          import base64
+          import gzip
+
+          payload = Path(".holo-upgrade/site.html.gz.b64")
+          if not payload.is_file() or payload.stat().st_size == 0:
+              raise SystemExit("hologram payload is missing")
+
+          encoded = "".join(payload.read_text(encoding="utf-8").split())
+          html = gzip.decompress(base64.b64decode(encoded)).decode("utf-8")
           required = [
+              "32 SILHOUETTES",
+              "10,000 홀로그램",
               "const N=1e4",
               "new Set(cat.map(o=>o.sig)).size!==N",
               "PNG 저장",
@@ -63,121 +54,60 @@ jobs:
               raise SystemExit(f"missing gallery features: {missing}")
           if html.count("case ") < 32:
               raise SystemExit("character silhouette cases are incomplete")
+          print(f"validated payload: {len(html):,} bytes")
           PY
-          node --check /tmp/botland-hologram.js
 
-      - name: Commit generated source files
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html standalone/index.html standalone/404.html standalone/.nojekyll standalone/health.json
-          if ! git diff --cached --quiet; then
-            git commit -m "build: refresh hologram gallery source [skip ci]"
-            git push origin HEAD:main
-          fi
-
-      - name: Publish files to gh-pages
+      - name: Validate the gh-pages loader
         run: |
           set -euo pipefail
           git fetch origin gh-pages
-          rm -rf /tmp/botland-pages
-          git worktree add -B gh-pages /tmp/botland-pages origin/gh-pages
-          find /tmp/botland-pages -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp standalone/index.html /tmp/botland-pages/index.html
-          cp standalone/404.html /tmp/botland-pages/404.html
-          cp standalone/health.json /tmp/botland-pages/health.json
-          touch /tmp/botland-pages/.nojekyll
-          cd /tmp/botland-pages
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m "deploy: publish Botland hologram gallery"
-            git push origin HEAD:gh-pages
-          fi
-          cd "$GITHUB_WORKSPACE"
-          git worktree remove /tmp/botland-pages --force
+          git show origin/gh-pages:index.html > /tmp/pages-index.html
+          git show origin/gh-pages:health.json > /tmp/pages-health.json
+          grep -q "BOTLAND HOLOGRAMS" /tmp/pages-index.html
+          grep -q "raw.githubusercontent.com/beerAndNacho/botlandgallary/main/.holo-upgrade/site.html.gz.b64" /tmp/pages-index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          health = json.loads(Path("/tmp/pages-health.json").read_text(encoding="utf-8"))
+          if health.get("status") != "ok":
+              raise SystemExit("gh-pages health is not ok")
+          if health.get("characters") != 10000:
+              raise SystemExit("gh-pages character count is not 10,000")
+          if health.get("silhouettes") != 32:
+              raise SystemExit("gh-pages silhouette count is not 32")
+          print(health)
+          PY
 
-      - name: Request legacy Pages build
+      - name: Validate GitHub Pages settings
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          code=$(curl -sS -o /tmp/pages-build.json -w "%{http_code}" \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2026-03-10" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages/builds")
-          cat /tmp/pages-build.json
-          case "$code" in
-            201|204|409) ;;
-            *) echo "Unexpected Pages build response: HTTP $code" >&2; exit 1 ;;
-          esac
-
-  record:
-    if: always()
-    runs-on: ubuntu-latest
-    needs: publish
-    steps:
-      - name: Checkout latest main
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Query Pages and write deployment status
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PUBLISH_RESULT: ${{ needs.publish.result }}
-        run: |
-          set -euo pipefail
-          git fetch origin main
-          git checkout -B main origin/main
           code=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages" || true)
-          export PAGES_HTTP_CODE="$code"
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages")
+          test "$code" = "200"
           python3 - <<'PY'
-          from datetime import datetime, timezone
           from pathlib import Path
           import json
-          import os
-
-          raw = Path("/tmp/pages.json").read_text(encoding="utf-8") if Path("/tmp/pages.json").exists() else ""
-          try:
-              payload = json.loads(raw) if raw else {}
-          except json.JSONDecodeError:
-              payload = {"raw": raw[:1000]}
-
-          status = {
-              "observed_at": datetime.now(timezone.utc).isoformat(),
-              "workflow_commit": os.environ.get("GITHUB_SHA"),
-              "publish_result": os.environ.get("PUBLISH_RESULT"),
-              "pages_api_http_status": os.environ.get("PAGES_HTTP_CODE"),
-              "expected_url": "https://beerandnacho.github.io/botlandgallary/",
-              "html_url": payload.get("html_url"),
-              "status": payload.get("status"),
-              "build_type": payload.get("build_type"),
-              "source": payload.get("source"),
-              "error": payload.get("message") or payload.get("error"),
-          }
-          Path("deployment-status.json").write_text(
-              json.dumps(status, ensure_ascii=False, indent=2) + "\n",
-              encoding="utf-8",
-          )
-          print(json.dumps(status, ensure_ascii=False, indent=2))
+          pages = json.loads(Path("/tmp/pages.json").read_text(encoding="utf-8"))
+          expected = "https://beerandnacho.github.io/botlandgallary/"
+          source = pages.get("source") or {}
+          if pages.get("html_url") != expected:
+              raise SystemExit(f"unexpected Pages URL: {pages.get('html_url')}")
+          if pages.get("build_type") != "legacy":
+              raise SystemExit(f"unexpected Pages build type: {pages.get('build_type')}")
+          if source.get("branch") != "gh-pages" or source.get("path") != "/":
+              raise SystemExit(f"unexpected Pages source: {source}")
+          if pages.get("status") not in {"built", "building"}:
+              raise SystemExit(f"unexpected Pages status: {pages.get('status')}")
+          print({
+              "url": pages.get("html_url"),
+              "status": pages.get("status"),
+              "build_type": pages.get("build_type"),
+              "source": source,
+          })
           PY
-
-      - name: Commit deployment status
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add deployment-status.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: record Pages deployment status [skip ci]"
-            git push origin HEAD:main
-          fi
