@@ -1,9 +1,11 @@
 # Botland Gallery
 
 [![CI](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml)
-[![Publish Botland Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
+[![Validate Botland Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
 
-> **Live gallery:** [https://beerandnacho.github.io/botlandgallary/](https://beerandnacho.github.io/botlandgallary/)
+## [▶ Open the live gallery](https://beerandnacho.github.io/botlandgallary/)
+
+**Public URL:** https://beerandnacho.github.io/botlandgallary/
 
 A static gallery that deterministically generates **10,000 original pixel robots** in the browser. The project takes inspiration from the layered-parts idea in [shevenionov/botlab](https://github.com/shevenionov/botlab), while using a new rendering engine, new shapes, new palettes, and a gallery-first interface.
 
@@ -19,7 +21,7 @@ A static gallery that deterministically generates **10,000 original pixel robots
 - 1024×1024 PNG and original SVG downloads
 - Responsive light/dark UI with reduced-motion support
 - Catalog validation in CI
-- Automatic publication to the `gh-pages` branch
+- GitHub Pages publication from the `gh-pages` branch
 - A dependency-free, single-file edition at [`standalone/index.html`](standalone/index.html)
 
 ## Why there are not 10,000 image files
@@ -65,14 +67,14 @@ npm run preview
 
 ## Deployment
 
-The repository uses two branches for publication:
+The repository uses two branches:
 
-- `main`: application source and the canonical standalone gallery
-- `gh-pages`: deployable `index.html`, `404.html`, `.nojekyll`, and deployment health metadata
+- `main`: application source and the compressed 10,000-character hologram payload
+- `gh-pages`: a lightweight public loader, `404.html`, `.nojekyll`, and health metadata
 
-A push to `main` runs `.github/workflows/pages.yml`, refreshes `gh-pages`, requests a Pages build, and verifies the public gallery before recording success.
+The public loader fetches the current payload from `main` with `cache: no-store`, decompresses it in the browser, verifies the collection markers, and opens the complete gallery. The Pages validation workflow checks the payload, loader, health metadata, official URL, Pages status, and `gh-pages` publishing source.
 
-Official address: `https://beerandnacho.github.io/botlandgallary/`
+Official address: **https://beerandnacho.github.io/botlandgallary/**
 
 ## Project structure
 
@@ -82,6 +84,7 @@ src/main.ts             gallery state, search, filters, dialog, downloads
 src/styles.css          responsive visual system
 scripts/validate-catalog.ts
 standalone/index.html   dependency-free single-file gallery
+.holo-upgrade/          compressed hologram gallery payload
 .github/workflows/ci.yml
 .github/workflows/pages.yml
 ```
