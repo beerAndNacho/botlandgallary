@@ -10,13 +10,14 @@ on:
 permissions:
   contents: write
   pages: write
+  id-token: write
 
 concurrency:
-  group: botland-pages
+  group: pages
   cancel-in-progress: true
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
@@ -35,6 +36,9 @@ jobs:
           cp /tmp/botland-hologram.html index.html
           mkdir -p standalone
           cp /tmp/botland-hologram.html standalone/index.html
+          cp /tmp/botland-hologram.html standalone/404.html
+          touch standalone/.nojekyll
+          printf '{"status":"ok","edition":"hologram-v2","characters":10000,"silhouettes":32,"source_commit":"%s"}\n' "$(git rev-parse HEAD)" > standalone/health.json
 
       - name: Validate catalog and browser script
         run: |
@@ -68,66 +72,27 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html standalone/index.html
+          git add index.html standalone/index.html standalone/404.html standalone/.nojekyll standalone/health.json
           if ! git diff --cached --quiet; then
-            git commit -m "feat: launch 10,000 hologram character gallery [skip ci]"
+            git commit -m "build: refresh hologram gallery source [skip ci]"
             git push origin HEAD:main
           fi
 
-      - name: Publish the site to gh-pages
-        run: |
-          set -euo pipefail
-          git fetch origin gh-pages
-          rm -rf /tmp/botland-pages
-          git worktree add -B gh-pages /tmp/botland-pages origin/gh-pages
-          find /tmp/botland-pages -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp standalone/index.html /tmp/botland-pages/index.html
-          cp standalone/index.html /tmp/botland-pages/404.html
-          touch /tmp/botland-pages/.nojekyll
-          printf '{"status":"ok","edition":"hologram-v2","characters":10000,"silhouettes":32,"source_commit":"%s"}\n' "$(git rev-parse HEAD)" > /tmp/botland-pages/health.json
-          cd /tmp/botland-pages
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m "deploy: publish hologram character edition"
-            git push origin gh-pages
-          fi
-          cd "$GITHUB_WORKSPACE"
-          git worktree remove /tmp/botland-pages --force
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
 
-      - name: Request a Pages build
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          code=$(curl -sS -o /tmp/pages-build.json -w "%{http_code}" \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages/builds")
-          cat /tmp/pages-build.json
-          case "$code" in
-            201|204|409) ;;
-            *) echo "Unexpected Pages build response: HTTP $code" >&2; exit 1 ;;
-          esac
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: standalone
 
-      - name: Verify the public hologram gallery
-        env:
-          SITE_URL: https://beerandnacho.github.io/botlandgallary/
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 60); do
-            code=$(curl -sS -L --connect-timeout 10 --max-time 25 \
-              -o /tmp/site.html -w "%{http_code}" \
-              "$SITE_URL?edition=hologram-v2&attempt=$attempt" || true)
-            if [ "$code" = "200" ] \
-              && grep -q "32 SILHOUETTES" /tmp/site.html \
-              && grep -q "10,000 홀로그램" /tmp/site.html; then
-              echo "Verified $SITE_URL"
-              exit 0
-            fi
-            echo "Attempt $attempt: HTTP ${code:-000}"
-            sleep 5
-          done
-          echo "The hologram gallery did not pass public verification." >&2
-          exit 1
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
