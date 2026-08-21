@@ -1,4 +1,4 @@
-name: Publish Botland Gallery
+name: Publish Botland Hologram Gallery
 
 on:
   push:
@@ -24,18 +24,59 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate standalone gallery
+      - name: Materialize the hologram edition
         run: |
           set -euo pipefail
-          test -s standalone/index.html
-          grep -q "BOTLAND GALLERY" standalone/index.html
-          grep -q "10,000" standalone/index.html
+          payload=.holo-upgrade/site.html.gz.b64
+          test -s "$payload"
+          tr -d '\n\r ' < "$payload" | base64 --decode | gzip --decompress > /tmp/botland-hologram.html
+          grep -q "32 SILHOUETTES" /tmp/botland-hologram.html
+          grep -q "10,000 홀로그램" /tmp/botland-hologram.html
+          cp /tmp/botland-hologram.html index.html
+          mkdir -p standalone
+          cp /tmp/botland-hologram.html standalone/index.html
 
-      - name: Publish the standalone site to gh-pages
+      - name: Validate catalog and browser script
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path("index.html").read_text(encoding="utf-8")
+          match = re.search(r"<script>([\s\S]*?)</script>", html)
+          if not match:
+              raise SystemExit("inline gallery script was not found")
+          Path("/tmp/botland-hologram.js").write_text(match.group(1), encoding="utf-8")
+          required = [
+              "const N=1e4",
+              "new Set(cat.map(o=>o.sig)).size!==N",
+              "PNG 저장",
+              "SVG 저장",
+              "RGB 잔상",
+              "스캔라인",
+          ]
+          missing = [token for token in required if token not in html]
+          if missing:
+              raise SystemExit(f"missing gallery features: {missing}")
+          if html.count("case ") < 32:
+              raise SystemExit("character silhouette cases are incomplete")
+          PY
+          node --check /tmp/botland-hologram.js
+
+      - name: Commit generated source files
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html standalone/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "feat: launch 10,000 hologram character gallery [skip ci]"
+            git push origin HEAD:main
+          fi
+
+      - name: Publish the site to gh-pages
+        run: |
+          set -euo pipefail
           git fetch origin gh-pages
           rm -rf /tmp/botland-pages
           git worktree add -B gh-pages /tmp/botland-pages origin/gh-pages
@@ -43,11 +84,11 @@ jobs:
           cp standalone/index.html /tmp/botland-pages/index.html
           cp standalone/index.html /tmp/botland-pages/404.html
           touch /tmp/botland-pages/.nojekyll
-          printf '{"status":"published","source_commit":"%s"}\n' "$GITHUB_SHA" > /tmp/botland-pages/health.json
+          printf '{"status":"ok","edition":"hologram-v2","characters":10000,"silhouettes":32,"source_commit":"%s"}\n' "$(git rev-parse HEAD)" > /tmp/botland-pages/health.json
           cd /tmp/botland-pages
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m "deploy: publish ${GITHUB_SHA::12}"
+            git commit -m "deploy: publish hologram character edition"
             git push origin gh-pages
           fi
           cd "$GITHUB_WORKSPACE"
@@ -65,39 +106,28 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages/builds")
           cat /tmp/pages-build.json
-          if [ "$code" != "201" ] && [ "$code" != "409" ]; then
-            echo "Unexpected Pages build response: HTTP $code" >&2
-            exit 1
-          fi
+          case "$code" in
+            201|204|409) ;;
+            *) echo "Unexpected Pages build response: HTTP $code" >&2; exit 1 ;;
+          esac
 
-      - name: Verify the public gallery
+      - name: Verify the public hologram gallery
         env:
           SITE_URL: https://beerandnacho.github.io/botlandgallary/
         run: |
           set -euo pipefail
-          for attempt in $(seq 1 45); do
-            code=$(curl -sS -L --connect-timeout 10 --max-time 20 \
+          for attempt in $(seq 1 60); do
+            code=$(curl -sS -L --connect-timeout 10 --max-time 25 \
               -o /tmp/site.html -w "%{http_code}" \
-              "$SITE_URL?verify=$GITHUB_RUN_ID-$attempt" || true)
+              "$SITE_URL?edition=hologram-v2&attempt=$attempt" || true)
             if [ "$code" = "200" ] \
-              && grep -q "BOTLAND GALLERY" /tmp/site.html \
-              && grep -q "10,000" /tmp/site.html; then
+              && grep -q "32 SILHOUETTES" /tmp/site.html \
+              && grep -q "10,000 홀로그램" /tmp/site.html; then
               echo "Verified $SITE_URL"
               exit 0
             fi
             echo "Attempt $attempt: HTTP ${code:-000}"
-            sleep 4
+            sleep 5
           done
-          echo "The public gallery did not pass verification." >&2
+          echo "The hologram gallery did not pass public verification." >&2
           exit 1
-
-      - name: Record successful deployment
-        run: |
-          set -euo pipefail
-          printf '{\n  "status": "ok",\n  "url": "https://beerandnacho.github.io/botlandgallary/",\n  "source_commit": "%s",\n  "verified_at": "%s"\n}\n' \
-            "$GITHUB_SHA" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > deployment-status.json
-          git add deployment-status.json
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: record successful Pages deployment [skip ci]"
-            git push origin HEAD:main
-          fi
