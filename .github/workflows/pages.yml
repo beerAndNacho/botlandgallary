@@ -1,23 +1,21 @@
-name: Validate Botland Hologram Gallery
+name: Deploy Botland Hologram Gallery
 
 on:
   push:
     branches: [main]
     paths-ignore:
       - deployment-status.json
-  pull_request:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: read
+  contents: write
 
 concurrency:
-  group: botland-gallery-validation-${{ github.ref }}
+  group: botland-pages
   cancel-in-progress: true
 
 jobs:
-  validate:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
@@ -25,89 +23,88 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate the 10,000-character payload
+      - name: Build a self-contained Pages site
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
           import base64
           import gzip
+          import json
+          import re
 
-          payload = Path(".holo-upgrade/site.html.gz.b64")
+          payload = Path('.holo-upgrade/site.html.gz.b64')
           if not payload.is_file() or payload.stat().st_size == 0:
-              raise SystemExit("hologram payload is missing")
+              raise SystemExit('hologram payload is missing')
 
-          encoded = "".join(payload.read_text(encoding="utf-8").split())
-          html = gzip.decompress(base64.b64decode(encoded)).decode("utf-8")
+          encoded = ''.join(payload.read_text(encoding='utf-8').split())
+          encoded += '=' * (-len(encoded) % 4)
+          compressed = base64.b64decode(encoded, validate=True)
+          html = gzip.decompress(compressed).decode('utf-8')
+
           required = [
-              "32 SILHOUETTES",
-              "10,000 홀로그램",
-              "const N=1e4",
-              "new Set(cat.map(o=>o.sig)).size!==N",
-              "PNG 저장",
-              "SVG 저장",
-              "RGB 잔상",
-              "스캔라인",
+              '32 SILHOUETTES',
+              '10,000 홀로그램',
+              'const N=1e4',
+              'new Set(cat.map(o=>o.sig)).size!==N',
+              'PNG 저장',
+              'SVG 저장',
+              'RGB 잔상',
+              '스캔라인',
           ]
           missing = [token for token in required if token not in html]
           if missing:
-              raise SystemExit(f"missing gallery features: {missing}")
-          if html.count("case ") < 32:
-              raise SystemExit("character silhouette cases are incomplete")
-          print(f"validated payload: {len(html):,} bytes")
+              raise SystemExit(f'missing gallery features: {missing}')
+          if html.count('case ') < 32:
+              raise SystemExit('character silhouette cases are incomplete')
+
+          script = re.search(r'<script>([\s\S]*?)</script>', html)
+          if not script:
+              raise SystemExit('inline gallery script was not found')
+
+          output = Path('pages-dist')
+          output.mkdir(exist_ok=True)
+          (output / 'index.html').write_text(html, encoding='utf-8')
+          (output / '404.html').write_text(html, encoding='utf-8')
+          (output / '.nojekyll').write_text('', encoding='utf-8')
+          (output / 'health.json').write_text(
+              json.dumps({
+                  'status': 'ok',
+                  'edition': 'self-contained-v4',
+                  'characters': 10000,
+                  'silhouettes': 32,
+                  'runtime_base64_decode': False,
+              }, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          print(f'Built self-contained gallery: {len(html):,} bytes')
           PY
 
-      - name: Validate the gh-pages loader
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('pages-dist/index.html').read_text(encoding='utf-8')
+          script = re.search(r'<script>([\s\S]*?)</script>', html)
+          Path('/tmp/botland-gallery.js').write_text(script.group(1), encoding='utf-8')
+          PY
+          node --check /tmp/botland-gallery.js
+
+      - name: Publish directly to gh-pages
         run: |
           set -euo pipefail
           git fetch origin gh-pages
-          git show origin/gh-pages:index.html > /tmp/pages-index.html
-          git show origin/gh-pages:health.json > /tmp/pages-health.json
-          grep -q "BOTLAND HOLOGRAMS" /tmp/pages-index.html
-          grep -q "raw.githubusercontent.com/beerAndNacho/botlandgallary/main/.holo-upgrade/site.html.gz.b64" /tmp/pages-index.html
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          health = json.loads(Path("/tmp/pages-health.json").read_text(encoding="utf-8"))
-          if health.get("status") != "ok":
-              raise SystemExit("gh-pages health is not ok")
-          if health.get("characters") != 10000:
-              raise SystemExit("gh-pages character count is not 10,000")
-          if health.get("silhouettes") != 32:
-              raise SystemExit("gh-pages silhouette count is not 32")
-          print(health)
-          PY
-
-      - name: Validate GitHub Pages settings
-        if: github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          code=$(curl -sS -o /tmp/pages.json -w "%{http_code}" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2026-03-10" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pages")
-          test "$code" = "200"
-          python3 - <<'PY'
-          from pathlib import Path
-          import json
-          pages = json.loads(Path("/tmp/pages.json").read_text(encoding="utf-8"))
-          expected = "https://beerandnacho.github.io/botlandgallary/"
-          source = pages.get("source") or {}
-          if pages.get("html_url") != expected:
-              raise SystemExit(f"unexpected Pages URL: {pages.get('html_url')}")
-          if pages.get("build_type") != "legacy":
-              raise SystemExit(f"unexpected Pages build type: {pages.get('build_type')}")
-          if source.get("branch") != "gh-pages" or source.get("path") != "/":
-              raise SystemExit(f"unexpected Pages source: {source}")
-          if pages.get("status") not in {"built", "building"}:
-              raise SystemExit(f"unexpected Pages status: {pages.get('status')}")
-          print({
-              "url": pages.get("html_url"),
-              "status": pages.get("status"),
-              "build_type": pages.get("build_type"),
-              "source": source,
-          })
-          PY
+          rm -rf /tmp/botland-gh-pages
+          git worktree add --detach /tmp/botland-gh-pages origin/gh-pages
+          cd /tmp/botland-gh-pages
+          git switch -C gh-pages
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$GITHUB_WORKSPACE/pages-dist/." .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'gh-pages is already current'
+          else
+            git commit -m "deploy: publish self-contained hologram gallery"
+            git push origin HEAD:gh-pages
+          fi
