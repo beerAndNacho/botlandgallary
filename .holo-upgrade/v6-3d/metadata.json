@@ -1,0 +1,15 @@
+{
+  "version": "6.0.0",
+  "source_bytes": 151073,
+  "gzip_base64_chars": 53272,
+  "parts": 6,
+  "sha256_html": "4dbb13f3b37a363ee4328b811f02c403824b94b8391df9803df831cf742a9e58",
+  "sha256_payload": "578715b7d40516876faa75ec792a6e326c8a95fedaa7b1de5b7231f4255fa85e",
+  "features": [
+    "pointer-3d-tilt",
+    "touch-3d-tilt",
+    "five-layer-parallax",
+    "advanced-character-traits",
+    "offline-runtime"
+  ]
+}

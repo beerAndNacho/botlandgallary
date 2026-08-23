@@ -1,96 +1,64 @@
 # Botland Gallery
 
 [![CI](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml)
-[![Validate Botland Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
+[![Deploy Botland 3D Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
 
-## [▶ Open the live gallery](https://beerandnacho.github.io/botlandgallary/)
+## [▶ Open Botland Gallery](https://beerandnacho.github.io/botlandgallary/?v=6)
 
 **Public URL:** https://beerandnacho.github.io/botlandgallary/
 
-A static gallery that deterministically generates **10,000 original pixel robots** in the browser. The project takes inspiration from the layered-parts idea in [shevenionov/botlab](https://github.com/shevenionov/botlab), while using a new rendering engine, new shapes, new palettes, and a gallery-first interface.
+Botland Gallery is a deterministic collection of **10,000 original hologram characters**. Version 6 turns every gallery card into an interactive 3D object and expands the character generator with deeper silhouettes, layered accessories, expressions, emblems, companions, energy effects, and lore traits.
 
-## What is included
+## Version 6 highlights
 
-- Exactly 10,000 catalog entries with 10,000 distinct core signatures
-- 12 bodies, 16 heads, 12 eye systems, 14 top modules, 10 mouths, and 10 side modules in the main Vite app
-- 24 palettes across 8 color families in the main Vite app
-- Search by serial, Korean name, palette, part, mood, and rarity
-- Body, color, mood, rarity, favorites, and sort filters
-- Persistent browser favorites
-- Detail links such as `#bot-04243`
-- 1024×1024 PNG and original SVG downloads
-- Responsive light/dark UI with reduced-motion support
-- Catalog validation in CI
-- GitHub Pages publication from the `gh-pages` branch
-- A dependency-free, single-file edition at [`standalone/index.html`](standalone/index.html)
+- Pointer-responsive 3D tilt on desktop
+- Touch-drag 3D tilt on phones and tablets
+- Five independent parallax layers: background, aura, character, companion, and foreground
+- Adjustable 3D strength from 0° to 18°
+- 18 body frames and 96 character species across 12 archetypes
+- Deterministic pose, expression, emblem, companion, energy style, equipment, origin, ability, and aura
+- Animated hologram glare, spectral sheen, scan lines, RGB separation, particles, and depth shadows
+- Detail-card swiping, previous/next navigation, favorites, search, filters, backup/restore, SVG export, and PNG export
+- Exactly 10,000 reproducible character IDs
+- No runtime `fetch`, Base64 decoding, decompression, or service-worker dependency
+- Self-contained application HTML for reliable mobile in-app browser support
 
-## Why there are not 10,000 image files
+## 3D interaction
 
-Every bot is reconstructed from its numeric ID. A coprime permutation maps each ID to a unique body/head/eye/top signature, while a stable 32-bit hash supplies the remaining visual traits. This keeps the repository small, makes every result reproducible, and still produces the full 10,000-item collection.
+Move the pointer across a card, or press and drag a card on a touch screen. The card rotates in perspective while its hologram layers move by different amounts. Releasing the card returns it smoothly to its resting position. The same interaction is available in the character detail view.
 
-The validation script checks:
+The **Settings → 3D strength** control changes the maximum rotation angle. Reduced-motion preferences and the animation toggle disable motion automatically.
 
-1. The catalog contains exactly 10,000 entries.
-2. All 10,000 core signatures are unique.
-3. Every palette is represented.
-4. Repeated generation from the same ID is deterministic.
-5. Representative bots produce valid SVG documents.
+## Character generation
 
-## Run locally
+Every ID reconstructs the same character from a stable 32-bit seed. The generator combines:
 
-Requires Node.js 22.12+ or Node.js 24.
+- 12 archetypes and 96 species
+- 18 body frames
+- eyes, top equipment, side equipment, finish, palette, element, and rarity
+- pose, expression, emblem, companion, and energy style
+- origin, ability, aura, title, name, and lore
 
-```bash
-npm install
-npm run dev
-```
-
-Then open the local URL printed by Vite.
-
-## Open the standalone edition
-
-The standalone edition contains its CSS, catalog generator, SVG renderer, filters, favorites, detail dialog, and download tools in one HTML file.
-
-```bash
-python3 -m http.server 8000 --directory standalone
-```
-
-Then open `http://localhost:8000`.
-
-## Validate and build
-
-```bash
-npm run check
-npm run build
-npm run preview
-```
+This design stores generation rules instead of 10,000 individual image files, keeping the repository compact while preserving the full catalog.
 
 ## Deployment
 
-The repository uses two branches:
+The production source is stored as checksum-verified compressed parts under `.holo-upgrade/v6-3d/`. The Pages workflow joins and decompresses those parts **during deployment**, validates the 3D and character-generation features, checks the inline JavaScript syntax, and publishes a self-contained page to `gh-pages`.
 
-- `main`: application source and the compressed 10,000-character hologram payload
-- `gh-pages`: a lightweight public loader, `404.html`, `.nojekyll`, and health metadata
+The browser receives the finished HTML directly. It does not fetch or decode a secondary application payload.
 
-The public loader fetches the current payload from `main` with `cache: no-store`, decompresses it in the browser, verifies the collection markers, and opens the complete gallery. The Pages validation workflow checks the payload, loader, health metadata, official URL, Pages status, and `gh-pages` publishing source.
+## Local development
 
-Official address: **https://beerandnacho.github.io/botlandgallary/**
+The original TypeScript/Vite implementation remains available in `src/`. The deployed v6 single-file edition can be reconstructed with the same commands used in `.github/workflows/pages.yml`.
 
-## Project structure
-
-```text
-src/bot-engine.ts       deterministic catalog + SVG renderer
-src/main.ts             gallery state, search, filters, dialog, downloads
-src/styles.css          responsive visual system
-scripts/validate-catalog.ts
-standalone/index.html   dependency-free single-file gallery
-.holo-upgrade/          compressed hologram gallery payload
-.github/workflows/ci.yml
-.github/workflows/pages.yml
+```bash
+npm install
+npm run check
+npm run build
 ```
 
 ## License
 
 - Website source: [MIT](LICENSE)
-- Generated Botland robot outputs: free for personal and commercial use
+- Generated Botland character outputs: free for personal and commercial use
 - Inspiration notice: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
