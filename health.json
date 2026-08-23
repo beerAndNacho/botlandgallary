@@ -1,9 +1,10 @@
 {
   "status": "ok",
-  "edition": "same-origin-payload-v5",
+  "version": "6.0.0",
   "characters": 10000,
-  "silhouettes": 32,
-  "payload": "/botlandgallary/payload.b64",
-  "runtime_external_fetch": false,
-  "runtime_base64_padding_repair": true
+  "pointer_3d": true,
+  "touch_3d": true,
+  "parallax_layers": 5,
+  "runtime_fetch": false,
+  "sha256_html": "4dbb13f3b37a363ee4328b811f02c403824b94b8391df9803df831cf742a9e58"
 }

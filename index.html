@@ -1,78 +1,1392 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#050713" />
-  <meta name="description" content="32가지 실루엣으로 만든 10,000개의 프리즘 홀로그램 캐릭터 갤러리" />
-  <meta property="og:title" content="Botland — 10,000 Hologram Characters" />
-  <meta property="og:description" content="고양이·여우·해파리·용·공작 등 32가지 캐릭터가 모두 홀로그램으로 빛나는 컬렉션" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070814" />
+  <meta name="description" content="손가락과 마우스에 반응해 3D로 기울어지는 10,000개의 고해상도 홀로그램 캐릭터 갤러리" />
+  <meta property="og:title" content="Botland Hologram Gallery" />
+  <meta property="og:description" content="다층 SVG 캐릭터와 실시간 3D 패럴랙스로 움직이는 10,000개의 고유 홀로그램 컬렉션" />
   <meta property="og:type" content="website" />
-  <title>Botland — 10,000 Hologram Characters</title>
+  <meta property="og:url" content="https://beerandnacho.github.io/botlandgallary/" />
+  <meta property="og:image" content="https://beerandnacho.github.io/botlandgallary/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://beerandnacho.github.io/botlandgallary/" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="application-name" content="Botland" />
+  <meta name="botland-build" content="6.0.0" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <title>Botland Hologram Gallery — 10,000 Characters</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 20% 0,#143663,transparent 34rem),radial-gradient(circle at 90% 5%,#64145f,transparent 35rem),#050713;color:#f5f8ff;font-family:Inter,Pretendard,system-ui,-apple-system,sans-serif}.loader{width:min(560px,calc(100% - 32px));padding:38px 30px;border:1px solid #8af8ff55;border-radius:24px;background:#0b1122e8;text-align:center;box-shadow:0 30px 100px #0009,0 0 50px #61f8ff20}.orb{width:90px;height:90px;margin:0 auto 24px;border:2px solid transparent;border-top-color:#61f8ff;border-right-color:#ff62df;border-radius:50%;box-shadow:inset 0 0 25px #8b72ff44,0 0 30px #61f8ff33;animation:spin 1.4s linear infinite}.orb:after{content:"";display:block;width:48px;height:48px;margin:19px;border:1px solid #fff8;border-radius:50%;box-shadow:0 0 22px #ff62df66}.loader h1{margin:0 0 10px;font-size:clamp(1.8rem,7vw,3rem);letter-spacing:-.05em;background:linear-gradient(90deg,#61f8ff,#fff,#ff62df);-webkit-background-clip:text;color:transparent}.loader p{margin:0;color:#aeb8d0;line-height:1.7}.bar{height:4px;margin:25px 0 0;overflow:hidden;border-radius:999px;background:#ffffff12}.bar i{display:block;width:45%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#61f8ff,#ff62df);animation:load 1.1s ease-in-out infinite alternate}.error button{margin-top:22px;padding:12px 18px;border:1px solid #61f8ff88;border-radius:999px;background:#61f8ff18;color:#bdfcff;font:inherit;font-weight:700;cursor:pointer}.error small{display:block;margin-top:14px;color:#7784a0;word-break:break-word}@keyframes spin{to{transform:rotate(360deg)}}@keyframes load{to{transform:translateX(122%)}}@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    :root {
+      color-scheme: dark;
+      --bg: #070814;
+      --bg-2: #0b0d20;
+      --surface: rgba(18, 21, 44, .78);
+      --surface-strong: #12152c;
+      --surface-soft: #181c39;
+      --text: #f7f8ff;
+      --muted: #a9afd0;
+      --faint: #737b9f;
+      --line: rgba(255,255,255,.12);
+      --line-strong: rgba(255,255,255,.24);
+      --cyan: #70f6ff;
+      --pink: #ff70e9;
+      --violet: #9880ff;
+      --yellow: #fff27a;
+      --green: #72ffbf;
+      --danger: #ff6999;
+      --shadow: 0 30px 90px rgba(0,0,0,.46);
+      --radius: 20px;
+      --header: 72px;
+      font-family: Inter, Pretendard, "Noto Sans KR", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eef0ff;
+      --bg-2: #e3e7fb;
+      --surface: rgba(255,255,255,.76);
+      --surface-strong: #fbfcff;
+      --surface-soft: #f1f3ff;
+      --text: #15162a;
+      --muted: #626887;
+      --faint: #858aa6;
+      --line: rgba(23,24,50,.12);
+      --line-strong: rgba(23,24,50,.22);
+      --shadow: 0 28px 75px rgba(65,71,120,.18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      min-width: 320px;
+      max-width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 14% -8%, rgba(112,246,255,.13), transparent 34rem),
+        radial-gradient(circle at 92% 3%, rgba(255,112,233,.14), transparent 34rem),
+        radial-gradient(circle at 50% 55%, rgba(152,128,255,.07), transparent 45rem),
+        var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .32;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at center, #000 20%, transparent 78%);
+    }
+
+    button, input, select { font: inherit; }
+    button, a, input, select { -webkit-tap-highlight-color: transparent; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    svg { display: block; }
+
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 3px solid rgba(112,246,255,.5);
+      outline-offset: 3px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: -60px;
+      z-index: 1000;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--cyan);
+      color: #061018;
+      font-weight: 800;
+      transition: top .18s ease;
+    }
+    .skip-link:focus { top: 14px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1480px, calc(100% - 40px));
+      margin: 0 auto;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(22px) saturate(1.25);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 950;
+      letter-spacing: .1em;
+      line-height: 1;
+    }
+    .brand-mark {
+      position: relative;
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: conic-gradient(from 210deg, var(--cyan), var(--violet), var(--pink), var(--yellow), var(--green), var(--cyan));
+      box-shadow: 0 0 25px rgba(112,246,255,.28);
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 6px;
+      background: var(--bg-2);
+      clip-path: polygon(0 0, 45% 0, 45% 45%, 100% 45%, 100% 100%, 55% 100%, 55% 55%, 0 55%);
+    }
+    .brand-sub { color: var(--muted); font-size: .68rem; font-weight: 750; letter-spacing: .18em; }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .primary-button, .secondary-button, .chip-button, .page-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+      backdrop-filter: blur(16px);
+    }
+    .icon-button { min-width: 42px; height: 42px; padding: 0 10px; border-radius: 12px; }
+    .icon-button:hover, .secondary-button:hover, .chip-button:hover, .page-button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(112,246,255,.46);
+      box-shadow: 0 10px 30px rgba(112,246,255,.08);
+    }
+    .icon-button.is-active { color: var(--danger); border-color: rgba(255,105,153,.45); }
+    .favorite-count { font-size: .72rem; font-variant-numeric: tabular-nums; }
+
+    main { width: min(1480px, 100%); margin: 0 auto; padding: 0 clamp(14px, 3.5vw, 52px) 90px; }
+
+    .hero {
+      min-height: calc(100svh - var(--header));
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(390px, .96fr);
+      align-items: center;
+      gap: clamp(42px, 7vw, 110px);
+      padding: 74px 0 92px;
+    }
+    .hero-copy { position: relative; z-index: 2; }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 20px;
+      color: var(--cyan);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; box-shadow: 0 0 12px currentColor; }
+    h1 { margin: 0; font-size: clamp(3.1rem, 7vw, 7.2rem); line-height: .92; letter-spacing: -.072em; }
+    h1 strong {
+      display: inline-block;
+      margin-top: .08em;
+      color: transparent;
+      background: linear-gradient(100deg, var(--cyan), #fff, var(--pink), var(--yellow), var(--green), var(--cyan));
+      background-size: 250% 100%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      filter: drop-shadow(0 0 24px rgba(112,246,255,.2));
+      animation: text-prism 8s linear infinite;
+    }
+    @keyframes text-prism { to { background-position: 250% 0; } }
+    .hero-description { max-width: 690px; margin: 28px 0 0; color: var(--muted); font-size: clamp(1rem, 1.4vw, 1.18rem); line-height: 1.78; word-break: keep-all; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+    .primary-button, .secondary-button { min-height: 48px; padding: 0 18px; border-radius: 12px; font-weight: 850; }
+    .primary-button {
+      border-color: transparent;
+      color: #071018;
+      background: linear-gradient(110deg, var(--cyan), #fff, var(--pink), var(--yellow));
+      background-size: 220% 100%;
+      box-shadow: 0 13px 36px rgba(112,246,255,.18);
+    }
+    .primary-button:hover { transform: translateY(-2px); background-position: 100% 0; box-shadow: 0 18px 40px rgba(255,112,233,.18); }
+
+    .hero-stage { position: relative; min-height: 590px; display: grid; place-items: center; isolation: isolate; perspective: 1000px; }
+    .hero-orbit {
+      position: absolute;
+      width: min(37vw, 520px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(112,246,255,.2);
+      border-radius: 50%;
+      box-shadow: inset 0 0 70px rgba(152,128,255,.07), 0 0 70px rgba(112,246,255,.05);
+      animation: orbit 30s linear infinite;
+    }
+    .hero-orbit::before, .hero-orbit::after { content: ""; position: absolute; border-radius: 50%; }
+    .hero-orbit::before { inset: 13%; border: 1px dashed rgba(255,112,233,.22); }
+    .hero-orbit::after { width: 11px; height: 11px; top: 8%; left: 50%; background: #fff; box-shadow: 0 0 20px var(--cyan), 0 0 38px var(--pink); }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+
+    .hero-card, .character-card, .detail-art[data-tilt-card] {
+      --rx: 0deg;
+      --ry: 0deg;
+      --px: 0;
+      --py: 0;
+      --mx: 50%;
+      --my: 50%;
+      --lift: 0px;
+      --card-scale: 1;
+      position: relative;
+      border: 1px solid transparent;
+      background:
+        linear-gradient(var(--surface-strong), var(--surface-strong)) padding-box,
+        conic-gradient(from 220deg, var(--cyan), var(--violet), var(--pink), var(--yellow), var(--green), var(--cyan)) border-box;
+      box-shadow: var(--shadow), 0 0 38px rgba(112,246,255,.08);
+      isolation: isolate;
+      transform-style: preserve-3d;
+      will-change: transform;
+      backface-visibility: hidden;
+      transition: transform .24s cubic-bezier(.2,.78,.2,1), border-color .2s ease, box-shadow .24s ease;
+    }
+    .hero-card, .character-card { overflow: hidden; }
+    .hero-card::before, .character-card::before, .detail-art[data-tilt-card]::before {
+      content: "";
+      position: absolute;
+      inset: -55% -75%;
+      z-index: 8;
+      pointer-events: none;
+      background: linear-gradient(105deg, transparent 34%, rgba(112,246,255,.08) 42%, rgba(255,255,255,.54) 49%, rgba(255,112,233,.16) 56%, transparent 64%);
+      transform: translateX(-35%) rotate(8deg) translateZ(70px);
+      animation: holo-sweep 6.8s ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+    .hero-card::after, .character-card::after, .detail-art[data-tilt-card]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 7;
+      pointer-events: none;
+      opacity: .28;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.48) 0, rgba(112,246,255,.18) 9%, rgba(255,112,233,.08) 18%, transparent 34%),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 4px),
+        linear-gradient(130deg, rgba(112,246,255,.08), transparent 30%, rgba(255,112,233,.09) 64%, rgba(255,242,122,.08));
+      mix-blend-mode: screen;
+      transform: translateZ(56px);
+    }
+    .hero-card.is-tilting, .character-card.is-tilting, .detail-art[data-tilt-card].is-tilting {
+      transition-duration: .045s;
+      border-color: rgba(255,255,255,.2);
+      box-shadow: 0 34px 78px rgba(0,0,0,.48), calc(var(--px) * -18px) calc(var(--py) * 16px) 48px rgba(112,246,255,.16), calc(var(--px) * 14px) calc(var(--py) * -12px) 44px rgba(255,112,233,.13);
+    }
+    @keyframes holo-sweep { 0%, 18% { transform: translateX(-42%) rotate(8deg) translateZ(70px); } 70%, 100% { transform: translateX(42%) rotate(8deg) translateZ(70px); } }
+
+    .hero-card {
+      --base-x: 0%; --base-y: 0%; --base-rot: 0deg; --base-scale: 1;
+      position: absolute; width: clamp(220px, 23vw, 345px); aspect-ratio: 1; padding: 0; border-radius: 26px; cursor: pointer;
+      transform: perspective(var(--tilt-perspective)) translate3d(var(--base-x), calc(var(--base-y) + var(--lift)), 0) rotateZ(var(--base-rot)) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--base-scale)) scale(var(--card-scale));
+    }
+    .hero-card svg { width: 100%; height: 100%; transform: translateZ(22px); }
+    .hero-card--main { --base-rot: 2deg; z-index: 4; }
+    .hero-card--left { --base-x: -42%; --base-y: 16%; --base-rot: -13deg; --base-scale: .76; z-index: 2; opacity: .78; }
+    .hero-card--right { --base-x: 43%; --base-y: -18%; --base-rot: 12deg; --base-scale: .68; z-index: 3; opacity: .9; }
+    .hero-card:hover { --lift: -8px; --card-scale: 1.02; z-index: 7; }
+    .hero-card--left:hover { --base-rot: -8deg; --base-scale: .8; }
+    .hero-card--right:hover { --base-rot: 7deg; --base-scale: .72; }
+    .hero-label { position: absolute; right: 3%; bottom: 8%; color: var(--faint); font: 700 .68rem ui-monospace, monospace; letter-spacing: .18em; writing-mode: vertical-rl; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-bottom: 96px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 20px 60px rgba(0,0,0,.16);
+      backdrop-filter: blur(18px);
+    }
+    .stat { padding: 25px clamp(18px, 3vw, 34px); border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat strong { display: block; font-size: clamp(1.55rem, 3vw, 2.7rem); line-height: 1; letter-spacing: -.05em; }
+    .stat span { display: block; margin-top: 8px; color: var(--muted); font-size: .78rem; }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 28px; }
+    .section-head h2 { margin: 0; font-size: clamp(2.4rem, 5vw, 4.9rem); line-height: 1; letter-spacing: -.06em; }
+    .section-head p { max-width: 440px; margin: 0 0 8px; color: var(--muted); line-height: 1.7; text-align: right; }
+
+    .filter-panel {
+      position: sticky;
+      top: calc(var(--header) + 10px);
+      z-index: 35;
+      padding: 14px;
+      margin-bottom: 17px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--surface-strong) 88%, transparent);
+      box-shadow: 0 18px 50px rgba(0,0,0,.18);
+      backdrop-filter: blur(22px) saturate(1.2);
+    }
+    .filter-grid { display: grid; grid-template-columns: minmax(240px, 1.6fr) repeat(4, minmax(125px, .72fr)) auto; gap: 9px; }
+    .field { position: relative; display: flex; align-items: center; min-width: 0; }
+    .field input, .field select {
+      width: 100%;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--bg-2);
+      color: var(--text);
+    }
+    .field input { padding: 0 13px 0 40px; }
+    .field select { padding: 0 33px 0 11px; appearance: none; cursor: pointer; }
+    .field-icon { position: absolute; left: 14px; color: var(--muted); pointer-events: none; }
+    .field--select::after { content: "⌄"; position: absolute; right: 12px; color: var(--muted); pointer-events: none; }
+    .filter-actions { display: flex; gap: 8px; }
+    .chip-button { min-height: 44px; padding: 0 12px; border-radius: 11px; white-space: nowrap; font-size: .78rem; font-weight: 820; }
+    .chip-button.is-active { color: var(--danger); border-color: rgba(255,105,153,.44); background: rgba(255,105,153,.08); }
+
+    .gallery-toolbar { min-height: 55px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .gallery-toolbar p { margin: 0; color: var(--muted); font-size: .84rem; }
+    .gallery-toolbar strong { color: var(--text); font-size: 1rem; }
+    .page-size { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .76rem; }
+    .page-size select { height: 37px; padding: 0 28px 0 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--text); }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; min-height: 430px; perspective: 1200px; }
+    .character-card {
+      border-radius: 17px;
+      transform: perspective(var(--tilt-perspective)) translate3d(0,var(--lift),0) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--card-scale));
+      touch-action: pan-y;
+    }
+    .character-card:hover { --lift: -7px; --card-scale: 1.015; box-shadow: 0 25px 62px rgba(0,0,0,.38), 0 0 38px rgba(112,246,255,.14); }
+    .character-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+    .character-art { position: relative; aspect-ratio: 1; overflow: hidden; background: #080a1a; transform: translateZ(18px); }
+    .character-art svg { width: 100%; height: 100%; transition: transform .22s ease, filter .22s ease; filter: saturate(1.12) contrast(1.04); transform: scale(1.012); }
+    .character-card:hover .character-art svg { transform: scale(1.035); filter: saturate(1.3) contrast(1.07) brightness(1.07); }
+    .character-info { transform: translateZ(26px); }
+    .rarity-badge, .favorite-button { transform: translateZ(48px); }
+    .holo-background, .holo-aura, .holo-character, .holo-companion, .holo-foreground {
+      transform-box: view-box;
+      transform-origin: 80px 80px;
+      transition: transform .16s cubic-bezier(.2,.75,.2,1), opacity .2s ease;
+      will-change: transform;
+    }
+    .holo-background { transform: translate(calc(var(--px) * -1.6px), calc(var(--py) * -1.6px)) scale(1.025); }
+    .holo-aura { transform: translate(calc(var(--px) * -3.1px), calc(var(--py) * -3.1px)); }
+    .holo-character { transform: translate(calc(var(--px) * 2.8px), calc(var(--py) * 2.8px)); }
+    .holo-companion { transform: translate(calc(var(--px) * 5px), calc(var(--py) * 5px)); }
+    .holo-foreground { transform: translate(calc(var(--px) * 7px), calc(var(--py) * 7px)); }
+    .character-card:hover .holo-aura, .hero-card:hover .holo-aura { opacity: 1; }
+    .rarity-badge {
+      position: absolute;
+      top: 9px;
+      left: 9px;
+      z-index: 7;
+      padding: 5px 7px;
+      border: 1px solid rgba(255,255,255,.25);
+      border-radius: 999px;
+      background: rgba(6,7,18,.55);
+      color: #fff;
+      font-size: .58rem;
+      font-weight: 900;
+      letter-spacing: .05em;
+      backdrop-filter: blur(9px);
+    }
+    .rarity-badge[data-rank="4"] { color: #fff7a7; box-shadow: 0 0 20px rgba(255,242,122,.22); }
+    .rarity-badge[data-rank="3"] { color: #e9c0ff; }
+    .rarity-badge[data-rank="2"] { color: #a5efff; }
+    .favorite-button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 8;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 50%;
+      background: rgba(6,7,18,.55);
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(9px);
+    }
+    .favorite-button.is-active { color: #ff79a7; }
+    .character-info { min-width: 0; padding: 12px 12px 13px; }
+    .serial { color: var(--cyan); font: 800 .62rem ui-monospace, monospace; letter-spacing: .09em; }
+    .character-info h3 { margin: 5px 0 8px; overflow: hidden; font-size: .9rem; text-overflow: ellipsis; white-space: nowrap; }
+    .character-tags { display: flex; gap: 5px; overflow: hidden; }
+    .character-tags span { flex: 0 0 auto; padding: 3px 6px; border: 1px solid var(--line); border-radius: 5px; color: var(--faint); font-size: .58rem; }
+
+    .empty-state { grid-column: 1 / -1; min-height: 420px; display: grid; place-items: center; padding: 40px; border: 1px dashed var(--line-strong); border-radius: var(--radius); color: var(--muted); text-align: center; }
+    .empty-state strong { display: block; margin-bottom: 7px; color: var(--text); font-size: 1.2rem; }
+
+    .pagination { min-height: 90px; display: flex; align-items: end; justify-content: center; flex-wrap: wrap; gap: 7px; }
+    .page-button { min-width: 39px; height: 39px; padding: 0 11px; border-radius: 10px; }
+    .page-button[aria-current="page"] { border-color: transparent; color: #071018; background: linear-gradient(110deg, var(--cyan), #fff, var(--pink)); font-weight: 900; }
+    .page-button:disabled { opacity: .3; cursor: not-allowed; transform: none; }
+
+    .site-footer { display: flex; justify-content: space-between; gap: 30px; margin-top: 82px; padding: 30px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+    .site-footer strong { color: var(--text); }
+
+    dialog {
+      width: min(1080px, calc(100% - 24px));
+      max-height: calc(100dvh - 24px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 25px;
+      background: var(--surface-strong);
+      color: var(--text);
+      box-shadow: 0 45px 130px rgba(0,0,0,.65);
+    }
+    dialog::backdrop { background: rgba(3,4,12,.78); backdrop-filter: blur(9px); }
+    .detail-shell { position: relative; display: grid; grid-template-columns: minmax(380px, 1.05fr) minmax(330px, .95fr); }
+    .detail-art { position: sticky; top: 0; align-self: start; width: 100%; min-height: 0; aspect-ratio: 1; overflow: hidden; background: #070814; }
+    .detail-art::after { content: ""; position: absolute; inset: -60% -80%; pointer-events: none; background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.38) 49%, rgba(255,112,233,.12) 56%, transparent 65%); animation: holo-sweep 6s ease-in-out infinite; mix-blend-mode: screen; }
+    .detail-art[data-tilt-card] {
+      overflow: hidden;
+      border-radius: 22px;
+      transform: perspective(1300px) rotateX(var(--rx)) rotateY(var(--ry)) scale(var(--card-scale));
+      touch-action: pan-y;
+    }
+    .detail-art svg { width: 100%; height: 100%; min-height: 0; transform: translateZ(22px) scale(1.01); }
+    .dialog-close { position: absolute; top: 14px; right: 14px; z-index: 20; }
+    .detail-content { padding: clamp(30px, 5vw, 58px); }
+    .detail-content h2 { margin: 8px 0 12px; font-size: clamp(2.2rem, 4vw, 3.8rem); line-height: .98; letter-spacing: -.058em; }
+    .detail-description { margin: 0 0 24px; color: var(--muted); line-height: 1.75; }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 24px; }
+    .detail-tag { padding: 6px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: .7rem; }
+    .spec-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin: 0 0 26px; }
+    .spec-list div { min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .spec-list dt { color: var(--faint); font-size: .64rem; }
+    .spec-list dd { margin: 4px 0 0; overflow: hidden; font-size: .78rem; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .detail-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+    .detail-actions button { min-height: 44px; }
+    .detail-nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 22px; }
+
+    .toast { position: fixed; left: 50%; bottom: 24px; z-index: 100; min-width: 220px; max-width: calc(100vw - 30px); padding: 11px 15px; border: 1px solid var(--line-strong); border-radius: 11px; background: var(--surface-strong); box-shadow: var(--shadow); text-align: center; opacity: 0; transform: translate(-50%, 15px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
+    .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 1220px) {
+      .gallery-grid { grid-template-columns: repeat(5,minmax(0,1fr)); }
+      .filter-grid { grid-template-columns: minmax(230px,1.5fr) repeat(2,minmax(130px,.8fr)); }
+      .field--search { grid-column: 1 / -1; }
+      .filter-actions { justify-content: flex-end; }
+    }
+    @media (max-width: 940px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-copy { display: flex; flex-direction: column; align-items: center; }
+      .hero-stage { min-height: 520px; }
+      .hero-orbit { width: min(75vw,500px); }
+      .hero-card { width: min(48vw,300px); }
+      .gallery-grid { grid-template-columns: repeat(4,minmax(0,1fr)); }
+      .detail-shell { grid-template-columns: 1fr; }
+      .detail-art { position: static; min-height: 0; aspect-ratio: 1; }
+      .detail-art svg { min-height: 0; }
+    }
+    @media (max-width: 720px) {
+      :root { --header: 64px; }
+      .site-header { width: calc(100% - 24px); }
+      .brand-sub { display: none; }
+      main { padding-inline: 12px; }
+      .hero { min-height: auto; padding: 60px 0 70px; }
+      h1 { font-size: clamp(3rem,14vw,5.4rem); }
+      .hero-stage { min-height: 420px; }
+      .hero-card { width: min(54vw,245px); border-radius: 19px; }
+      .hero-label { display: none; }
+      .stats { grid-template-columns: repeat(2,1fr); margin-bottom: 72px; }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .section-head { align-items: start; flex-direction: column; }
+      .section-head p { text-align: left; }
+      .filter-panel { position: static; }
+      .filter-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .field--search { grid-column: 1 / -1; }
+      .filter-actions { grid-column: 1 / -1; }
+      .filter-actions .chip-button { flex: 1; }
+      .gallery-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; }
+      .character-info { padding: 10px 9px 11px; }
+      .character-info h3 { font-size: .78rem; }
+      .site-footer { flex-direction: column; }
+      .detail-content { padding: 32px 20px 25px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: clamp(2.8rem,15vw,4.3rem); }
+      .hero-actions { width: 100%; }
+      .hero-actions > * { width: 100%; }
+      .hero-stage { min-height: 350px; }
+      .hero-card { width: min(58vw,215px); }
+      .filter-grid { grid-template-columns: 1fr; }
+      .field--search, .filter-actions { grid-column: 1; }
+      .gallery-toolbar { align-items: start; flex-direction: column; justify-content: center; }
+      .gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .character-tags span:nth-child(n+3) { display: none; }
+      .spec-list, .detail-actions { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    }
+
+
+    /* Botland Advanced v5 — interactive 3D cards + layered character rendering */
+    :root {
+      --holo-shine: .92;
+      --scan-opacity: .28;
+      --grid-columns: 6;
+      --bottom-nav-height: 0px;
+      --tilt-perspective: 950px;
+      --tilt-strength: 12;
+    }
+    html[data-density="compact"] { --grid-columns: 7; }
+    html[data-density="large"] { --grid-columns: 5; }
+    html[data-motion="off"] *, html[data-motion="off"] *::before, html[data-motion="off"] *::after { animation: none !important; transition-duration: .001ms !important; }
+    html[data-motion="off"] [data-tilt-card], html[data-tilt="off"] [data-tilt-card] { --rx: 0deg !important; --ry: 0deg !important; --px: 0 !important; --py: 0 !important; --mx: 50% !important; --my: 50% !important; }
+    html[data-scanlines="off"] { --scan-opacity: 0; }
+    body { overflow-x: clip; padding-bottom: var(--bottom-nav-height); }
+    h1, h2, .hero-description { text-wrap: balance; }
+    .hero-card::before, .character-card::before, .detail-art[data-tilt-card]::before { opacity: var(--holo-shine); }
+    .hero-card::after, .character-card::after, .detail-art[data-tilt-card]::after { opacity: var(--scan-opacity); }
+    .gallery-grid { grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr)); }
+    .character-card { content-visibility: auto; contain-intrinsic-size: 260px 340px; }
+    .character-card[data-rank="4"] { box-shadow: var(--shadow), 0 0 42px rgba(255,242,122,.13); }
+    .character-card[data-rank="3"] { box-shadow: var(--shadow), 0 0 34px rgba(152,128,255,.13); }
+    .quick-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .quick-actions .chip-button { min-height: 40px; }
+    .build-status {
+      display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; padding: 7px 10px;
+      border: 1px solid var(--line); border-radius: 999px; color: var(--faint); background: var(--surface);
+      font: 800 .64rem ui-monospace, monospace; letter-spacing: .08em;
+    }
+    .build-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+    .toolbar-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+    .mini-button { min-height: 37px; padding: 0 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--text); cursor: pointer; font-size: .75rem; font-weight: 800; }
+    .mini-button:hover { border-color: rgba(112,246,255,.45); }
+
+    .utility-dialog { width: min(720px, calc(100% - 24px)); }
+    .utility-shell { padding: clamp(24px,5vw,44px); }
+    .utility-head { display: flex; align-items: start; justify-content: space-between; gap: 20px; margin-bottom: 26px; }
+    .utility-head h2 { margin: 0; font-size: clamp(2rem,5vw,3.4rem); line-height: 1; letter-spacing: -.055em; }
+    .utility-head p { margin: 10px 0 0; color: var(--muted); line-height: 1.65; }
+    .jump-form { display: grid; grid-template-columns: 1fr auto; gap: 9px; }
+    .jump-form input { min-width: 0; height: 50px; padding: 0 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-2); color: var(--text); font: 800 1rem ui-monospace, monospace; }
+    .form-hint { margin: 10px 0 0; color: var(--faint); font-size: .75rem; }
+
+    .collection-summary { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; margin-bottom: 16px; }
+    .collection-metric { padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .collection-metric strong { display: block; font-size: clamp(1.4rem,4vw,2.2rem); letter-spacing: -.04em; }
+    .collection-metric span { display: block; margin-top: 5px; color: var(--faint); font-size: .7rem; }
+    .rarity-bars { display: grid; gap: 8px; margin: 20px 0; }
+    .rarity-row { display: grid; grid-template-columns: 82px 1fr 44px; align-items: center; gap: 10px; color: var(--muted); font-size: .75rem; }
+    .rarity-track { height: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.07); }
+    .rarity-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg,var(--cyan),var(--violet),var(--pink)); }
+    .collection-preview { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 8px; margin: 20px 0; }
+    .collection-preview button { padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); cursor: pointer; }
+    .collection-preview svg { width: 100%; height: auto; }
+    .utility-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+    .utility-actions > * { flex: 1 1 150px; }
+
+    .settings-grid { display: grid; gap: 12px; }
+    .setting-row { display: grid; grid-template-columns: minmax(140px,1fr) minmax(190px,1.2fr); align-items: center; gap: 18px; padding: 15px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+    .setting-row strong { display: block; font-size: .86rem; }
+    .setting-row small { display: block; margin-top: 4px; color: var(--faint); line-height: 1.45; }
+    .setting-row input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    .setting-row select { width: 100%; height: 42px; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-2); color: var(--text); }
+    .switch { justify-self: end; display: inline-flex; align-items: center; gap: 9px; cursor: pointer; color: var(--muted); font-size: .78rem; }
+    .switch input { width: 20px; height: 20px; accent-color: var(--cyan); }
+    .range-value { display: inline-block; min-width: 54px; text-align: right; color: var(--cyan); font: 800 .75rem ui-monospace, monospace; }
+
+    .detail-lore { margin: 0 0 24px; padding: 14px 16px; border-left: 3px solid var(--cyan); border-radius: 0 12px 12px 0; background: linear-gradient(90deg,rgba(112,246,255,.08),transparent); color: var(--muted); line-height: 1.65; font-size: .82rem; }
+    .detail-version { margin-top: 16px; color: var(--faint); font: 700 .62rem ui-monospace, monospace; letter-spacing: .06em; }
+    .detail-shell, .detail-content { min-width: 0; }
+    .detail-shell { overflow: hidden; }
+    .detail-content { overflow-wrap: anywhere; }
+    .spec-list dd { min-width: 0; }
+
+    .mobile-nav { display: none; }
+    .offline-badge { display: inline-flex; align-items: center; gap: 6px; color: var(--green); }
+    .offline-badge.is-offline { color: var(--yellow); }
+
+    @media (max-width: 1220px) {
+      :root { --grid-columns: 5; }
+      html[data-density="compact"] { --grid-columns: 6; }
+      html[data-density="large"] { --grid-columns: 4; }
+    }
+    @media (max-width: 940px) {
+      :root { --grid-columns: 4; }
+      html[data-density="compact"] { --grid-columns: 5; }
+      html[data-density="large"] { --grid-columns: 3; }
+    }
+    @media (max-width: 720px) {
+      :root { --grid-columns: 3; --bottom-nav-height: calc(70px + env(safe-area-inset-bottom)); }
+      html[data-density="compact"] { --grid-columns: 3; }
+      html[data-density="large"] { --grid-columns: 2; }
+      .site-header { max-width: 100%; }
+      .header-actions .github-link { display: none; }
+      .hero { padding-top: 44px; }
+      .hero h1 { font-size: clamp(2.65rem,12.8vw,4.7rem); line-height: .94; }
+      .hero-description { font-size: .94rem; line-height: 1.72; }
+      .gallery-toolbar { width: 100%; }
+      .toolbar-actions { width: 100%; justify-content: flex-start; }
+      .toolbar-actions .page-size { flex: 1 1 100%; justify-content: space-between; }
+      .collection-summary { grid-template-columns: 1fr; }
+      .collection-preview { grid-template-columns: repeat(4,minmax(0,1fr)); }
+      .setting-row { grid-template-columns: 1fr; gap: 11px; }
+      .switch { justify-self: start; }
+      .mobile-nav {
+        position: fixed; left: 8px; right: 8px; bottom: 8px; z-index: 80; display: grid; grid-template-columns: repeat(5,1fr);
+        min-height: 58px; padding: 6px 6px calc(6px + env(safe-area-inset-bottom)); border: 1px solid var(--line-strong);
+        border-radius: 18px; background: color-mix(in srgb,var(--surface-strong) 90%,transparent); box-shadow: 0 18px 60px rgba(0,0,0,.45);
+        backdrop-filter: blur(22px) saturate(1.25);
+      }
+      .mobile-nav button { display: grid; place-items: center; gap: 1px; min-width: 0; padding: 6px 2px; border: 0; border-radius: 12px; background: transparent; color: var(--muted); font-size: .6rem; cursor: pointer; }
+      .mobile-nav button span:first-child { color: var(--text); font-size: 1.15rem; line-height: 1; }
+      .mobile-nav button:active { background: rgba(112,246,255,.08); color: var(--cyan); }
+      .toast { bottom: calc(82px + env(safe-area-inset-bottom)); }
+      dialog { max-height: calc(100dvh - 12px); }
+    }
+    @media (max-width: 480px) {
+      :root { --grid-columns: 2; }
+      html[data-density="compact"] { --grid-columns: 3; }
+      html[data-density="large"] { --grid-columns: 2; }
+      .header-actions { gap: 5px; }
+      .icon-button { min-width: 39px; height: 39px; padding: 0 8px; }
+      .brand { font-size: .9rem; }
+      .collection-preview { grid-template-columns: repeat(3,minmax(0,1fr)); }
+      .jump-form { grid-template-columns: 1fr; }
+      .jump-form button { min-height: 48px; }
+    }
+
   </style>
 </head>
 <body>
-  <main class="loader" id="status">
-    <div class="orb" aria-hidden="true"></div>
-    <h1>BOTLAND HOLOGRAMS</h1>
-    <p>32가지 캐릭터 실루엣과 10,000개의 홀로그램을 불러오는 중입니다.</p>
-    <div class="bar" aria-hidden="true"><i></i></div>
+  <a class="skip-link" href="#gallery-grid">갤러리로 바로가기</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Botland Hologram Gallery 홈"><span class="brand-mark" aria-hidden="true"></span><span>BOTLAND</span><span class="brand-sub">HOLOGRAM GALLERY</span></a>
+    <div class="header-actions">
+      <button class="icon-button" id="header-favorites" type="button" aria-label="즐겨찾기만 보기">♥ <span class="favorite-count" id="favorite-count">0</span></button>
+      <button class="icon-button" id="settings-button" type="button" aria-label="표시 설정">⚙</button>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="테마 전환">◐</button>
+      <a class="icon-button github-link" href="https://github.com/beerAndNacho/botlandgallary" target="_blank" rel="noreferrer" aria-label="GitHub 저장소">⌘</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">PRISMATIC CHARACTER ARCHIVE</p>
+        <h1 id="hero-title">전부 홀로그램으로 빛나는<br><strong>10,000개의 캐릭터</strong></h1>
+        <p class="hero-description">기계·동물·조류·수중 생물·곤충·식물·판타지·우주·탈것·오브젝트·정령·수호자까지 12개 계열을 조합했습니다. 카드에 손가락이나 마우스를 움직이면 캐릭터·오라·동반체가 서로 다른 깊이로 반응하며 실제 홀로그램 카드처럼 입체적으로 움직입니다.</p>
+        <div class="hero-actions">
+          <button class="primary-button" id="random-character" type="button">✦ 랜덤 캐릭터 만나기</button>
+          <button class="secondary-button" id="daily-character" type="button">☀ 오늘의 캐릭터</button>
+          <button class="secondary-button" id="jump-character" type="button"># 번호로 바로가기</button>
+          <a class="secondary-button" href="#gallery">전체 컬렉션 보기 →</a>
+        </div>
+        <div class="build-status"><span id="network-status" class="offline-badge">SELF-CONTAINED · V5</span></div>
+      </div>
+      <div class="hero-stage" aria-label="대표 홀로그램 캐릭터">
+        <div class="hero-orbit" aria-hidden="true"></div>
+        <button class="hero-card hero-card--left" id="hero-left" type="button" data-tilt-card data-tilt-kind="hero"></button>
+        <button class="hero-card hero-card--right" id="hero-right" type="button" data-tilt-card data-tilt-kind="hero"></button>
+        <button class="hero-card hero-card--main" id="hero-main" type="button" data-tilt-card data-tilt-kind="hero"></button>
+        <span class="hero-label">LIVE HOLOGRAMS</span>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="컬렉션 통계">
+      <div class="stat"><strong>10,000</strong><span>고유 캐릭터</span></div>
+      <div class="stat"><strong>96</strong><span>서로 다른 캐릭터 종류</span></div>
+      <div class="stat"><strong>18</strong><span>입체 바디 프레임</span></div>
+      <div class="stat"><strong>5</strong><span>다층 3D 패럴랙스</span></div>
+    </section>
+
+    <section id="gallery" aria-labelledby="gallery-title">
+      <div class="section-head">
+        <div><p class="eyebrow">THE FULL HOLO CATALOG</p><h2 id="gallery-title">홀로그램 아카이브</h2></div>
+        <p>번호만 알면 같은 형태와 홀로그램 마감을 언제든 다시 생성할 수 있습니다.</p>
+      </div>
+
+      <form class="filter-panel" id="filter-form" role="search">
+        <div class="filter-grid">
+          <label class="field field--search"><span class="sr-only">검색</span><span class="field-icon">⌕</span><input id="search-input" type="search" autocomplete="off" placeholder="번호, 이름, 동물, 계열, 장비 검색" /></label>
+          <label class="field field--select"><span class="sr-only">계열</span><select id="archetype-filter"></select></label>
+          <label class="field field--select"><span class="sr-only">종류</span><select id="species-filter"></select></label>
+          <label class="field field--select"><span class="sr-only">색상</span><select id="color-filter"></select></label>
+          <label class="field field--select"><span class="sr-only">희귀도</span><select id="rarity-filter"></select></label>
+          <div class="filter-actions"><button class="chip-button" id="favorites-filter" type="button">♥ 즐겨찾기</button><button class="chip-button" id="reset-filter" type="button">초기화</button></div>
+        </div>
+      </form>
+
+      <div class="gallery-toolbar">
+        <p id="result-summary" aria-live="polite"></p>
+        <div class="toolbar-actions"><button class="mini-button" id="toolbar-jump" type="button"># 번호 이동</button><button class="mini-button" id="toolbar-collection" type="button">♥ 내 컬렉션</button><div class="page-size"><label for="sort-filter">정렬</label><select id="sort-filter"><option value="id-asc">번호 낮은 순</option><option value="id-desc">번호 높은 순</option><option value="rarity">희귀도 순</option><option value="name">이름 순</option><option value="shuffle">랜덤 정렬</option></select><label for="page-size">표시</label><select id="page-size"><option value="24">24개</option><option value="36">36개</option><option value="48">48개</option><option value="60">60개</option><option value="96">96개</option></select></div></div>
+      </div>
+
+      <div class="gallery-grid" id="gallery-grid" tabindex="-1"></div>
+      <nav class="pagination" id="pagination" aria-label="페이지 이동"></nav>
+    </section>
+
+    <footer class="site-footer"><div><strong>Botland Hologram Gallery v5</strong><br>10,000 deterministic prismatic characters.</div><div>외부 데이터 요청 없이 브라우저에서 생성되며 카드가 실시간 3D로 반응합니다.</div></footer>
   </main>
+
+  <dialog id="detail-dialog" aria-labelledby="detail-title"></dialog>
+  <dialog id="jump-dialog" class="utility-dialog" aria-labelledby="jump-title">
+    <div class="utility-shell">
+      <div class="utility-head"><div><span class="serial">DIRECT ACCESS</span><h2 id="jump-title">번호로 바로가기</h2><p>1부터 10,000 사이의 번호 또는 HL-00001 형식을 입력하세요.</p></div><button class="icon-button" type="button" data-dialog-close="jump-dialog" aria-label="닫기">×</button></div>
+      <form class="jump-form" id="jump-form"><label class="sr-only" for="jump-input">캐릭터 번호</label><input id="jump-input" inputmode="numeric" autocomplete="off" placeholder="예: 4243 또는 HL-04243" /><button class="primary-button" type="submit">캐릭터 열기</button></form>
+      <p class="form-hint" id="jump-message" aria-live="polite">같은 번호는 언제나 동일한 캐릭터를 생성합니다.</p>
+    </div>
+  </dialog>
+  <dialog id="collection-dialog" class="utility-dialog" aria-labelledby="collection-title"></dialog>
+  <dialog id="settings-dialog" class="utility-dialog" aria-labelledby="settings-title">
+    <div class="utility-shell">
+      <div class="utility-head"><div><span class="serial">DISPLAY LAB</span><h2 id="settings-title">홀로그램 설정</h2><p>모바일 성능과 취향에 맞게 3D 깊이, 광택, 움직임, 스캔라인, 카드 밀도를 조절합니다.</p></div><button class="icon-button" type="button" data-dialog-close="settings-dialog" aria-label="닫기">×</button></div>
+      <div class="settings-grid">
+        <label class="setting-row"><span><strong>3D 카드 깊이</strong><small>마우스·손가락 위치에 따라 카드와 내부 레이어가 기울어지는 강도입니다.</small></span><span><input id="setting-tilt" type="range" min="0" max="18" step="1" /><span class="range-value" id="setting-tilt-value"></span></span></label>
+        <label class="setting-row"><span><strong>홀로그램 광택</strong><small>카드 위를 흐르는 프리즘 반사의 강도입니다.</small></span><span><input id="setting-holo" type="range" min="35" max="135" step="5" /><span class="range-value" id="setting-holo-value"></span></span></label>
+        <label class="setting-row"><span><strong>애니메이션</strong><small>카드 광택과 배경 궤도 움직임을 켭니다.</small></span><span class="switch"><input id="setting-motion" type="checkbox" /> 움직임 사용</span></label>
+        <label class="setting-row"><span><strong>스캔라인</strong><small>홀로그램 표면의 미세한 수평선을 표시합니다.</small></span><span class="switch"><input id="setting-scanlines" type="checkbox" /> 스캔라인 표시</span></label>
+        <label class="setting-row"><span><strong>카드 밀도</strong><small>한 화면에 표시되는 카드 크기와 열 수를 조절합니다.</small></span><select id="setting-density"><option value="compact">촘촘하게</option><option value="comfortable">기본</option><option value="large">크게</option></select></label>
+        <label class="setting-row"><span><strong>페이지당 카드</strong><small>모바일에서는 24개가 가장 빠릅니다.</small></span><select id="setting-page-size"><option value="24">24개</option><option value="36">36개</option><option value="48">48개</option><option value="60">60개</option><option value="96">96개</option></select></label>
+      </div>
+      <div class="utility-actions"><button class="secondary-button" id="reset-settings" type="button">기본값 복원</button><button class="primary-button" type="button" data-dialog-close="settings-dialog">설정 완료</button></div>
+    </div>
+  </dialog>
+  <input id="favorites-import" type="file" accept="application/json,.json" hidden />
+  <nav class="mobile-nav" aria-label="모바일 빠른 메뉴">
+    <button type="button" data-mobile-action="home"><span>⌂</span><span>홈</span></button>
+    <button type="button" data-mobile-action="random"><span>✦</span><span>랜덤</span></button>
+    <button type="button" data-mobile-action="search"><span>⌕</span><span>검색</span></button>
+    <button type="button" data-mobile-action="collection"><span>♥</span><span>보관함</span></button>
+    <button type="button" data-mobile-action="settings"><span>⚙</span><span>설정</span></button>
+  </nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script>
-    (()=>{
-      const status=document.getElementById('status');
-      const payloadUrl='/botlandgallary/payload.b64?v=68d25e1557b56e71ae2e4413cfc6808a902b5f7c';
+    "use strict";
 
-      function decodeBase64(value){
-        let clean=String(value).replace(/\s+/g,'').replace(/-/g,'+').replace(/_/g,'/');
-        if(!/^[A-Za-z0-9+/]*={0,2}$/.test(clean)){
-          throw new Error('홀로그램 데이터 형식이 올바르지 않습니다.');
-        }
-        clean=clean.replace(/=+$/,'');
-        clean+='='.repeat((4-clean.length%4)%4);
-        const chunks=[];
-        let total=0;
-        const chunkSize=32768;
-        for(let offset=0;offset<clean.length;offset+=chunkSize){
-          const binary=atob(clean.slice(offset,offset+chunkSize));
-          const bytes=new Uint8Array(binary.length);
-          for(let index=0;index<binary.length;index++)bytes[index]=binary.charCodeAt(index);
-          chunks.push(bytes);
-          total+=bytes.length;
-        }
-        const output=new Uint8Array(total);
-        let cursor=0;
-        for(const chunk of chunks){output.set(chunk,cursor);cursor+=chunk.length;}
-        return output;
+    const CHARACTER_COUNT = 10000;
+    const ARCHETYPES = ["메카닉", "동물", "조류", "수중 생물", "곤충", "식물", "판타지", "우주", "탈것", "오브젝트", "정령", "수호자"];
+    const SPECIES = [
+      ["안드로이드","메카노이드","사이보그","드로이드","로봇 기사","정비봇","탐사봇","아케이드봇"],
+      ["고양이","여우","토끼","곰","라쿤","레서판다","늑대","수달"],
+      ["부엉이","백조","공작","까마귀","벌새","펭귄","플라밍고","학"],
+      ["문어","해마","쥐가오리","고래","상어","해파리","복어","전기뱀장어"],
+      ["딱정벌레","나방","잠자리","꿀벌","사마귀","무당벌레","나비","매미"],
+      ["버섯","선인장","연꽃","도토리","이끼","대나무","민들레","덩굴"],
+      ["용","가고일","기사","마법 골렘","키메라","봉황","유니콘","룬 정령"],
+      ["혜성","위성","달","별","오로라","성운","블랙홀","부유섬"],
+      ["바이크","열차","잠수정","비행선","로버","셔틀","스쿠터","드론"],
+      ["주전자","시계","랜턴","카세트","체스말","우체통","풍선","라디오"],
+      ["구름","빗방울","불꽃","눈송이","모래","파도","번개","안개"],
+      ["석상","토템","갑주","오벨리스크","스핑크스","문지기","등대","수호탑"]
+    ];
+    const BODY_NAMES = ["휴머노이드","탱크","호버","장각형","캡슐","드럼","구체형","토템형","스피더","메카","슬라임","사족형","거미형","뱀형","가오리형","포드형","꼬마형","크리스털형"];
+    const EYE_NAMES = ["듀얼 글로우","와이드 바이저","사이클롭스","트라이 렌즈","슬립 라인","크로스","링 렌즈","웨이브","스타","비대칭","하트 픽셀","스캔 바","프리즘","도트 매트릭스","아케인","오로라"];
+    const TOP_NAMES = ["안테나","혼","비콘","위성","크라운","프로펠러","긴 귀","헤일로","솔라 패널","모호크","레이더","꽃잎","버섯 캡","별 고리","번개 봉","수정 뿔","깃털 관","클린"];
+    const MOUTH_NAMES = ["그릴","스마일","펄스","포트","라인","팽","메시","노치","부리","주둥이","마스크","무표정","웃음","룬"],
+          SIDE_NAMES = ["로봇 암","클로","실드","멀티툴","윙","코일","포드","미니멀","지느러미","촉수","잎사귀","제트","책가방","망토","위성 링","수정 파편"];
+    const MOODS = ["차분","호기심","용감","장난기","집중","몽환","경계","명랑","신비","다정","대담","느긋"];
+    const RARITIES = ["커먼","언커먼","레어","에픽","레전더리"];
+    const FINISHES = ["프리즘 포일","오로라 글래스","오팔 스펙트럼","레이저 그리드","리퀴드 라이트","크리스털 필름","네뷸라 코팅","스타 더스트","레인보우 크롬","스펙트럴 스캔","문라이트 포일","플라즈마 글래스"];
+    const COLOR_FAMILIES = ["시안 프리즘","오로라 민트","솔라 골드","플라즈마 로즈","애시드 라임","코랄 플레어","바이올렛 네뷸라","문라이트 실버","루비 플럭스","오션 글래스","피치 미라지","미드나이트 크롬"];
+    const PALETTES = [
+      {dark:"#061023",dark2:"#0b2444",a:"#55f6ff",b:"#a4b9ff",c:"#ff72e5",d:"#fff278",ink:"#050817"},
+      {dark:"#061b1a",dark2:"#0b3934",a:"#65ffd2",b:"#b4fff0",c:"#9f8cff",d:"#ffe072",ink:"#04100e"},
+      {dark:"#241203",dark2:"#4a2b06",a:"#ffd45c",b:"#fff7c0",c:"#ff79a8",d:"#62efff",ink:"#160a02"},
+      {dark:"#24071e",dark2:"#521044",a:"#ff5fd2",b:"#ffc8ef",c:"#7adfff",d:"#ffe66f",ink:"#13030f"},
+      {dark:"#111d04",dark2:"#2e4808",a:"#baff52",b:"#efffb8",c:"#75eaff",d:"#ff719e",ink:"#091002"},
+      {dark:"#26100e",dark2:"#54241d",a:"#ff806e",b:"#ffd1c4",c:"#69f1d3",d:"#ffe578",ink:"#150706"},
+      {dark:"#110824",dark2:"#2b1757",a:"#9e75ff",b:"#e7d7ff",c:"#ff65cd",d:"#6ff7ff",ink:"#080412"},
+      {dark:"#0d1420",dark2:"#26364a",a:"#dcecff",b:"#ffffff",c:"#78dfff",d:"#ef8aff",ink:"#050a11"},
+      {dark:"#26050d",dark2:"#581125",a:"#ff4e76",b:"#ffd2dc",c:"#6bffe0",d:"#ffd958",ink:"#150208"},
+      {dark:"#041b25",dark2:"#063d50",a:"#54dfff",b:"#c5f7ff",c:"#77ffbd",d:"#ff75c9",ink:"#021016"},
+      {dark:"#261514",dark2:"#57302c",a:"#ffb29b",b:"#fff0e8",c:"#9e81ff",d:"#71f2de",ink:"#160b0a"},
+      {dark:"#05060d",dark2:"#171a29",a:"#7e8cff",b:"#f6f7ff",c:"#ff66ca",d:"#73f5ff",ink:"#020308"}
+    ];
+    const ADJECTIVES = ["빛나는","고요한","민첩한","따뜻한","기민한","용감한","장난스런","정교한","느긋한","단단한","푸른","황금빛","작은","은밀한","반짝이는","호기심 많은","씩씩한","부드러운","빠른","낙천적인","몽환적인","프리즘","오로라","은하의","수정빛","다정한","신비한","대담한","투명한","찬란한"];
+    const JOBS = ["정찰자","수리공","항해사","정원사","기록관","탐험가","우편부","연구원","경비원","조종사","관측자","연주자","요리사","설계자","수집가","메신저","지도사","채굴자","등대지기","친구","연금술사","사진가","기상관","도서관장","조각가","천문학자","발명가","수호자","이야기꾼","큐레이터"];
+    const ORIGINS = ["루멘 시티","오로라 벨트","프리즘 사막","네온 심해","글래스 포레스트","문라이트 항구","제니스 정거장","미라지 정원","크롬 협곡","스펙트럼 군도","노바 도서관","별빛 공방"];
+    const ELEMENTS = ["빛","물","바람","불꽃","수정","번개","별가루","식물","달빛","자기장","안개","시간"];
+    const ABILITIES = ["빛의 지도를 투영한다","잃어버린 신호를 복원한다","작은 별을 안전하게 운반한다","감정을 색으로 번역한다","주변의 소음을 음악으로 바꾼다","깨진 기억 조각을 이어 붙인다","오로라 방패를 펼친다","미세한 날씨 변화를 예측한다","꿈속 통로를 탐색한다","어두운 길에 프리즘 표식을 남긴다","낡은 기계를 따뜻하게 깨운다","위험한 에너지를 수정 안에 봉인한다"];
+    const AURAS = ["시안 잔광","마젠타 파동","오팔 안개","골드 스파크","민트 오로라","바이올렛 링","실버 문광","코랄 플레어","루비 펄스","오션 글로우","피치 미라지","레인보우 크롬"];
+    const POSES = ["정면 대기","좌측 역동","우측 역동","부유","방어","비행","질주","파워업","수호","탐색","연주","휴식"];
+    const EXPRESSIONS = ["미소","결의","호기심","졸림","놀람","장난","평온","집중","신비","용감","다정","무표정"];
+    const EMBLEMS = ["프리즘 코어","트윈 문","스타 시드","오로라 눈","룬 다이아","솔라 크라운","웨이브 문장","크리스털 하트","네온 클로버","코멧 핀","기어 로터스","타임 링"];
+    const COMPANIONS = ["미니 드론","빛 구슬","별 양","꽃 정령","기계 나비","픽셀 새","수정 물고기","룬 북","미니 위성","구름 조각","불꽃 여우","단독 행동"];
+    const ENERGY_STYLES = ["오비탈 링","빛 날개","플라즈마 화염","파동 리본","수정 파편","룬 서클","번개 아크","생명 덩굴","성운 입자","자기장","안개 베일","시간 문양"];
+
+    const BUILD_VERSION = "6.0.0";
+    const mobileDefault = matchMedia("(max-width:720px)").matches;
+    const favoriteKey = "botland:hologram:favorites:v4";
+    const legacyFavoriteKey = "botland:hologram:favorites:v2";
+    const themeKey = "botland:hologram:theme:v4";
+    const settingsKey = "botland:hologram:settings:v4";
+    const filterKey = "botland:hologram:filters:v4";
+    const memoryStorage = new Map();
+    const storage = {
+      get(key){try{return localStorage.getItem(key)}catch{return memoryStorage.get(key)??null}},
+      set(key,value){try{localStorage.setItem(key,value)}catch{memoryStorage.set(key,value)}},
+      remove(key){try{localStorage.removeItem(key)}catch{memoryStorage.delete(key)}}
+    };
+    const state = {query:"", archetype:null, species:null, color:null, rarity:null, favoritesOnly:false, sort:"id-asc", page:1, pageSize:mobileDefault?24:60, shuffleSalt:Date.now()>>>0};
+    let settings = loadSettings();
+    let favorites = loadFavorites();
+    let selectedId = null;
+    let toastTimer = 0;
+    let detailTouchStart = null;
+
+    function hash32(input){let x=input>>>0;x^=x>>>16;x=Math.imul(x,0x7feb352d);x^=x>>>15;x=Math.imul(x,0x846ca68b);x^=x>>>16;return x>>>0}
+    function pick(seed,salt,count){return hash32(seed+Math.imul(salt+1,0x9e3779b9))%count}
+    function rarityFor(seed){const roll=hash32(seed^0xa511e9b3)%10000;if(roll<70)return{name:"레전더리",rank:4};if(roll<420)return{name:"에픽",rank:3};if(roll<1500)return{name:"레어",rank:2};if(roll<4300)return{name:"언커먼",rank:1};return{name:"커먼",rank:0}}
+
+    function specFor(id){
+      const CORE_SPACE=18*12*8*16*18;
+      let core=(Math.imul(id,7919)+6281)%CORE_SPACE;
+      const body=core%18;core=Math.floor(core/18);
+      const archetype=core%12;core=Math.floor(core/12);
+      const species=core%8;core=Math.floor(core/8);
+      const eyes=core%16;core=Math.floor(core/16);
+      const top=core%18;
+      const seed=hash32(id+0x1f2e3d4c);
+      const palette=pick(seed,0,PALETTES.length), mouth=pick(seed,1,MOUTH_NAMES.length), side=pick(seed,2,SIDE_NAMES.length), finish=pick(seed,3,FINISHES.length), pattern=pick(seed,4,16), background=pick(seed,5,16), mood=pick(seed,6,MOODS.length), variant=pick(seed,7,8), rarity=rarityFor(seed), origin=pick(seed,10,ORIGINS.length), element=pick(seed,11,ELEMENTS.length), ability=pick(seed,12,ABILITIES.length), aura=pick(seed,13,AURAS.length), pose=pick(seed,14,POSES.length), expression=pick(seed,15,EXPRESSIONS.length), emblem=pick(seed,16,EMBLEMS.length), companion=pick(seed,17,COMPANIONS.length), energy=pick(seed,18,ENERGY_STYLES.length), detail=pick(seed,19,12);
+      const serial=`HL-${String(id+1).padStart(5,"0")}`;
+      const speciesName=SPECIES[archetype][species];
+      const name=`${ADJECTIVES[pick(seed,8,ADJECTIVES.length)]} ${speciesName} ${JOBS[pick(seed,9,JOBS.length)]}`;
+      return {id,serial,name,seed,body,archetype,species,eyes,top,mouth,side,finish,pattern,background,mood,variant,palette,rarity,origin,element,ability,aura,pose,expression,emblem,companion,energy,detail,coreSignature:`${body}-${archetype}-${species}-${eyes}-${top}`};
+    }
+
+    const catalog=Array.from({length:CHARACTER_COUNT},(_,id)=>specFor(id));
+    const searchIndex=catalog.map(c=>[c.serial,c.name,ARCHETYPES[c.archetype],SPECIES[c.archetype][c.species],BODY_NAMES[c.body],EYE_NAMES[c.eyes],TOP_NAMES[c.top],MOUTH_NAMES[c.mouth],SIDE_NAMES[c.side],MOODS[c.mood],FINISHES[c.finish],COLOR_FAMILIES[c.palette],c.rarity.name,ORIGINS[c.origin],ELEMENTS[c.element],ABILITIES[c.ability],AURAS[c.aura],POSES[c.pose],EXPRESSIONS[c.expression],EMBLEMS[c.emblem],COMPANIONS[c.companion],ENERGY_STYLES[c.energy]].join(" ").toLowerCase());
+
+    function esc(value){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;")}
+    function uidFor(c){return `h${c.id}`}
+    function holoDefs(c,p){
+      const u=uidFor(c),angle=(c.seed%120)-30;
+      return `<defs>
+        <linearGradient id="${u}-bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${p.dark}"/><stop offset=".52" stop-color="${p.dark2}"/><stop offset="1" stop-color="#050615"/></linearGradient>
+        <radialGradient id="${u}-halo" cx="50%" cy="40%" r="62%"><stop stop-color="${p.a}" stop-opacity=".34"/><stop offset=".45" stop-color="${p.c}" stop-opacity=".13"/><stop offset="1" stop-color="${p.dark}" stop-opacity="0"/></radialGradient>
+        <linearGradient id="${u}-foil" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(${angle} .5 .5)"><stop stop-color="${p.a}"/><stop offset=".14" stop-color="${p.b}"/><stop offset=".29" stop-color="#ffffff"/><stop offset=".46" stop-color="${p.c}"/><stop offset=".63" stop-color="${p.d}"/><stop offset=".8" stop-color="${p.a}"/><stop offset="1" stop-color="${p.c}"/></linearGradient>
+        <linearGradient id="${u}-foil2" x1="1" y1="0" x2="0" y2="1" gradientTransform="rotate(${-angle} .5 .5)"><stop stop-color="${p.c}"/><stop offset=".22" stop-color="${p.a}"/><stop offset=".43" stop-color="#ffffff"/><stop offset=".62" stop-color="${p.d}"/><stop offset=".82" stop-color="${p.b}"/><stop offset="1" stop-color="${p.a}"/></linearGradient>
+        <linearGradient id="${u}-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity=".92"/><stop offset=".23" stop-color="${p.a}" stop-opacity=".72"/><stop offset=".62" stop-color="${p.c}" stop-opacity=".46"/><stop offset="1" stop-color="${p.dark2}" stop-opacity=".76"/></linearGradient>
+        <pattern id="${u}-scan" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 1H8" stroke="#fff" stroke-opacity=".11"/><path d="M0 5H8" stroke="${p.a}" stroke-opacity=".08"/></pattern>
+        <filter id="${u}-glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3" result="b"/><feColorMatrix in="b" type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .85 0" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="${u}-rim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".95"/><stop offset=".28" stop-color="${p.a}" stop-opacity=".72"/><stop offset=".6" stop-color="${p.c}" stop-opacity=".48"/><stop offset="1" stop-color="${p.d}" stop-opacity=".2"/></linearGradient>
+        <radialGradient id="${u}-core" cx="42%" cy="35%" r="68%"><stop stop-color="#fff"/><stop offset=".18" stop-color="${p.a}"/><stop offset=".58" stop-color="${p.c}"/><stop offset="1" stop-color="${p.dark}"/></radialGradient>
+        <pattern id="${u}-micro" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 0h6v6H0z" fill="none"/><path d="M0 6 6 0" stroke="#fff" stroke-opacity=".08" stroke-width=".7"/></pattern>
+        <filter id="${u}-soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="${u}-depth" x="-45%" y="-45%" width="190%" height="200%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="${p.ink}" flood-opacity=".74"/><feDropShadow dx="-2" dy="-2" stdDeviation="2.4" flood-color="${p.a}" flood-opacity=".25"/><feDropShadow dx="2" dy="1" stdDeviation="2.2" flood-color="${p.c}" flood-opacity=".2"/></filter>
+      </defs>`;
+    }
+
+    function backgroundSvg(c,p){
+      const u=uidFor(c),b=c.background,out=[`<rect width="160" height="160" rx="23" fill="url(#${u}-bg)"/>`,`<circle cx="80" cy="72" r="68" fill="url(#${u}-halo)"/>`];
+      if(b===0)out.push(`<circle cx="80" cy="76" r="55" fill="none" stroke="${p.a}" stroke-opacity=".22" stroke-width="2"/><circle cx="80" cy="76" r="43" fill="none" stroke="${p.c}" stroke-opacity=".15"/>`);
+      else if(b===1)out.push(`<path d="M0 122 40 82l26 25 40-60 54 70v43H0Z" fill="${p.dark2}" opacity=".72"/>`);
+      else if(b===2)out.push(`<path d="M-20 10 150 180M20-20 180 140M-60 20 100 180M60-20 180 100" stroke="${p.a}" stroke-opacity=".12" stroke-width="6"/>`);
+      else if(b===3)out.push(`<g fill="${p.a}" opacity=".17"><circle cx="22" cy="27" r="4"/><circle cx="135" cy="32" r="7"/><circle cx="28" cy="127" r="7"/><circle cx="128" cy="128" r="4"/></g>`);
+      else if(b===4)out.push(`<path d="M80 8 94 38l32-6-18 28 24 21-33 5 4 33-23-24-23 24 4-33-33-5 24-21-18-28 32 6Z" fill="${p.c}" opacity=".13"/>`);
+      else if(b===5)out.push(`<g stroke="${p.b}" stroke-opacity=".14"><circle cx="80" cy="80" r="63"/><circle cx="80" cy="80" r="50"/><circle cx="80" cy="80" r="36"/></g>`);
+      else if(b===6)out.push(`<path d="M0 25H160M0 55H160M0 85H160M0 115H160M0 145H160" stroke="${p.a}" stroke-opacity=".11"/>`);
+      else if(b===7)out.push(`<path d="M80 0 160 80 80 160 0 80Z" fill="none" stroke="${p.c}" stroke-opacity=".2" stroke-width="4"/>`);
+      else if(b===8)out.push(`<path d="M0 0h78v78H0zM82 82h78v78H82z" fill="${p.dark2}" opacity=".5"/>`);
+      else if(b===9)out.push(`<ellipse cx="80" cy="73" rx="65" ry="24" fill="none" stroke="${p.a}" stroke-opacity=".2" stroke-width="3" transform="rotate(-12 80 73)"/>`);
+      else if(b===10)out.push(`<g fill="${p.b}" opacity=".16"><path d="m18 30 5 11 12 2-9 8 3 12-11-6-11 6 3-12-9-8 12-2Z"/><path d="m132 94 4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1Z"/></g>`);
+      else if(b===11)out.push(`<path d="M0 132C35 98 52 142 83 111s48 13 77-20v69H0Z" fill="${p.dark2}" opacity=".66"/>`);
+      else if(b===12)out.push(`<path d="M18 18h124v124H18z" fill="none" stroke="${p.a}" stroke-opacity=".16" stroke-dasharray="5 6"/>`);
+      else if(b===13)out.push(`<path d="M80 13 144 125H16Z" fill="none" stroke="${p.c}" stroke-opacity=".16" stroke-width="3"/><path d="M80 39 122 113H38Z" fill="none" stroke="${p.a}" stroke-opacity=".13"/>`);
+      else if(b===14)out.push(`<g stroke="${p.a}" stroke-opacity=".14"><path d="M18 42h124M18 80h124M18 118h124"/><path d="M42 18v124M80 18v124M118 18v124"/></g>`);
+      else out.push(`<path d="M0 28 160 8v18L0 46Zm0 50 160-20v18L0 96Zm0 50 160-20v18L0 146Z" fill="${p.c}" opacity=".1"/>`);
+      out.push(`<ellipse cx="80" cy="140" rx="43" ry="9" fill="${p.ink}" opacity=".55"/>`,`<ellipse cx="80" cy="138" rx="32" ry="4" fill="${p.a}" opacity=".16" filter="url(#${u}-soft)"/>`);
+      return out.join("");
+    }
+
+    function bodySvg(c,p){const u=uidFor(c),F=`url(#${u}-foil)`,G=`url(#${u}-foil2)`,L=`url(#${u}-glass)`,S=`stroke="${p.ink}" stroke-width="5" stroke-linejoin="round"`;switch(c.body){
+      case 0:return `<path d="M53 86h54l9 48-19 12H63l-19-12Z" fill="${F}" ${S}/><path d="M59 102h42v27H59z" fill="${L}" stroke="${p.ink}" stroke-width="4"/><path d="M63 108h34" stroke="#fff" stroke-opacity=".65" stroke-width="3"/>`;
+      case 1:return `<path d="M43 96h74l12 34-15 14H46l-15-14Z" fill="${G}" ${S}/><path d="M35 132h90" stroke="${p.ink}" stroke-width="12" stroke-linecap="round"/><path d="M39 132h82" stroke="${p.a}" stroke-opacity=".7" stroke-width="5" stroke-dasharray="8 5"/>`;
+      case 2:return `<path d="m48 91 64 0 17 34-24 19H55l-24-19Z" fill="${F}" ${S}/><path d="M48 137h64" stroke="${p.a}" stroke-width="7" stroke-linecap="round" filter="url(#${u}-glow)"/>`;
+      case 3:return `<path d="M58 87h44l8 43-15 8H65l-15-8Z" fill="${G}" ${S}/><path d="M67 136v15m26-15v15" stroke="${p.ink}" stroke-width="8" stroke-linecap="round"/><path d="M63 152h15m4 0h15" stroke="${p.a}" stroke-width="5" stroke-linecap="round"/>`;
+      case 4:return `<rect x="49" y="83" width="62" height="61" rx="27" fill="${F}" ${S}/><path d="M49 111h62v8q0 25-25 25H74q-25 0-25-25Z" fill="${G}" opacity=".82"/><circle cx="80" cy="111" r="17" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`;
+      case 5:return `<rect x="44" y="88" width="72" height="50" rx="12" fill="${F}" ${S}/><rect x="37" y="128" width="86" height="19" rx="8" fill="${G}" ${S}/><path d="M50 137h60" stroke="#fff" stroke-opacity=".5" stroke-width="3" stroke-dasharray="7 5"/>`;
+      case 6:return `<circle cx="80" cy="112" r="35" fill="${F}" ${S}/><circle cx="80" cy="112" r="19" fill="${L}" stroke="${p.ink}" stroke-width="4"/><circle cx="80" cy="112" r="8" fill="${p.a}" filter="url(#${u}-glow)"/>`;
+      case 7:return `<path d="M55 80h50l14 65H41Z" fill="${G}" ${S}/><path d="M50 116h60l9 29H41Z" fill="${F}" opacity=".78"/><path d="M80 88v46" stroke="#fff" stroke-opacity=".6" stroke-width="4"/>`;
+      case 8:return `<path d="M35 103h34v42H48l-13-14Zm90 0H91v42h21l13-14Z" fill="${F}" ${S}/><rect x="67" y="84" width="26" height="65" rx="7" fill="${G}" ${S}/><path d="M72 96h16v38H72z" fill="${L}"/>`;
+      case 9:return `<path d="M39 96 54 82h52l15 14-9 51H48Z" fill="${F}" ${S}/><path d="m61 96 19 15 19-15v31H61Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`;
+      case 10:return `<path d="M43 118q0-34 37-34t37 34q0 30-37 30t-37-30Z" fill="${F}" ${S}/><path d="M48 126q9 22 32 22t32-22" fill="${G}" opacity=".8"/>`;
+      case 11:return `<path d="M55 95h50l12 38-19 11H62l-19-11Z" fill="${G}" ${S}/><path d="M54 134 36 151m70-17 18 17" stroke="${p.ink}" stroke-width="8" stroke-linecap="round"/><path d="M35 151h19m52 0h19" stroke="${p.a}" stroke-width="5"/>`;
+      case 12:return `<ellipse cx="80" cy="111" rx="29" ry="24" fill="${F}" ${S}/><path d="M58 126 37 147m35-13-10 22m40-30 21 21m-35-13 10 22" stroke="${p.ink}" stroke-width="7" stroke-linecap="round"/><path d="M38 147h15m16 8h14m39-8h-15m-16 8H77" stroke="${p.a}" stroke-width="4"/>`;
+      case 13:return `<path d="M61 83q38 22 17 65" fill="none" stroke="${p.ink}" stroke-width="30" stroke-linecap="round"/><path d="M61 83q33 22 17 62" fill="none" stroke="url(#${u}-foil)" stroke-width="20" stroke-linecap="round"/>`;
+      case 14:return `<path d="M31 111q49-44 98 0-19 38-49 38t-49-38Z" fill="${F}" ${S}/><path d="M51 115q29-24 58 0-10 18-29 18t-29-18Z" fill="${L}"/>`;
+      case 15:return `<path d="M46 93h68l12 24-18 29H52l-18-29Z" fill="${G}" ${S}/><rect x="56" y="102" width="48" height="31" rx="12" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`;
+      case 16:return `<path d="M54 94h52l9 43-18 12H63l-18-12Z" fill="${F}" ${S}/><path d="M59 125h42l-4 24H63Z" fill="${G}"/><path d="M64 147h32" stroke="${p.a}" stroke-width="5"/>`;
+      default:return `<path d="m80 80 38 31-15 38H57l-15-38Z" fill="${F}" ${S}/><path d="m80 95 22 18-8 22H66l-8-22Z" fill="${L}"/><path d="m80 80 0 69" stroke="#fff" stroke-opacity=".55" stroke-width="3"/>`;
+    }}
+
+    function headSvg(c,p){const u=uidFor(c),F=`url(#${u}-foil)`,G=`url(#${u}-foil2)`,L=`url(#${u}-glass)`,S=`stroke="${p.ink}" stroke-width="5" stroke-linejoin="round"`;const v=c.variant;switch(c.archetype){
+      case 0:return v%2?`<path d="M48 39h64l8 15-10 38H50L40 54Z" fill="${F}" ${S}/><path d="M53 50h54l-5 30H58Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`:`<rect x="47" y="39" width="66" height="54" rx="9" fill="${F}" ${S}/><rect x="55" y="49" width="50" height="30" rx="6" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`;
+      case 1:{const ears=[`M50 49 40 24l27 18`,`M51 46 31 35l29 18`,`M52 49 44 17l25 27`,`M51 48 36 20l30 21`][v%4];return `<path d="${ears}m43 5 12-25-28 19" fill="${F}" ${S}/><path d="M47 47q0-18 33-18t33 18v37q0 15-33 15T47 84Z" fill="${F}" ${S}/><path d="M58 59h44v25H58Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/><path d="M69 82q11 12 22 0" fill="none" stroke="${p.ink}" stroke-width="4"/>`}
+      case 2:return `<path d="M50 50q8-27 30-27t30 27v38H50Z" fill="${F}" ${S}/><path d="m80 29 ${v%2?22:14} 14-18 10-18-10Z" fill="${G}" ${S}/><path d="m80 75 ${v%2?20:15} 8-20 13-20-13Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`;
+      case 3:return `<path d="M46 49q0-22 34-22t34 22v35q0 18-34 18T46 84Z" fill="${F}" ${S}/><path d="M47 53 30 42l14 31m69-20 17-11-14 31" fill="${G}" ${S}/>${v%2?`<path d="M57 37q-12-21 3-27m43 27q12-21-3-27" fill="none" stroke="${p.a}" stroke-width="6"/>`:`<path d="M63 31 55 12m42 19 8-19" stroke="${p.a}" stroke-width="6"/>`}<path d="M56 61h48v25H56Z" fill="${L}"/>`;
+      case 4:return `<path d="M47 48q0-20 33-20t33 20v42H47Z" fill="${F}" ${S}/><path d="M58 33 46 10m56 23 12-23" stroke="${p.ink}" stroke-width="6" stroke-linecap="round"/><circle cx="45" cy="9" r="6" fill="${p.a}" filter="url(#${u}-glow)"/><circle cx="115" cy="9" r="6" fill="${p.c}" filter="url(#${u}-glow)"/><path d="m55 80 12 15m38-15-12 15" stroke="${p.ink}" stroke-width="5"/>`;
+      case 5:return v%2?`<path d="M45 49q35-31 70 0l-9 44H54Z" fill="${F}" ${S}/><path d="M33 43q47-36 94 0-10 18-47 18T33 43Z" fill="${G}" ${S}/><path d="M60 58h40v26H60Z" fill="${L}"/>`:`<path d="M48 43q32-24 64 0v47H48Z" fill="${F}" ${S}/><path d="M80 43V10m0 7q-24-14-31 5 19 13 31-5Zm0 0q24-14 31 5-19 13-31-5Z" fill="${G}" ${S}/><path d="M57 58h46v25H57Z" fill="${L}"/>`;
+      case 6:return `<path d="M47 52 58 30h44l11 22-8 42H55Z" fill="${F}" ${S}/><path d="m58 35-9-25 24 22m29 3 9-25-24 22" fill="${G}" ${S}/><path d="M58 57h44v26H58Z" fill="${L}"/><path d="M72 88h16" stroke="${p.a}" stroke-width="5"/>`;
+      case 7:return `<circle cx="80" cy="60" r="35" fill="${F}" ${S}/><ellipse cx="80" cy="60" rx="48" ry="15" fill="none" stroke="${p.a}" stroke-width="5" filter="url(#${u}-glow)" transform="rotate(${v%2?12:-12} 80 60)"/><circle cx="80" cy="60" r="22" fill="${L}"/><path d="M55 80q25 24 50 0" fill="${G}" opacity=".65"/>`;
+      case 8:return `<path d="M41 58 55 35h50l14 23-10 34H51Z" fill="${F}" ${S}/><path d="M57 44h46l8 15-10 17H59L49 59Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/><path d="M63 78h34" stroke="${p.a}" stroke-width="5"/>`;
+      case 9:{const objectShapes=[`<path d="M51 44h58l8 13-8 34H51l-8-34Z"/>`,`<circle cx="80" cy="62" r="34"/>`,`<path d="M44 48h72v43H44Z"/>`,`<path d="M52 32h56l12 57H40Z"/>`][v%4];return `<g fill="${F}" ${S}>${objectShapes}</g><path d="M56 51h48v28H56Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/>${v%2?`<path d="M109 51h18q13 0 13 13t-13 13h-12" fill="none" stroke="${p.ink}" stroke-width="7"/>`:`<path d="M80 31V15" stroke="${p.ink}" stroke-width="7"/><circle cx="80" cy="12" r="6" fill="${p.a}"/>`}`}
+      case 10:return `<path d="M39 72q12-30 36-18 9-31 31-10 28-2 26 24-3 24-31 23H57Q32 90 39 72Z" fill="${F}" ${S}/><path d="M55 64q11-12 25-2 14-12 28 2v20H55Z" fill="${L}"/><path d="M50 93q12 18 30 0 18 18 30 0" fill="none" stroke="${p.a}" stroke-width="5"/>`;
+      default:return `<path d="M50 34h60l13 24-14 38H51L37 58Z" fill="${F}" ${S}/><path d="M61 49h38l9 13-9 22H61l-9-22Z" fill="${L}" stroke="${p.ink}" stroke-width="4"/><path d="M42 55 25 45l12 29m81-19 17-10-12 29" fill="${G}" ${S}/>`;
+    }}
+
+    function speciesSvg(c,p){
+      const u=uidFor(c),F=`url(#${u}-foil)`,G=`url(#${u}-foil2)`,L=`url(#${u}-glass)`,S=`stroke="${p.ink}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`,i=c.species;
+      const groups=[
+        [
+          `<path d="M54 46 43 25l25 16m38 5 11-21-25 16" fill="${G}" ${S}/><path d="M54 73 36 68m18 13-20 2m72-10 18-5m-18 13 20 2" stroke="${p.a}" stroke-width="3"/>`,
+          `<path d="m52 50-25-9 23 22m58-13 25-9-23 22" fill="${G}" ${S}/><path d="M51 78 34 91l22-2m53-11 17 13-22-2" stroke="${p.c}" stroke-width="4"/>`,
+          `<path d="M58 43 54 8l18 35m30 0 4-35-18 35" fill="${F}" ${S}/><path d="M58 72q22 17 44 0" fill="none" stroke="${p.a}" stroke-width="3"/>`,
+          `<circle cx="56" cy="39" r="14" fill="${G}" ${S}/><circle cx="104" cy="39" r="14" fill="${G}" ${S}/><path d="M55 79q25 20 50 0" fill="none" stroke="${p.c}" stroke-width="4"/>`,
+          `<path d="M54 46 40 25l29 17m37 4 14-21-29 17" fill="${F}" ${S}/><path d="M53 58q27 19 54 0v17q-27 16-54 0Z" fill="${p.ink}" opacity=".9"/><path d="M37 120q-23 8-10 28 15 13 28-3" fill="none" stroke="${G}" stroke-width="13"/><path d="M30 126q8 3 14 11" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>`,
+          `<circle cx="55" cy="40" r="11" fill="${G}" ${S}/><circle cx="105" cy="40" r="11" fill="${G}" ${S}/><path d="M48 57q32 20 64 0v19q-32 16-64 0Z" fill="${p.ink}" opacity=".78"/><path d="M118 117q31 1 25 25-9 21-32 4" fill="none" stroke="${F}" stroke-width="14"/>`,
+          `<path d="m51 48-21-27 34 18m45 9 21-27-34 18" fill="${G}" ${S}/><path d="M49 82 35 93l18 1m58-12 14 11-18 1" stroke="${p.a}" stroke-width="5"/><path d="M57 86q23 18 46 0" fill="none" stroke="${p.c}" stroke-width="4"/>`,
+          `<circle cx="53" cy="43" r="9" fill="${G}" ${S}/><circle cx="107" cy="43" r="9" fill="${G}" ${S}/><path d="M52 78 34 74m18 12-18 5m74-13 18-4m-18 12 18 5" stroke="${p.a}" stroke-width="3"/><ellipse cx="80" cy="119" rx="17" ry="22" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`
+        ],
+        [
+          `<circle cx="80" cy="61" r="34" fill="none" stroke="${G}" stroke-width="13" stroke-dasharray="11 5"/><path d="M53 99q-31 15-25 42m79-42q31 15 25 42" fill="none" stroke="${F}" stroke-width="12"/>`,
+          `<path d="M80 30q-17 35-6 66 8 20 3 45" fill="none" stroke="${F}" stroke-width="16"/><path d="m68 53-28 15 30 4m20-19 28 15-30 4" fill="${G}" ${S}/><path d="M74 139q13 13 27 0" fill="none" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M42 54q-25 30-22 67 32-2 52-28M118 54q25 30 22 67-32-2-52-28" fill="${F}" ${S}/><path d="M33 67q18 8 28 30m66-30q-18 8-28 30" stroke="#fff" stroke-opacity=".38" stroke-width="3"/>`,
+          `<path d="M57 68 24 61l28 18m51-11 33-7-28 18" fill="${G}" ${S}/><path d="M63 89q17 11 34 0" fill="none" stroke="${p.a}" stroke-width="5"/><path d="m80 96 22 18-22 7-22-7Z" fill="${F}" ${S}/>` ,
+          `<path d="M80 35q-44 24-49 78 33 1 54-24M80 35q44 24 49 78-33 1-54-24" fill="${F}" ${S}/><path d="M80 27v67" stroke="${p.ink}" stroke-width="7"/><path d="M80 93q-20 35-2 56" fill="none" stroke="${G}" stroke-width="13"/>`,
+          `<path d="M48 47q32-24 64 0v61q0 36-32 36t-32-36Z" fill="none" stroke="${G}" stroke-width="10"/><ellipse cx="80" cy="114" rx="24" ry="29" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`,
+          `<path d="M51 55q-28 33-12 79m70-79q28 33 12 79" fill="none" stroke="${F}" stroke-width="10"/><path d="M80 36v91" stroke="${p.a}" stroke-width="5"/><path d="m66 42 14-20 14 20" fill="${G}" ${S}/>` ,
+          `<path d="M58 39 48 18m54 21 10-21" stroke="${p.ink}" stroke-width="6"/><path d="M80 87q-29 22-23 54 23 11 46 0 6-32-23-54Z" fill="${F}" ${S}/><path d="M70 105h20m-24 13h28" stroke="#fff" stroke-opacity=".38" stroke-width="3"/>`
+        ],
+        [
+          `<path d="M54 91q-39 9-31 49m83-49q39 9 31 49M55 109q-27 21-14 43m64-43q27 21 14 43" fill="none" stroke="${F}" stroke-width="11"/><circle cx="80" cy="49" r="8" fill="${p.a}" filter="url(#${u}-glow)"/>`,
+          `<path d="M91 85q-5 28-22 41-14 11 1 25 17 13 30-7" fill="none" stroke="${F}" stroke-width="15"/><path d="M97 137q13 10 22 0-8 18-22 0Z" fill="${G}" ${S}/><path d="M55 66 35 52l22 3" fill="${p.a}" ${S}/>` ,
+          `<path d="M36 92q44-47 88 0-11 42-44 48-33-6-44-48Z" fill="${F}" ${S}/><path d="M44 94q36-25 72 0-16 21-36 24-20-3-36-24Z" fill="${L}"/><path d="m80 38 13-22 7 27" fill="${G}" ${S}/>` ,
+          `<path d="M45 107 20 119l27 10m68-22 25 12-27 10" fill="${G}" ${S}/><path d="M69 139 50 153m41-14 19 14" stroke="${p.ink}" stroke-width="8"/><path d="M48 152h18m28 0h18" stroke="${p.a}" stroke-width="4"/>`,
+          `<path d="m80 34 13-22 8 25" fill="${G}" ${S}/><path d="M111 68q29 18 34 50-28 7-44-8" fill="${F}" ${S}/><path d="M58 75 33 62l22 3" fill="${p.a}" ${S}/>` ,
+          `<path d="M48 85q32-25 64 0v51q-32 24-64 0Z" fill="none" stroke="${G}" stroke-width="11"/><path d="M61 109h38M58 122h44" stroke="#fff" stroke-opacity=".38" stroke-width="4"/>`,
+          `<path d="M48 105q-33 19-22 47m86-47q33 19 22 47" fill="none" stroke="${F}" stroke-width="10"/><path d="m55 42 25-28 25 28" fill="none" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M57 38q23-27 46 0" fill="none" stroke="${G}" stroke-width="9"/><path d="M57 106q-29 20-16 49m62-49q29 20 16 49" fill="none" stroke="${F}" stroke-width="10"/><path d="M80 29v27" stroke="${p.a}" stroke-width="5"/>`
+        ],
+        [
+          `<ellipse cx="80" cy="83" rx="37" ry="47" fill="none" stroke="${G}" stroke-width="10"/><path d="M59 120q-34 13-31 39m48-37q-20 23-8 38m33-40q34 13 31 39m-48-37q20 23 8 38" fill="none" stroke="${F}" stroke-width="9"/>`,
+          `<path d="M80 40q-30 23-27 59 4 34 29 49" fill="none" stroke="${F}" stroke-width="17"/><path d="M81 145q29-3 17-28-12-24 10-37" fill="none" stroke="${G}" stroke-width="9"/><circle cx="84" cy="55" r="3" fill="#fff"/>`,
+          `<path d="M80 45q-52 13-61 57 34 22 61 5 27 17 61-5-9-44-61-57Z" fill="${F}" ${S}/><path d="M42 94q38-22 76 0" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="4"/>`,
+          `<path d="M61 111 35 123m64-12 26 12" stroke="${p.ink}" stroke-width="11"/><path d="M58 134 43 152m59-18 15 18" stroke="${G}" stroke-width="10"/><path d="M80 38q-28 0-31 22" fill="none" stroke="${F}" stroke-width="10"/>`,
+          `<path d="m80 34 13-22 8 28" fill="${G}" ${S}/><path d="M49 106 21 119l30 9m60-22 28 13-30 9" fill="${F}" ${S}/><path d="M61 68 38 59l22 1" fill="${p.a}" ${S}/>` ,
+          `<path d="M80 47q-38 15-38 53 0 37 38 47 38-10 38-47 0-38-38-53Z" fill="none" stroke="${G}" stroke-width="10"/><path d="M51 118q29 19 58 0" fill="none" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M80 52q-39 17-36 52 3 30 36 42 33-12 36-42 3-35-36-52Z" fill="${F}" ${S}/><path d="M50 82 31 68l22 3m54 11 19-14-22 3" fill="${G}" ${S}/><path d="M44 104 27 98m89 6 17-6" stroke="${p.a}" stroke-width="4"/>`,
+          `<path d="M62 40q18-26 36 0" fill="none" stroke="${G}" stroke-width="9"/><path d="M51 104q-32 14-29 45m87-45q32 14 29 45" fill="none" stroke="${F}" stroke-width="10"/><path d="M56 107h48" stroke="#fff" stroke-opacity=".36" stroke-width="4"/>`
+        ],
+        [
+          `<path d="M50 55q30-33 60 0v74q-30 24-60 0Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M80 33V14m-8 6 8-6 8 6" stroke="${p.ink}" stroke-width="5"/><path d="M52 113h56" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M80 55q-48-28-63 20 28 40 63 13 35 27 63-13-15-48-63-20Z" fill="${F}" ${S}/><path d="M80 40V17m-9 9 9-9 9 9" stroke="${p.ink}" stroke-width="4"/>`,
+          `<path d="M80 75q-49-29-63 10 30 36 63 9 33 27 63-9-14-39-63-10Z" fill="${L}" ${S}/><path d="M80 36V14m-24 11-9-15m57 15 9-15" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M51 91 27 74m82 17 24-17" stroke="${G}" stroke-width="11"/><path d="M48 107 23 125m89-18 25 18" stroke="${F}" stroke-width="10"/><path d="M61 118h38" stroke="${p.ink}" stroke-width="9"/><path d="M64 118v22m32-22v22" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M53 89 24 78l22 20m61-9 29-11-22 20" fill="${F}" ${S}/><path d="M57 108 33 137m70-29 24 29" stroke="${G}" stroke-width="10"/>`,
+          `<path d="M49 60q31-29 62 0v74q-31 20-62 0Z" fill="none" stroke="${F}" stroke-width="11"/><g fill="${p.c}"><circle cx="57" cy="91" r="5"/><circle cx="103" cy="91" r="5"/><circle cx="67" cy="119" r="4"/><circle cx="93" cy="119" r="4"/></g>` ,
+          `<path d="M80 71q-50-40-68 8 28 56 68 22 40 34 68-22-18-48-68-8Z" fill="${F}" ${S}/><path d="M35 75q18 8 33 26m57-26q-18 8-33 26" stroke="#fff" stroke-opacity=".36" stroke-width="3"/>`,
+          `<path d="M54 56q26-30 52 0v83q-26 18-52 0Z" fill="none" stroke="${G}" stroke-width="11"/><path d="M54 95 29 78m77 17 25-17" stroke="${F}" stroke-width="9"/><path d="M80 35V11" stroke="${p.a}" stroke-width="5"/>`
+        ],
+        [
+          `<path d="M40 62q40-37 80 0-8 27-40 27T40 62Z" fill="${F}" ${S}/><path d="M80 26V11m-18 21-9-17m45 17 9-17" stroke="${p.a}" stroke-width="5"/><path d="M58 103q-22 20-16 48m60-48q22 20 16 48" fill="none" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M58 83V48m44 35V48M49 60h18m26 0h18" stroke="${F}" stroke-width="14" stroke-linecap="round"/><path d="M59 44v-13m42 13v-13" stroke="${p.a}" stroke-width="4"/><g stroke="${p.c}" stroke-width="2"><path d="M51 58h6m45 0h6M56 48h5m38 0h5"/></g>`,
+          `<path d="M80 38q-41 25-43 73 22 8 43-14 21 22 43 14-2-48-43-73Z" fill="${F}" ${S}/><path d="M80 31V13" stroke="${p.a}" stroke-width="5"/><path d="M45 106q35-20 70 0" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="4"/>`,
+          `<path d="M53 44q27-31 54 0v84q-27 21-54 0Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M48 103 27 90m85 13 21-13" stroke="${F}" stroke-width="12"/><path d="M80 23 67 9m13 14L93 9" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M55 40 42 13l28 21m35 6 13-27-28 21" fill="${G}" ${S}/><path d="M45 105 18 91l24 28m73-14 27-14-24 28" fill="${F}" ${S}/><path d="M80 116q19 13 38 0" fill="none" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M80 31q-37 12-45 47 18 29 45 15 27 14 45-15-8-35-45-47Z" fill="${F}" ${S}/><path d="M48 105q-25 21-12 48m76-48q25 21 12 48" fill="none" stroke="${G}" stroke-width="12"/><path d="M80 28V8" stroke="${p.c}" stroke-width="5"/>`,
+          `<path d="M80 45q-39 18-43 55 20 29 43 8 23 21 43-8-4-37-43-55Z" fill="${F}" ${S}/><path d="M80 44 88 11 98 43" fill="${G}" ${S}/><path d="M46 105 23 130m91-25 23 25" stroke="${G}" stroke-width="10"/>`,
+          `<path d="M80 38q-31 29-23 78 23 14 46 0 8-49-23-78Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M80 22 66 9m14 13L94 9" stroke="${p.a}" stroke-width="5"/><path d="M50 109 22 120m88-11 28 11" stroke="${F}" stroke-width="9"/>`
+        ],
+        [
+          `<path d="M40 74q40-58 80 0-8 35-40 35T40 74Z" fill="${F}" ${S}/><path d="M48 104q-25 25-11 51m75-51q25 25 11 51" fill="none" stroke="${G}" stroke-width="11"/><path d="M80 32V10" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M48 41 32 14l35 22m45 5 16-27-35 22" fill="${G}" ${S}/><path d="M43 105 14 92l24 30m79-17 29-13-24 30" fill="${F}" ${S}/><path d="M80 105q-19 23-7 48" fill="none" stroke="${p.c}" stroke-width="10"/>`,
+          `<path d="M49 39h62l11 20-9 73H47L38 59Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M49 103 20 118l30 11m61-26 29 15-30 11" fill="${F}" ${S}/><path d="M80 39V17" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M46 52q34-35 68 0v75q-34 27-68 0Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M53 109 28 137m79-28 25 28" stroke="${G}" stroke-width="12"/><path d="M61 38 48 15m51 23 13-23" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M48 45 34 14l36 25m42 6 14-31-36 25" fill="${G}" ${S}/><path d="M43 105q-29 21-17 49m91-49q29 21 17 49" fill="none" stroke="${F}" stroke-width="11"/><path d="M80 115q20 17 40 0" fill="none" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M46 50h68v82q-34 24-68 0Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M42 99H19v43h31m68-43h23v43h-31" fill="none" stroke="${F}" stroke-width="10"/><path d="M80 45V19" stroke="${p.c}" stroke-width="5"/>`,
+          `<path d="M80 41q-42 32-33 86 33 19 66 0 9-54-33-86Z" fill="none" stroke="${F}" stroke-width="12"/><path d="M51 111 22 126m87-15 29 15" stroke="${G}" stroke-width="10"/><path d="M80 40 69 10m11 30 11-30" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M52 38h56l16 26-11 72H47L36 64Z" fill="none" stroke="${G}" stroke-width="12"/><path d="M45 45 28 21l31 17m56 7 17-24-31 17" fill="${F}" ${S}/><path d="M80 109q-27 25-15 48" fill="none" stroke="${p.a}" stroke-width="8"/>`
+        ],
+        [
+          `<path d="M80 31 48 83l32 23 32-23Z" fill="${F}" ${S}/><path d="M77 105q-38 20-50 50" fill="none" stroke="${G}" stroke-width="12"/>`,
+          `<path d="M48 52h64l9 41-17 20H56L39 93Z" fill="${F}" ${S}/><path d="M44 117 21 143m95-26 23 26" stroke="${G}" stroke-width="12"/><path d="M52 46 43 14m65 32 9-32" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="m80 24 29 40-29 39-29-39Z" fill="${F}" ${S}/><path d="M80 103q-28 15-25 50m25-50q28 15 25 50" fill="none" stroke="${G}" stroke-width="10"/>`,
+          `<path d="M37 77q43-55 86 0-8 44-43 44T37 77Z" fill="${F}" ${S}/><path d="M80 27V10" stroke="${p.a}" stroke-width="5"/><path d="M48 119q-20 14-17 36m81-36q20 14 17 36" fill="none" stroke="${G}" stroke-width="10"/>`,
+          `<path d="M80 20q-48 37-36 96 36 18 72 0 12-59-36-96Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M80 24V7" stroke="${p.c}" stroke-width="5"/><path d="M47 112 21 137m92-25 26 25" stroke="${G}" stroke-width="11"/>`,
+          `<path d="M80 50q-52-15-62 28 27 32 62 10 35 22 62-10-10-43-62-28Z" fill="${F}" ${S}/><path d="M80 87q-34 23-21 67" fill="none" stroke="${G}" stroke-width="12"/>`,
+          `<circle cx="80" cy="70" r="37" fill="#02030a" stroke="${F}" stroke-width="13"/><ellipse cx="80" cy="70" rx="58" ry="16" fill="none" stroke="${G}" stroke-width="8" filter="url(#${u}-glow)"/><circle cx="80" cy="70" r="9" fill="${p.a}"/>`,
+          `<path d="M37 111q43-35 86 0-17 31-43 31t-43-31Z" fill="${F}" ${S}/><path d="M80 61V20m-25 87L34 150m71-43 21 43" stroke="${G}" stroke-width="10"/><path d="M58 90q22-18 44 0" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="4"/>`
+        ],
+        [
+          `<circle cx="49" cy="122" r="24" fill="none" stroke="${F}" stroke-width="11"/><circle cx="111" cy="122" r="24" fill="none" stroke="${G}" stroke-width="11"/><path d="M49 121 72 91h24l15 30M80 91V62m-18 0h36" fill="none" ${S}/>` ,
+          `<path d="M42 54h76v74H42Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M42 113 18 138m100-25 24 25" stroke="${G}" stroke-width="12"/><path d="M53 37h54" stroke="${p.a}" stroke-width="7"/>`,
+          `<path d="M44 72h72l16 43-21 27H49l-21-27Z" fill="none" stroke="${F}" stroke-width="13"/><circle cx="80" cy="91" r="13" fill="${L}" stroke="${p.ink}" stroke-width="4"/><path d="M54 142 38 154m68-12 16 12" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M42 76q38-49 76 0v55H42Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M38 75q42-58 84 0" fill="none" stroke="${G}" stroke-width="20"/><path d="M54 134 41 151m65-17 13 17" stroke="${p.a}" stroke-width="8"/>`,
+          `<path d="M47 82h66l13 45-19 20H53l-19-20Z" fill="none" stroke="${F}" stroke-width="13"/><circle cx="45" cy="139" r="13" fill="none" stroke="${G}" stroke-width="8"/><circle cx="115" cy="139" r="13" fill="none" stroke="${G}" stroke-width="8"/>`,
+          `<path d="M80 22 118 92l-12 42H54L42 92Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M55 126 35 150m70-24 20 24" stroke="${G}" stroke-width="11"/><path d="M80 22V7" stroke="${p.a}" stroke-width="5"/>`,
+          `<circle cx="54" cy="130" r="18" fill="none" stroke="${F}" stroke-width="10"/><path d="M54 130 78 83h22l15 47" fill="none" ${S}/><path d="M82 68h28m-7 0v18" stroke="${p.a}" stroke-width="6"/>`,
+          `<path d="M50 75h60l12 45-17 25H55l-17-25Z" fill="none" stroke="${F}" stroke-width="12"/><path d="M49 62 31 45m80 17 18-17" stroke="${G}" stroke-width="9"/><circle cx="30" cy="44" r="9" fill="${p.a}"/><circle cx="130" cy="44" r="9" fill="${p.c}"/>`
+        ],
+        [
+          `<path d="M52 46h57l12 18-12 70H52L40 64Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M110 55h20q15 0 15 17t-15 17h-16M49 64 24 81" fill="none" stroke="${G}" stroke-width="10"/><path d="M20 83h16" stroke="${p.a}" stroke-width="6"/>`,
+          `<circle cx="80" cy="81" r="42" fill="none" stroke="${F}" stroke-width="12"/><path d="M80 81 80 51m0 30 25 14" stroke="${p.ink}" stroke-width="7"/><circle cx="80" cy="81" r="7" fill="${p.a}"/><path d="M54 130h52" stroke="${G}" stroke-width="12"/>`,
+          `<path d="M48 55h64v82H48Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M56 55q24-33 48 0" fill="none" stroke="${G}" stroke-width="9"/><rect x="59" y="70" width="42" height="45" rx="8" fill="${L}" stroke="${p.ink}" stroke-width="4"/>`,
+          `<path d="M45 61h70v77H45Z" fill="none" stroke="${F}" stroke-width="12"/><circle cx="65" cy="92" r="13" fill="none" stroke="${G}" stroke-width="7"/><circle cx="95" cy="92" r="13" fill="none" stroke="${G}" stroke-width="7"/><path d="M78 92h4M52 120h56" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M80 38 111 76v63H49V76Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M80 51v82" stroke="${G}" stroke-width="9"/><path d="M58 139h44" stroke="${p.a}" stroke-width="6"/>`,
+          `<path d="M45 53h70v84H45Z" fill="none" stroke="${F}" stroke-width="12"/><path d="M115 63h18v33h-18" fill="none" stroke="${G}" stroke-width="9"/><path d="M51 72h58" stroke="${p.a}" stroke-width="5"/>`,
+          `<circle cx="80" cy="74" r="39" fill="none" stroke="${F}" stroke-width="13"/><path d="M80 113q-25 18-10 42" fill="none" stroke="${G}" stroke-width="9"/><path d="M80 31V12" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M46 62h68v75H46Z" fill="none" stroke="${F}" stroke-width="12"/><circle cx="80" cy="102" r="18" fill="none" stroke="${G}" stroke-width="8"/><path d="M55 73h50M80 62V31m0 0 18-13" stroke="${p.a}" stroke-width="5"/>`
+        ],
+        [
+          `<path d="M35 75q12-30 37-18 10-31 32-10 29-2 27 25-3 25-32 24H54Q28 94 35 75Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M54 112q-24 17-13 43m65-43q24 17 13 43" fill="none" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M80 35q-38 42-38 74 0 35 38 35t38-35q0-32-38-74Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M80 44V19" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M80 24q40 45 31 88-7 35-31 35t-31-35q-9-43 31-88Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M57 76q23-24 46 0" fill="none" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M80 33 65 65l12-6-9 27 16-15-4 35 30-52-16 7 11-28-18 14Z" fill="${F}" ${S}/><path d="M43 116q37 25 74 0" fill="none" stroke="${G}" stroke-width="11"/>`,
+          `<path d="M50 50h60l13 43-22 53H59L37 93Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M54 112h52" stroke="${G}" stroke-width="10"/><g fill="${p.a}"><circle cx="55" cy="61" r="3"/><circle cx="105" cy="68" r="4"/><circle cx="75" cy="132" r="3"/></g>`,
+          `<path d="M27 105q27-43 53-16 26-27 53 16-24 42-53 42t-53-42Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M37 110q43-20 86 0" fill="none" stroke="${G}" stroke-width="9"/>`,
+          `<path d="M80 18 65 61l15-10-7 31 17-13-10 39 35-57-18 9 9-30-19 15Z" fill="${F}" ${S}/><path d="M48 120q32 27 64 0" fill="none" stroke="${G}" stroke-width="10"/>`,
+          `<path d="M37 84q43-30 86 0M30 103q50-33 100 0M40 124q40-25 80 0" fill="none" stroke="${F}" stroke-width="12" stroke-linecap="round"/><path d="M80 47V24" stroke="${p.a}" stroke-width="5"/>`
+        ],
+        [
+          `<path d="M48 52h64v78H48Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M43 130h74v22H43Z" fill="none" stroke="${G}" stroke-width="11"/><path d="M80 52V26" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M48 39h64v100H48Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M48 67h64M48 96h64" stroke="${G}" stroke-width="9"/><path d="M80 39V14" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M45 49h70v83H45Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M39 85h82" stroke="${G}" stroke-width="16"/><path d="M49 126 28 151m83-25 21 25" stroke="${p.a}" stroke-width="8"/>`,
+          `<path d="m80 21 34 45-13 76H59L46 66Z" fill="none" stroke="${F}" stroke-width="13"/><path d="m80 40 18 27-8 62H70l-8-62Z" fill="none" stroke="${G}" stroke-width="8"/>`,
+          `<path d="M80 38q-45 17-49 65 13 39 49 43 36-4 49-43-4-48-49-65Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M45 103 19 120m96-17 26 17" stroke="${G}" stroke-width="11"/><path d="M80 38V15" stroke="${p.a}" stroke-width="5"/>`,
+          `<path d="M38 57h84v79H38Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M38 83h84" stroke="${G}" stroke-width="12"/><path d="M29 136h102" stroke="${p.a}" stroke-width="8"/>`,
+          `<path d="M56 39h48l18 28v72H38V67Z" fill="none" stroke="${F}" stroke-width="13"/><path d="M80 39V17" stroke="${p.a}" stroke-width="5"/><path d="M35 96h90" stroke="${G}" stroke-width="12"/>`,
+          `<path d="M45 61h70v76H45Z" fill="none" stroke="${F}" stroke-width="13"/><path d="m40 61 10-27h60l10 27" fill="none" stroke="${G}" stroke-width="11"/><path d="M80 34V12" stroke="${p.a}" stroke-width="5"/>`
+        ]
+      ];
+      return groups[c.archetype]?.[i]||"";
+    }
+
+    function eyesSvg(c,p){const u=uidFor(c),y=c.archetype===2?61:63,g=p.a,k=p.ink;switch(c.eyes){case 0:return `<circle cx="66" cy="${y}" r="6" fill="${g}" stroke="${k}" stroke-width="3"/><circle cx="94" cy="${y}" r="6" fill="${p.c}" stroke="${k}" stroke-width="3"/>`;case 1:return `<rect x="57" y="${y-6}" width="46" height="13" rx="5" fill="${k}"/><path d="M62 ${y}h36" stroke="url(#${u}-foil)" stroke-width="6"/>`;case 2:return `<circle cx="80" cy="${y}" r="12" fill="${k}"/><circle cx="80" cy="${y}" r="7" fill="${g}" filter="url(#${u}-glow)"/>`;case 3:return `<circle cx="61" cy="${y+2}" r="5" fill="${g}"/><circle cx="80" cy="${y-2}" r="6" fill="#fff"/><circle cx="99" cy="${y+2}" r="5" fill="${p.c}"/>`;case 4:return `<path d="M58 ${y}h18m8 0h18" stroke="${g}" stroke-width="5" stroke-linecap="round"/>`;case 5:return `<path d="m59 ${y-6} 14 14m0-14L59 ${y+8}m28-14 14 14m0-14L87 ${y+8}" stroke="${g}" stroke-width="5"/>`;case 6:return `<circle cx="66" cy="${y}" r="8" fill="none" stroke="${g}" stroke-width="5"/><circle cx="94" cy="${y}" r="8" fill="none" stroke="${p.c}" stroke-width="5"/>`;case 7:return `<path d="M56 ${y}q10-10 20 0t20 0 8 0" fill="none" stroke="${g}" stroke-width="5"/>`;case 8:return `<path d="m66 ${y-11} 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Zm28 0 3 7 8 1-6 5 2 8-7-4-7 4 2-8-6-5 8-1Z" fill="${g}"/>`;case 9:return `<rect x="57" y="${y-6}" width="21" height="13" rx="4" fill="${g}" stroke="${k}" stroke-width="3"/><circle cx="97" cy="${y}" r="7" fill="${p.c}" stroke="${k}" stroke-width="3"/>`;case 10:return `<path d="M66 ${y+7}c-14-8-13-20 0-16 13-4 14 8 0 16Zm28 0c-14-8-13-20 0-16 13-4 14 8 0 16Z" fill="${p.c}"/>`;case 11:return `<rect x="55" y="${y-5}" width="50" height="11" rx="3" fill="${k}"/><path d="M59 ${y-1}h42" stroke="${g}" stroke-width="3" stroke-dasharray="5 3"/>`;case 12:return `<path d="m66 ${y-9} 9 9-9 9-9-9Zm28 0 9 9-9 9-9-9Z" fill="url(#${u}-foil2)" stroke="${k}" stroke-width="3"/>`;case 13:return `<g fill="${g}"><circle cx="60" cy="${y}" r="3"/><circle cx="68" cy="${y}" r="3"/><circle cx="92" cy="${y}" r="3"/><circle cx="100" cy="${y}" r="3"/></g>`;case 14:return `<path d="M57 ${y+4} 66 ${y-6}l9 10m10 0 9-10 9 10" fill="none" stroke="${g}" stroke-width="5"/>`;default:return `<ellipse cx="66" cy="${y}" rx="9" ry="5" fill="${g}" filter="url(#${u}-glow)"/><ellipse cx="94" cy="${y}" rx="9" ry="5" fill="${p.c}" filter="url(#${u}-glow)"/><circle cx="66" cy="${y}" r="2" fill="#fff"/><circle cx="94" cy="${y}" r="2" fill="#fff"/>`}}
+
+    function mouthSvg(c,p){const y=c.archetype===2?79:82,k=p.ink;switch(c.mouth){case 0:return `<rect x="64" y="${y-5}" width="32" height="11" rx="2" fill="${k}"/><path d="M70 ${y-2}v6m7-6v6m7-6v6m7-6v6" stroke="#fff" stroke-opacity=".65" stroke-width="2"/>`;case 1:return `<path d="M65 ${y-3}q15 14 30 0" fill="none" stroke="${k}" stroke-width="5" stroke-linecap="round"/>`;case 2:return `<path d="m62 ${y+1} 7-7 8 12 8-12 8 12 7-7" fill="none" stroke="${p.a}" stroke-width="4"/>`;case 3:return `<circle cx="80" cy="${y}" r="7" fill="${k}"/><circle cx="80" cy="${y}" r="3" fill="${p.c}"/>`;case 4:return `<path d="M65 ${y}h30" stroke="${k}" stroke-width="5"/>`;case 5:return `<path d="M64 ${y-4}h32l-7 13-9-7-9 7Z" fill="${k}"/>`;case 6:return `<rect x="61" y="${y-6}" width="38" height="14" rx="3" fill="${k}"/><path d="M65 ${y-2}h30M65 ${y+3}h30" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>`;case 7:return `<path d="M65 ${y}h11v-5h9v5h11" fill="none" stroke="${k}" stroke-width="5"/>`;case 8:return `<path d="m67 ${y-6} 13 7 13-7-13 18Z" fill="url(#${uidFor(c)}-foil2)" stroke="${k}" stroke-width="3"/>`;case 9:return `<ellipse cx="80" cy="${y}" rx="15" ry="8" fill="${k}"/><circle cx="80" cy="${y}" r="4" fill="${p.a}"/>`;case 10:return `<path d="M62 ${y-6}h36v13H62Z" fill="url(#${uidFor(c)}-glass)" stroke="${k}" stroke-width="4"/>`;case 11:return ``;case 12:return `<path d="M63 ${y-3}q17 20 34 0" fill="none" stroke="${k}" stroke-width="6"/><path d="M70 ${y+5}h20" stroke="${p.c}" stroke-width="3"/>`;default:return `<path d="m66 ${y+5} 5-12 5 8 5-8 5 8 5-8 4 12" fill="none" stroke="${p.a}" stroke-width="3"/>`}}
+
+    function topSvg(c,p){const u=uidFor(c),F=`url(#${u}-foil2)`,S=`stroke="${p.ink}" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"`;switch(c.top){case 0:return `<path d="M80 38V15" ${S}/><circle cx="80" cy="11" r="7" fill="${p.a}" filter="url(#${u}-glow)"/>`;case 1:return `<path d="m58 42-13-25 25 17m32 8 13-25-25 17" fill="${F}" ${S}/>`;case 2:return `<path d="M70 40V24h20v16" ${S}/><path d="M68 24h24l-5-12H73Z" fill="${F}" ${S}/>`;case 3:return `<path d="M80 39V22" ${S}/><path d="M80 23q22-16 35 0-17 15-35 0Z" fill="${F}" ${S}/>`;case 4:return `<path d="m52 42-6-21 20 9 14-20 14 20 20-9-6 21Z" fill="${F}" ${S}/>`;case 5:return `<path d="M80 39V24M53 22h54" ${S}/><rect x="69" y="17" width="22" height="10" rx="5" fill="${F}" stroke="${p.ink}" stroke-width="4"/>`;case 6:return `<path d="m55 46-19-27 30 17m39 10 19-27-30 17" fill="${F}" ${S}/>`;case 7:return `<ellipse cx="80" cy="27" rx="34" ry="11" fill="none" stroke="${p.a}" stroke-width="5" filter="url(#${u}-glow)"/><path d="M80 40V29" ${S}/>`;case 8:return `<path d="M80 40V25" ${S}/><path d="M43 16h31v17H43zm43 0h31v17H86z" fill="${F}" ${S}/>`;case 9:return `<path d="M57 42V14h10v28m8 0V7h11v35m8 0V18h10v24" fill="${F}" ${S}/>`;case 10:return `<path d="M80 40V23" ${S}/><path d="M80 24q24-17 39 0-19 17-39 0Z" fill="none" stroke="${p.a}" stroke-width="5"/>`;case 11:return `<path d="M80 41V21m0 1q-27-17-35 7 21 15 35-7Zm0 0q27-17 35 7-21 15-35-7Z" fill="${F}" ${S}/>`;case 12:return `<path d="M45 39q35-32 70 0-10 20-35 20T45 39Z" fill="${F}" ${S}/>`;case 13:return `<ellipse cx="80" cy="25" rx="42" ry="13" fill="none" stroke="url(#${u}-foil)" stroke-width="7" filter="url(#${u}-glow)" transform="rotate(-12 80 25)"/>`;case 14:return `<path d="M80 41V14m0 1-14 12m14-12 14 12" ${S}/><path d="m80 5 6 10-6 10-6-10Z" fill="${p.a}" filter="url(#${u}-glow)"/>`;case 15:return `<path d="M55 42 65 18l15 10 15-10 10 24Z" fill="${F}" ${S}/>`;case 16:return `<path d="m54 43 5-24 10 12 11-22 11 22 10-12 5 24Z" fill="${F}" ${S}/>`;default:return ``}}
+
+    function sideSvg(c,p){const u=uidFor(c),F=`url(#${u}-foil2)`,S=`stroke="${p.ink}" stroke-width="6" stroke-linejoin="round"`;switch(c.side){case 0:return `<path d="M49 98 29 111v30m82-43 20 13v30" fill="none" ${S}/><circle cx="29" cy="144" r="8" fill="${F}"/><circle cx="131" cy="144" r="8" fill="${F}"/>`;case 1:return `<path d="m49 103-25 7 9 10-12 11 21 5 14-19m55-14 25 7-9 10 12 11-21 5-14-19" fill="${F}" ${S}/>`;case 2:return `<path d="M50 91 22 103v36l24 9 10-32m54-25 28 12v36l-24 9-10-32" fill="${F}" ${S}/>`;case 3:return `<path d="M49 102 31 116v31m80-45 18 14v31" fill="none" ${S}/><rect x="22" y="143" width="18" height="11" rx="4" fill="${F}"/><path d="m121 144 16 10" stroke="${p.a}" stroke-width="6"/>`;case 4:return `<path d="m51 90-34 2 29 26m63-28 34 2-29 26" fill="${F}" ${S}/>`;case 5:return `<path d="M49 105H27v35h22m62-35h22v35h-22" fill="none" ${S}/><path d="M20 116h17m86 0h17" stroke="${p.a}" stroke-width="5"/>`;case 6:return `<rect x="23" y="99" width="28" height="37" rx="7" fill="${F}" ${S}/><rect x="109" y="99" width="28" height="37" rx="7" fill="${F}" ${S}/>`;case 7:return `<path d="M51 111H37m72 0h14" ${S}/>`;case 8:return `<path d="m51 97-26-16 7 31 19 7m58-22 26-16-7 31-19 7" fill="${F}" ${S}/>`;case 9:return `<path d="M50 104q-33 8-25 35m85-35q33 8 25 35M49 114q-22 20-7 37m69-37q22 20 7 37" fill="none" stroke="url(#${u}-foil)" stroke-width="8" stroke-linecap="round"/>`;case 10:return `<path d="M51 100q-29-25-35-3 20 20 35 19m58-16q29-25 35-3-20 20-35 19" fill="${F}" ${S}/>`;case 11:return `<path d="m50 109-28 19 21 4-8 19 25-24m50-18 28 19-21 4 8 19-25-24" fill="${F}" ${S}/>`;case 12:return `<path d="M51 106 31 98v43h20m58-35 20-8v43h-20" fill="${F}" ${S}/><path d="M33 105h16m62 0h16" stroke="#fff" stroke-opacity=".5" stroke-width="4"/>`;case 13:return `<path d="m51 91-21 14v43l21-19m58-38 21 14v43l-21-19" fill="${F}" ${S}/>`;case 14:return `<ellipse cx="80" cy="111" rx="62" ry="28" fill="none" stroke="${p.a}" stroke-width="5" stroke-dasharray="10 7" filter="url(#${u}-glow)"/>`;default:return `<g fill="${F}" stroke="${p.ink}" stroke-width="4"><path d="m46 102-27-9 10 25-18 18 30 2 10-18Z"/><path d="m114 102 27-9-10 25 18 18-30 2-10-18Z"/></g>`}}
+
+    function detailsSvg(c,p){const u=uidFor(c),out=[];if(c.pattern%4===0)out.push(`<path d="M62 112h36M66 121h28" stroke="#fff" stroke-opacity=".42" stroke-width="3" stroke-dasharray="6 4"/>`);else if(c.pattern%4===1)out.push(`<path d="m65 105 15 17 15-17" fill="none" stroke="${p.c}" stroke-width="4"/>`);else if(c.pattern%4===2)out.push(`<circle cx="80" cy="116" r="9" fill="none" stroke="${p.a}" stroke-width="4"/><circle cx="80" cy="116" r="3" fill="#fff"/>`);else out.push(`<path d="M61 106h38l-8 21H69Z" fill="url(#${u}-glass)" stroke="${p.ink}" stroke-width="3"/>`);
+      const sparkleCount=2+c.rarity.rank;const points=[[20,22],[138,30],[25,128],[135,117],[39,65],[122,69]];for(let i=0;i<sparkleCount;i++){const [x,y]=points[(i+c.variant)%points.length];out.push(`<path d="M${x} ${y-6}v12m-6-6h12" stroke="${i%2?p.c:p.a}" stroke-width="2" filter="url(#${u}-glow)"/>`)}return out.join("")}
+
+    function poseTransform(c){
+      return [
+        "translate(0 0)",
+        "rotate(-3 80 94) translate(-2 1)",
+        "rotate(3 80 94) translate(2 1)",
+        "translate(0 -4)",
+        "translate(0 1) scale(.98 1.02) translate(1.6 -1.6)",
+        "translate(0 -5) rotate(-1 80 88)",
+        "translate(0 2) scale(1.02 .98) translate(-1.6 1.6)",
+        "scale(1.025) translate(-1.95 -1.95)",
+        "translate(0 -2)",
+        "rotate(-1.5 80 86)",
+        "translate(-1 -2)",
+        "translate(1 1)"
+      ][c.pose]||"";
+    }
+
+    function auraLayerSvg(c,p){
+      const u=uidFor(c),F=`url(#${u}-foil)`,R=`url(#${u}-rim)`,k=p.ink;
+      const layers=[
+        `<g fill="none" stroke="${p.a}" stroke-opacity=".5"><ellipse cx="80" cy="89" rx="61" ry="28" stroke-width="3"/><ellipse cx="80" cy="89" rx="49" ry="20" stroke="${p.c}" stroke-width="2" stroke-dasharray="9 6" transform="rotate(-11 80 89)"/></g>`,
+        `<path d="M54 71Q22 48 17 86q22-10 35 13m54-28q32-23 37 15-22-10-35 13" fill="${F}" fill-opacity=".36" stroke="${p.a}" stroke-opacity=".7" stroke-width="3"/>`,
+        `<path d="M41 132q-17-27 8-43-2 22 14 32-2-34 17-49 19 15 17 49 16-10 14-32 25 16 8 43Z" fill="${R}" opacity=".22"/>`,
+        `<path d="M9 111q25-28 49-4t47 0 46-4M6 126q27-24 52-2t49 0 46-4" fill="none" stroke="${F}" stroke-opacity=".42" stroke-width="5" stroke-linecap="round"/>`,
+        `<g fill="${F}" opacity=".42" stroke="${k}" stroke-width="2"><path d="m28 61 14-18 9 23-16 10Z"/><path d="m127 48 12 20-22 7-7-18Z"/><path d="m24 118 15-12 11 21-22 7Z"/><path d="m135 108 10 17-21 10-6-19Z"/></g>`,
+        `<circle cx="80" cy="82" r="57" fill="none" stroke="${p.a}" stroke-opacity=".32" stroke-width="3" stroke-dasharray="3 8"/><path d="M80 19v15m0 96v15M17 82h15m96 0h15m-108-45 11 11m68 68 11 11M35 127l11-11m68-68 11-11" stroke="${p.c}" stroke-opacity=".5" stroke-width="3"/>`,
+        `<path d="M34 92 51 70l-5 24 18-12-9 24m70-14-17-22 5 24-18-12 9 24" fill="none" stroke="${p.a}" stroke-opacity=".65" stroke-width="4" stroke-linejoin="round" filter="url(#${u}-glow)"/>`,
+        `<path d="M47 142q-31-23-11-54 10 19 30 20-17-29 14-50 31 21 14 50 20-1 30-20 20 31-11 54" fill="none" stroke="${p.a}" stroke-opacity=".34" stroke-width="5"/><g fill="${p.c}" opacity=".42"><circle cx="41" cy="91" r="4"/><circle cx="119" cy="91" r="4"/><circle cx="80" cy="46" r="5"/></g>`,
+        `<g fill="${F}" opacity=".38"><circle cx="28" cy="48" r="6"/><circle cx="132" cy="54" r="4"/><circle cx="23" cy="120" r="4"/><circle cx="137" cy="119" r="7"/><circle cx="80" cy="20" r="3"/></g><path d="M18 105q62-52 124 0" fill="none" stroke="${p.c}" stroke-opacity=".26" stroke-width="4"/>`,
+        `<path d="M20 83q20-36 40 0t40 0 40 0" fill="none" stroke="${p.a}" stroke-opacity=".35" stroke-width="4"/><path d="M18 103q22-34 42 0t40 0 42 0" fill="none" stroke="${p.c}" stroke-opacity=".3" stroke-width="4"/>`,
+        `<g fill="${p.b}" opacity=".16"><ellipse cx="44" cy="66" rx="31" ry="18"/><ellipse cx="110" cy="79" rx="37" ry="22"/><ellipse cx="78" cy="117" rx="53" ry="17"/></g>`,
+        `<circle cx="80" cy="82" r="56" fill="none" stroke="${p.a}" stroke-opacity=".28" stroke-width="3"/><path d="M80 33v49l28 17M80 82 52 55" fill="none" stroke="${p.c}" stroke-opacity=".52" stroke-width="4" stroke-linecap="round"/><g fill="${p.a}" opacity=".55"><circle cx="80" cy="33" r="4"/><circle cx="108" cy="99" r="4"/><circle cx="52" cy="55" r="4"/></g>`
+      ];
+      return layers[c.energy]||layers[0];
+    }
+
+    function emblemSvg(c,p){
+      const u=uidFor(c),F=`url(#${u}-foil2)`,G=`url(#${u}-core)`,S=`stroke="${p.ink}" stroke-width="2.6" stroke-linejoin="round"`;
+      const marks=[
+        `<circle cx="80" cy="116" r="11" fill="${G}" ${S}/><path d="M80 108v16m-8-8h16" stroke="#fff" stroke-opacity=".8" stroke-width="2"/>`,
+        `<path d="M70 115a10 10 0 1 0 20 0 8 8 0 1 1-20 0Z" fill="${F}" ${S}/>`,
+        `<path d="m80 103 4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1Z" fill="${F}" ${S}/>`,
+        `<path d="M64 116q16-18 32 0-16 18-32 0Z" fill="${G}" ${S}/><circle cx="80" cy="116" r="4" fill="#fff"/>`,
+        `<path d="m80 102 14 14-14 14-14-14Z" fill="${F}" ${S}/><path d="M80 108v16m-8-8h16" stroke="#fff" stroke-opacity=".65" stroke-width="2"/>`,
+        `<path d="m66 126 4-18 10 8 10-8 4 18Z" fill="${F}" ${S}/>`,
+        `<path d="M65 116q8-12 15 0t15 0" fill="none" stroke="${p.a}" stroke-width="5" stroke-linecap="round"/>`,
+        `<path d="M80 129c-17-10-16-27 0-20 16-7 17 10 0 20Z" fill="${F}" ${S}/>`,
+        `<path d="m80 104 4 8 9-2-3 9 7 6-10 1-3 9-6-8-9 2 3-9-7-6 10-1Z" fill="${F}" ${S}/>`,
+        `<path d="M65 124q15-25 30 0-15 8-30 0Z" fill="${G}" ${S}/><path d="M80 108v18" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>`,
+        `<g fill="${F}" ${S}><circle cx="80" cy="116" r="6"/><circle cx="68" cy="116" r="5"/><circle cx="92" cy="116" r="5"/><circle cx="80" cy="104" r="5"/></g>`,
+        `<circle cx="80" cy="116" r="12" fill="none" stroke="${p.a}" stroke-width="4"/><path d="M80 106v10l7 5" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`
+      ];
+      return `<g opacity=".92">${marks[c.emblem]||marks[0]}</g>`;
+    }
+
+    function expressionSvg(c,p){
+      const y=c.archetype===2?50:49,k=p.ink;
+      return [
+        `<path d="M57 ${y}q9-7 18 0m10 0q9-7 18 0" fill="none" stroke="${k}" stroke-width="3" stroke-linecap="round"/><circle cx="57" cy="75" r="3" fill="${p.c}" opacity=".55"/><circle cx="103" cy="75" r="3" fill="${p.c}" opacity=".55"/>`,
+        `<path d="m57 ${y+2} 18-5m10 0 18 5" stroke="${k}" stroke-width="4" stroke-linecap="round"/>`,
+        `<path d="M57 ${y+2}q9-9 18-1m10 1q9-2 18 1" fill="none" stroke="${p.a}" stroke-width="3"/>`,
+        `<path d="M57 ${y+3}h18m10 0h18" stroke="${k}" stroke-width="3" stroke-linecap="round" opacity=".65"/>`,
+        `<path d="M57 ${y-2}q9-8 18 1m10 0q9-9 18 1" fill="none" stroke="${p.a}" stroke-width="4"/>`,
+        `<path d="m59 ${y+1} 13-5m15 5 13-5" stroke="${p.c}" stroke-width="3"/><path d="M108 70q7 5 0 10" fill="none" stroke="${p.a}" stroke-width="3"/>`,
+        `<path d="M58 ${y}q8-4 16 0m12 0q8-4 16 0" fill="none" stroke="${k}" stroke-width="2.5" opacity=".75"/>`,
+        `<path d="m57 ${y+2} 17-3m12 0 17 3" stroke="${k}" stroke-width="4" stroke-linecap="round"/>`,
+        `<path d="M51 63q9-18 18-9m40 9q-9-18-18-9" fill="none" stroke="${p.c}" stroke-opacity=".65" stroke-width="3"/><circle cx="80" cy="46" r="3" fill="${p.a}"/>`,
+        `<path d="m57 ${y+1} 18-6m10 0 18 6" stroke="${k}" stroke-width="4"/>`,
+        `<path d="M54 76q7 8 14 0m24 0q7 8 14 0" fill="none" stroke="${p.c}" stroke-width="3" opacity=".58"/>`,
+        `<path d="M57 ${y}h18m10 0h18" stroke="${k}" stroke-width="3" opacity=".55"/>`
+      ][c.expression]||"";
+    }
+
+    function companionSvg(c,p){
+      if(c.companion===11)return "";
+      const u=uidFor(c),right=(c.seed&1)===1,x=right?132:28,y=62+(c.detail%4)*13,flip=right?-1:1,F=`url(#${u}-foil)`,S=`stroke="${p.ink}" stroke-width="2.8" stroke-linejoin="round"`;
+      const forms=[
+        `<g fill="${F}" ${S}><rect x="-10" y="-8" width="20" height="16" rx="5"/><path d="M-14-3h4m20 0h4M0-8v-8" fill="none"/><circle cx="0" cy="-17" r="3" fill="${p.a}"/></g><circle cx="-4" cy="0" r="2" fill="#fff"/><circle cx="4" cy="0" r="2" fill="#fff"/>`,
+        `<circle r="10" fill="url(#${u}-core)" ${S}/><circle cx="-3" cy="-3" r="3" fill="#fff" opacity=".8"/><ellipse rx="15" ry="5" fill="none" stroke="${p.a}" stroke-width="2" opacity=".7"/>`,
+        `<path d="M-11 4q0-11 11-11T11 4Q7 12 0 12T-11 4Z" fill="${F}" ${S}/><path d="m-7-4-4-8 8 5m10 3 4-8-8 5" fill="${F}" ${S}/><circle cx="-4" cy="2" r="1.6" fill="${p.ink}"/><circle cx="4" cy="2" r="1.6" fill="${p.ink}"/>`,
+        `<path d="M0 12V0m0 2q-13-11-17 1 10 9 17-1Zm0 0q13-11 17 1-10 9-17-1Z" fill="${F}" ${S}/><circle cy="-5" r="5" fill="${p.a}"/>`,
+        `<path d="M0-2q-12-11-17 1 10 8 17 3m0-4q12-11 17 1-10 8-17 3" fill="${F}" ${S}/><rect x="-3" y="-9" width="6" height="19" rx="3" fill="${p.a}"/>`,
+        `<path d="M-13 3Q0-12 13 3 2 2 0 12-2 2-13 3Z" fill="${F}" ${S}/><circle cx="-3" cy="1" r="1.5" fill="${p.ink}"/>`,
+        `<path d="M-15 0Q0-12 15 0 0 15-15 0Z" fill="${F}" ${S}/><circle cx="-4" cy="-1" r="2" fill="#fff"/><circle cx="4" cy="-1" r="2" fill="#fff"/><path d="M15 0q8-7 10 1" fill="none" stroke="${p.a}" stroke-width="3"/>`,
+        `<path d="M-12-10h20q4 0 4 4v20H-8q-4 0-4-4Z" fill="${F}" ${S}/><path d="M0-9v22M-8-4h6m4 0h6" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>`,
+        `<circle r="8" fill="${F}" ${S}/><ellipse rx="18" ry="6" fill="none" stroke="${p.a}" stroke-width="3"/><path d="M0-8v-10" stroke="${p.ink}" stroke-width="3"/><circle cy="-19" r="3" fill="${p.c}"/>`,
+        `<g fill="${F}" ${S}><circle cx="-6" r="8"/><circle cx="4" cy="-3" r="10"/><circle cx="11" cy="3" r="7"/></g><path d="M-10 7q10 7 20 0" fill="none" stroke="${p.a}" stroke-width="3"/>`,
+        `<path d="M0 11c-14-8-14-22 0-16 14-6 14 8 0 16Z" fill="${F}" ${S}/><path d="M-2-5q-7-9-10-1m14 1q7-9 10-1" fill="none" stroke="${p.a}" stroke-width="3"/>`
+      ];
+      return `<g transform="translate(${x} ${y}) scale(${flip} 1)" filter="url(#${u}-depth)">${forms[c.companion]||forms[0]}</g>`;
+    }
+
+    function foregroundDetailSvg(c,p){
+      const u=uidFor(c),count=3+c.rarity.rank,pts=[[18,19],[142,28],[22,137],[139,125],[41,28],[122,42],[38,112],[126,104]],out=[];
+      for(let i=0;i<count;i++){const [x,y]=pts[(i+c.detail)%pts.length],r=1.2+(i%3);out.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="${i%2?p.a:p.c}" opacity="${.32+i*.04}" filter="url(#${u}-glow)"/>`)}
+      out.push(`<path d="M12 39V15h24M124 15h24v24M12 121v24h24m88 0h24v-24" fill="none" stroke="url(#${u}-rim)" stroke-opacity=".34" stroke-width="2"/>`);
+      if(c.rarity.rank>=3)out.push(`<path d="M9 86q71-58 142 0" fill="none" stroke="${p.a}" stroke-opacity=".2" stroke-width="2" stroke-dasharray="2 8"/>`);
+      return out.join("");
+    }
+
+    function foilOverlay(c,p){const u=uidFor(c),f=c.finish;let extra="";if(f===0)extra=`<path d="M-25 135 90-15h36L10 160Z" fill="url(#${u}-foil)" opacity=".15"/>`;else if(f===1)extra=`<ellipse cx="80" cy="75" rx="70" ry="58" fill="none" stroke="${p.a}" stroke-opacity=".25" stroke-width="6"/>`;else if(f===2)extra=`<g fill="#fff" opacity=".18"><circle cx="30" cy="37" r="2"/><circle cx="123" cy="45" r="3"/><circle cx="112" cy="124" r="2"/><circle cx="45" cy="119" r="3"/></g>`;else if(f===3)extra=`<path d="M0 32h160M0 64h160M0 96h160M0 128h160M32 0v160M64 0v160M96 0v160M128 0v160" stroke="${p.a}" stroke-opacity=".08"/>`;else if(f===4)extra=`<path d="M-10 120Q40 75 85 112t85-12" fill="none" stroke="url(#${u}-foil)" stroke-opacity=".2" stroke-width="18"/>`;else if(f===5)extra=`<path d="m80 5 72 73-72 77L8 78Z" fill="none" stroke="#fff" stroke-opacity=".13" stroke-width="4"/>`;else if(f===6)extra=`<circle cx="48" cy="45" r="40" fill="${p.c}" opacity=".07"/><circle cx="119" cy="104" r="46" fill="${p.a}" opacity=".06"/>`;else if(f===7)extra=`<g fill="#fff" opacity=".22"><circle cx="17" cy="18" r="1"/><circle cx="42" cy="29" r="1.4"/><circle cx="132" cy="19" r="1.2"/><circle cx="146" cy="81" r="1.4"/><circle cx="22" cy="103" r="1.2"/><circle cx="123" cy="141" r="1"/></g>`;else if(f===8)extra=`<rect x="8" y="8" width="144" height="144" rx="18" fill="none" stroke="url(#${u}-foil)" stroke-opacity=".32" stroke-width="5"/>`;else if(f===9)extra=`<rect width="160" height="160" fill="url(#${u}-scan)" opacity=".45"/>`;else if(f===10)extra=`<path d="M0 122 160 48v35L0 157Z" fill="#fff" opacity=".08"/>`;else extra=`<path d="M0 22 160 130M0 82 90 160M66 0l94 63" stroke="${p.c}" stroke-opacity=".1" stroke-width="14"/>`;return `<g pointer-events="none">${extra}<rect x="1.5" y="1.5" width="157" height="157" rx="22" fill="none" stroke="url(#${u}-foil)" stroke-opacity=".6" stroke-width="3"/><path d="M14 145 145 14" stroke="#fff" stroke-opacity=".12" stroke-width="8"/></g>`}
+
+    function svgFor(c,{rounded=true,title=true}={}){
+      const p=PALETTES[c.palette],u=uidFor(c),label=`${c.serial} ${c.name}`;
+      const core=`${sideSvg(c,p)}${bodySvg(c,p)}${headSvg(c,p)}${speciesSvg(c,p)}${topSvg(c,p)}${eyesSvg(c,p)}${mouthSvg(c,p)}${expressionSvg(c,p)}${detailsSvg(c,p)}${emblemSvg(c,p)}`;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="${esc(label)}" shape-rendering="geometricPrecision">${title?`<title>${esc(label)}</title>`:""}${holoDefs(c,p)}<g class="holo-background">${backgroundSvg(c,p)}</g><g class="holo-aura" opacity=".88">${auraLayerSvg(c,p)}</g><g class="holo-character"><g transform="${poseTransform(c)}" filter="url(#${u}-depth)"><g filter="url(#${u}-soft)">${core}</g><path d="M57 48q23-18 46 0" fill="none" stroke="url(#${u}-rim)" stroke-opacity=".5" stroke-width="2.2"/><path d="M55 101q25-16 50 0" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="2"/></g></g><g class="holo-companion">${companionSvg(c,p)}</g><g class="holo-foreground">${foregroundDetailSvg(c,p)}${foilOverlay(c,p)}</g>${rounded?"":`<rect x="0" y="0" width="160" height="160" fill="none"/>`}</svg>`;
+    }
+
+    function safeJson(raw,fallback){try{return JSON.parse(raw)}catch{return fallback}}
+    function loadFavorites(){const raw=storage.get(favoriteKey)??storage.get(legacyFavoriteKey)??"[]";const v=safeJson(raw,[]);return new Set(Array.isArray(v)?v.map(Number).filter(id=>Number.isInteger(id)&&id>=0&&id<CHARACTER_COUNT):[])}
+    function saveFavorites(){storage.set(favoriteKey,JSON.stringify([...favorites].sort((a,b)=>a-b)))}
+    function defaultSettings(){return {tilt:mobileDefault?10:13,holo:105,motion:!matchMedia("(prefers-reduced-motion:reduce)").matches,scanlines:true,density:"comfortable",pageSize:mobileDefault?24:60}}
+    function loadSettings(){const base=defaultSettings(),saved=safeJson(storage.get(settingsKey)||"{}",{});return {...base,...saved}}
+    function saveSettings(){storage.set(settingsKey,JSON.stringify(settings))}
+    function applySettings({syncControls=true}={}){
+      settings.tilt=Math.max(0,Math.min(18,Number(settings.tilt)||0));
+      document.documentElement.dataset.density=settings.density;
+      document.documentElement.dataset.motion=settings.motion?"on":"off";
+      document.documentElement.dataset.scanlines=settings.scanlines?"on":"off";
+      document.documentElement.dataset.tilt=settings.tilt>0&&settings.motion?"on":"off";
+      document.documentElement.style.setProperty("--holo-shine",String(Math.max(.25,Math.min(1.35,settings.holo/100))));
+      document.documentElement.style.setProperty("--tilt-strength",String(settings.tilt));
+      state.pageSize=Number(settings.pageSize)||state.pageSize;
+      const pageSize=document.getElementById("page-size");if(pageSize)pageSize.value=String(state.pageSize);
+      if(!settings.motion||settings.tilt===0)resetAllTilt();
+      if(syncControls){
+        const t=document.getElementById("setting-tilt"),tv=document.getElementById("setting-tilt-value"),h=document.getElementById("setting-holo"),m=document.getElementById("setting-motion"),s=document.getElementById("setting-scanlines"),d=document.getElementById("setting-density"),p=document.getElementById("setting-page-size"),v=document.getElementById("setting-holo-value");
+        if(t)t.value=String(settings.tilt);if(tv)tv.textContent=`${settings.tilt}°`;if(h)h.value=String(settings.holo);if(m)m.checked=Boolean(settings.motion);if(s)s.checked=Boolean(settings.scanlines);if(d)d.value=settings.density;if(p)p.value=String(settings.pageSize);if(v)v.textContent=`${settings.holo}%`;
       }
+    }
+    function setTheme(theme){document.documentElement.dataset.theme=theme;storage.set(themeKey,theme);document.querySelector('meta[name="theme-color"]').content=theme==="dark"?"#070814":"#eef0ff"}
+    function initialTheme(){const saved=storage.get(themeKey);return saved==="dark"||saved==="light"?saved:(matchMedia("(prefers-color-scheme:light)").matches?"light":"dark")}
+    function showToast(message,duration=2100){const el=document.getElementById("toast");el.textContent=message;el.classList.add("is-visible");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("is-visible"),duration)}
+    function optionMarkup(values,label){return `<option value="">${label}</option>${values.map((v,i)=>`<option value="${i}">${v}</option>`).join("")}`}
 
-      async function start(){
-        try{
-          if(!('DecompressionStream' in self))throw new Error('현재 브라우저의 압축 해제 기능을 사용할 수 없습니다.');
-          const response=await fetch(payloadUrl,{cache:'no-store'});
-          if(!response.ok)throw new Error('홀로그램 데이터를 불러오지 못했습니다: '+response.status);
-          const encoded=await response.text();
-          if(!encoded.trim().startsWith('H4sI'))throw new Error('잘못된 홀로그램 데이터가 전달되었습니다.');
-          const compressed=decodeBase64(encoded);
-          const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
-          const html=await new Response(stream).text();
-          if(!html.includes('32 SILHOUETTES')||!html.includes('10,000 홀로그램')){
-            throw new Error('홀로그램 데이터 검증에 실패했습니다.');
-          }
-          document.open();
-          document.write(html);
-          document.close();
-        }catch(error){
-          const message=String(error&&error.message?error.message:error);
-          status.innerHTML='<div class="error"><h1>BOTLAND HOLOGRAMS</h1><p>'+message.replace(/[&<>"']/g,character=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[character]))+'</p><button type="button" onclick="location.reload()">다시 불러오기</button><small>오류가 계속되면 브라우저 캐시를 지운 뒤 다시 열어 주세요.</small></div>';
-          console.error(error);
-        }
-      }
+    document.getElementById("archetype-filter").innerHTML=optionMarkup(ARCHETYPES,"모든 계열");
+    document.getElementById("species-filter").innerHTML=`<option value="">모든 종류</option>`;
+    document.getElementById("color-filter").innerHTML=optionMarkup(COLOR_FAMILIES,"모든 홀로 컬러");
+    document.getElementById("rarity-filter").innerHTML=`<option value="">모든 희귀도</option>${RARITIES.map(v=>`<option value="${v}">${v}</option>`).join("")}`;
 
-      start();
-    })();
+    function syncSpeciesOptions(){const select=document.getElementById("species-filter");const values=state.archetype===null?[...new Set(SPECIES.flat())]:SPECIES[state.archetype];select.innerHTML=`<option value="">모든 종류</option>${values.map((v,i)=>`<option value="${state.archetype===null?v:i}">${v}</option>`).join("")}`;select.value=state.species===null?"":String(state.species)}
+
+    function filteredCatalog(){const q=state.query.trim().toLowerCase();let items=catalog.filter(c=>{if(q&&!searchIndex[c.id].includes(q))return false;if(state.archetype!==null&&c.archetype!==state.archetype)return false;if(state.species!==null){if(state.archetype!==null&&c.species!==state.species)return false;if(state.archetype===null&&SPECIES[c.archetype][c.species]!==state.species)return false}if(state.color!==null&&c.palette!==state.color)return false;if(state.rarity!==null&&c.rarity.name!==state.rarity)return false;if(state.favoritesOnly&&!favorites.has(c.id))return false;return true});if(state.sort==="id-desc")items.sort((a,b)=>b.id-a.id);else if(state.sort==="rarity")items.sort((a,b)=>b.rarity.rank-a.rarity.rank||a.id-b.id);else if(state.sort==="name")items.sort((a,b)=>a.name.localeCompare(b.name,"ko")||a.id-b.id);else if(state.sort==="shuffle")items.sort((a,b)=>hash32(a.seed^state.shuffleSalt)-hash32(b.seed^state.shuffleSalt));return items}
+
+    function cardMarkup(c){const active=favorites.has(c.id);return `<article class="character-card" data-rank="${c.rarity.rank}" data-tilt-card data-tilt-kind="gallery"><button class="character-open" type="button" data-open="${c.id}" aria-label="${esc(c.serial)} ${esc(c.name)} 상세 보기"><div class="character-art">${svgFor(c,{title:false})}<span class="rarity-badge" data-rank="${c.rarity.rank}">${c.rarity.name}</span></div><div class="character-info"><span class="serial">${c.serial}</span><h3>${esc(c.name)}</h3><div class="character-tags"><span>${ARCHETYPES[c.archetype]}</span><span>${SPECIES[c.archetype][c.species]}</span><span>${ELEMENTS[c.element]}</span></div></div></button><button class="favorite-button ${active?"is-active":""}" type="button" data-favorite="${c.id}" aria-label="${active?"즐겨찾기 해제":"즐겨찾기 추가"}" aria-pressed="${active}">♥</button></article>`}
+
+    function pageMarkup(page,total){if(total<=1)return"";const pages=new Set([1,total,page-2,page-1,page,page+1,page+2].filter(v=>v>=1&&v<=total)),sorted=[...pages].sort((a,b)=>a-b);let html=`<button class="page-button" data-page="${page-1}" ${page===1?"disabled":""}>←</button>`,prev=0;for(const p of sorted){if(prev&&p-prev>1)html+=`<span aria-hidden="true">…</span>`;html+=`<button class="page-button" data-page="${p}" ${p===page?'aria-current="page"':''}>${p}</button>`;prev=p}return html+`<button class="page-button" data-page="${page+1}" ${page===total?"disabled":""}>→</button>`}
+
+    function renderGallery({focus=false}={}){const items=filteredCatalog(),pages=Math.max(1,Math.ceil(items.length/state.pageSize));state.page=Math.min(Math.max(1,state.page),pages);const start=(state.page-1)*state.pageSize,visible=items.slice(start,start+state.pageSize),grid=document.getElementById("gallery-grid");grid.innerHTML=visible.length?visible.map(cardMarkup).join(""):`<div class="empty-state"><div><strong>조건에 맞는 캐릭터가 없습니다.</strong>검색어나 필터를 바꿔 보세요.</div></div>`;document.getElementById("result-summary").innerHTML=`<strong>${items.length.toLocaleString("ko-KR")}</strong>개 결과 · ${state.page}/${pages} 페이지`;document.getElementById("pagination").innerHTML=pageMarkup(state.page,pages);document.getElementById("favorite-count").textContent=String(favorites.size);const fb=document.getElementById("favorites-filter");fb.classList.toggle("is-active",state.favoritesOnly);fb.setAttribute("aria-pressed",String(state.favoritesOnly));document.getElementById("header-favorites").classList.toggle("is-active",state.favoritesOnly);if(focus){grid.scrollIntoView({behavior:"smooth",block:"start"});grid.focus({preventScroll:true})}}
+
+    function detailMarkup(c){
+      const active=favorites.has(c.id),tags=[ARCHETYPES[c.archetype],SPECIES[c.archetype][c.species],COLOR_FAMILIES[c.palette],FINISHES[c.finish],MOODS[c.mood],c.rarity.name,ELEMENTS[c.element],AURAS[c.aura],POSES[c.pose],EXPRESSIONS[c.expression]];
+      return `<div class="detail-shell"><button class="icon-button dialog-close" type="button" data-close aria-label="닫기">×</button><div class="detail-art" data-swipe-area data-tilt-card data-tilt-kind="detail">${svgFor(c,{rounded:false})}</div><div class="detail-content"><span class="serial">${c.serial} · ${c.rarity.name}</span><h2 id="detail-title">${esc(c.name)}</h2><p class="detail-description">${SPECIES[c.archetype][c.species]} 실루엣과 ${BODY_NAMES[c.body]} 바디를 결합하고, ${FINISHES[c.finish]} 마감, ${ENERGY_STYLES[c.energy]} 오라, ${EMBLEMS[c.emblem]} 문장으로 완성한 다층 홀로그램 캐릭터입니다.</p><p class="detail-lore"><strong>${ORIGINS[c.origin]}</strong>에서 온 ${ELEMENTS[c.element]} 속성의 존재입니다. ${ABILITIES[c.ability]} 주변에는 ${AURAS[c.aura]}이 남습니다.</p><div class="detail-tags">${tags.map(t=>`<span class="detail-tag">${t}</span>`).join("")}</div><dl class="spec-list"><div><dt>캐릭터 계열</dt><dd>${ARCHETYPES[c.archetype]}</dd></div><div><dt>종류</dt><dd>${SPECIES[c.archetype][c.species]}</dd></div><div><dt>바디</dt><dd>${BODY_NAMES[c.body]}</dd></div><div><dt>눈</dt><dd>${EYE_NAMES[c.eyes]}</dd></div><div><dt>상단 장비</dt><dd>${TOP_NAMES[c.top]}</dd></div><div><dt>측면 장비</dt><dd>${SIDE_NAMES[c.side]}</dd></div><div><dt>홀로그램 마감</dt><dd>${FINISHES[c.finish]}</dd></div><div><dt>출신 구역</dt><dd>${ORIGINS[c.origin]}</dd></div><div><dt>속성</dt><dd>${ELEMENTS[c.element]}</dd></div><div><dt>오라</dt><dd>${AURAS[c.aura]}</dd></div><div><dt>포즈</dt><dd>${POSES[c.pose]}</dd></div><div><dt>표정</dt><dd>${EXPRESSIONS[c.expression]}</dd></div><div><dt>문장</dt><dd>${EMBLEMS[c.emblem]}</dd></div><div><dt>동반체</dt><dd>${COMPANIONS[c.companion]}</dd></div><div><dt>에너지 형상</dt><dd>${ENERGY_STYLES[c.energy]}</dd></div><div><dt>핵심 서명</dt><dd>${c.coreSignature}</dd></div><div><dt>생성 시드</dt><dd>${c.seed.toString(16).toUpperCase().padStart(8,"0")}</dd></div></dl><div class="detail-actions"><button class="primary-button" data-detail-favorite="${c.id}" type="button">${active?"♥ 즐겨찾기 해제":"♡ 즐겨찾기 추가"}</button><button class="secondary-button" data-share="${c.id}" type="button">공유하기</button><button class="secondary-button" data-copy="${c.id}" type="button">링크 복사</button><button class="secondary-button" data-svg="${c.id}" type="button">SVG 저장</button><button class="secondary-button" data-png="${c.id}" type="button">PNG 저장</button><button class="secondary-button" data-jump-open type="button">다른 번호 찾기</button></div><div class="detail-nav"><button class="chip-button" data-nav="${(c.id-1+CHARACTER_COUNT)%CHARACTER_COUNT}" type="button">← 이전</button><button class="chip-button" data-nav="${(c.id+1)%CHARACTER_COUNT}" type="button">다음 →</button></div><div class="detail-version">BOTLAND V${BUILD_VERSION} · 3D TILT · SWIPE LEFT / RIGHT</div></div></div>`
+    }
+
+    function replaceUrlSafely(url){try{history.replaceState(null,"",url)}catch{}}
+    function showModalSafely(dialog){if(dialog.open)return;try{dialog.showModal()}catch{dialog.setAttribute("open","")}}
+    function closeModalSafely(dialog){if(!dialog.open&&!dialog.hasAttribute("open"))return;try{dialog.close()}catch{dialog.removeAttribute("open")}}
+    function openDetail(id,{updateHash=true}={}){if(!Number.isInteger(id)||id<0||id>=CHARACTER_COUNT)return;selectedId=id;const dialog=document.getElementById("detail-dialog");dialog.innerHTML=detailMarkup(catalog[id]);showModalSafely(dialog);if(updateHash)replaceUrlSafely(`#holo-${String(id+1).padStart(5,"0")}`)}
+    function closeDetail({clearHash=true}={}){const dialog=document.getElementById("detail-dialog");closeModalSafely(dialog);selectedId=null;if(clearHash&&location.hash.startsWith("#holo-"))replaceUrlSafely(location.pathname+location.search)}
+    function syncHash(){const m=location.hash.match(/^#holo-(\d{1,5})$/);if(!m)return;const id=Number(m[1])-1;if(id>=0&&id<CHARACTER_COUNT)openDetail(id,{updateHash:false})}
+    function toggleFavorite(id){favorites.has(id)?favorites.delete(id):favorites.add(id);saveFavorites();renderGallery();if(selectedId===id)document.getElementById("detail-dialog").innerHTML=detailMarkup(catalog[id]);const collection=document.getElementById("collection-dialog");if(collection.open)renderCollection();showToast(favorites.has(id)?"즐겨찾기에 추가했습니다.":"즐겨찾기에서 제거했습니다.")}
+    function downloadText(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+    function downloadSvg(id){const c=catalog[id];downloadText(`${c.serial.toLowerCase()}.svg`,svgFor(c,{rounded:false}),"image/svg+xml")}
+    async function downloadPng(id){const c=catalog[id],blob=new Blob([svgFor(c,{rounded:false})],{type:"image/svg+xml"}),url=URL.createObjectURL(blob);try{const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=url});const canvas=document.createElement("canvas");canvas.width=1024;canvas.height=1024;const ctx=canvas.getContext("2d");ctx.imageSmoothingEnabled=true;ctx.drawImage(image,0,0,1024,1024);const png=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));if(!png)throw new Error("PNG conversion failed");const purl=URL.createObjectURL(png),a=document.createElement("a");a.href=purl;a.download=`${c.serial.toLowerCase()}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(purl),1000)}finally{URL.revokeObjectURL(url)}}
+    function characterUrl(id){const url=new URL(location.href);url.hash=`holo-${String(id+1).padStart(5,"0")}`;return url}
+    async function copyLink(id){const url=characterUrl(id);try{await navigator.clipboard.writeText(url.href);showToast("상세 링크를 복사했습니다.")}catch{const input=document.createElement("textarea");input.value=url.href;document.body.append(input);input.select();document.execCommand("copy");input.remove();showToast("상세 링크를 복사했습니다.")}}
+    async function shareCharacter(id){const c=catalog[id],url=characterUrl(id);if(navigator.share){try{await navigator.share({title:`${c.serial} ${c.name}`,text:`Botland 홀로그램 캐릭터 ${c.serial}`,url:url.href});return}catch(error){if(error&&error.name==="AbortError")return}}await copyLink(id)}
+
+    function resetTilt(card){
+      if(!card)return;
+      card.classList.remove("is-tilting");
+      card.style.setProperty("--rx","0deg");
+      card.style.setProperty("--ry","0deg");
+      card.style.setProperty("--px","0");
+      card.style.setProperty("--py","0");
+      card.style.setProperty("--mx","50%");
+      card.style.setProperty("--my","50%");
+    }
+    function resetAllTilt(){document.querySelectorAll("[data-tilt-card]").forEach(resetTilt)}
+    function updateTilt(card,clientX,clientY){
+      if(!card||!settings.motion||settings.tilt<=0)return;
+      const rect=card.getBoundingClientRect();
+      if(rect.width<2||rect.height<2)return;
+      const nx=Math.max(0,Math.min(1,(clientX-rect.left)/rect.width));
+      const ny=Math.max(0,Math.min(1,(clientY-rect.top)/rect.height));
+      const px=(nx-.5)*2,py=(ny-.5)*2,strength=Number(settings.tilt)||0;
+      const multiplier=card.dataset.tiltKind==="detail"?.72:card.dataset.tiltKind==="hero"?1.05:1;
+      card.style.setProperty("--rx",`${(-py*strength*multiplier).toFixed(2)}deg`);
+      card.style.setProperty("--ry",`${(px*strength*multiplier).toFixed(2)}deg`);
+      card.style.setProperty("--px",px.toFixed(3));
+      card.style.setProperty("--py",py.toFixed(3));
+      card.style.setProperty("--mx",`${(nx*100).toFixed(1)}%`);
+      card.style.setProperty("--my",`${(ny*100).toFixed(1)}%`);
+      card.classList.add("is-tilting");
+    }
+    let activeTouchTilt=null;
+    document.addEventListener("pointermove",event=>{
+      const card=event.target.closest?.("[data-tilt-card]")||activeTouchTilt;
+      if(!card)return;
+      if(event.pointerType==="touch"&&activeTouchTilt!==card)return;
+      updateTilt(card,event.clientX,event.clientY);
+    },{passive:true});
+    document.addEventListener("pointerover",event=>{
+      if(event.pointerType==="touch")return;
+      const card=event.target.closest?.("[data-tilt-card]");
+      if(card)updateTilt(card,event.clientX,event.clientY);
+    },{passive:true});
+    document.addEventListener("pointerout",event=>{
+      if(event.pointerType==="touch")return;
+      const card=event.target.closest?.("[data-tilt-card]");
+      if(card&&!card.contains(event.relatedTarget))resetTilt(card);
+    },{passive:true});
+    document.addEventListener("pointerdown",event=>{
+      const card=event.target.closest?.("[data-tilt-card]");
+      if(!card||event.pointerType!=="touch")return;
+      activeTouchTilt=card;
+      updateTilt(card,event.clientX,event.clientY);
+    },{passive:true});
+    document.addEventListener("pointerup",event=>{if(activeTouchTilt){const card=activeTouchTilt;activeTouchTilt=null;setTimeout(()=>resetTilt(card),240)}},{passive:true});
+    document.addEventListener("pointercancel",()=>{if(activeTouchTilt){resetTilt(activeTouchTilt);activeTouchTilt=null}},{passive:true});
+
+    function dailyCharacterId(){const now=new Date(),stamp=Number(`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`);return hash32(stamp^0x48f2a91d)%CHARACTER_COUNT}
+    function parseCharacterNumber(value){const match=String(value).trim().toUpperCase().match(/(?:HL[-\s]?)?(\d{1,5})/);if(!match)return null;const number=Number(match[1]);return Number.isInteger(number)&&number>=1&&number<=CHARACTER_COUNT?number-1:null}
+    function openUtilityDialog(id){const dialog=document.getElementById(id);if(id==="collection-dialog")renderCollection();if(id==="settings-dialog")applySettings();showModalSafely(dialog);if(id==="jump-dialog")setTimeout(()=>document.getElementById("jump-input").focus(),80)}
+    function closeUtilityDialog(id){const dialog=document.getElementById(id);if(dialog)closeModalSafely(dialog)}
+    function collectionCounts(){const counts=Object.fromEntries(RARITIES.map(name=>[name,0]));for(const id of favorites)counts[catalog[id].rarity.name]++;return counts}
+    function collectionMarkup(){const ids=[...favorites].sort((a,b)=>a-b),counts=collectionCounts(),progress=(ids.length/CHARACTER_COUNT*100).toFixed(ids.length?2:0),preview=ids.slice(0,18);return `<div class="utility-shell"><div class="utility-head"><div><span class="serial">PERSONAL ARCHIVE</span><h2 id="collection-title">내 컬렉션</h2><p>즐겨찾기는 이 기기에 저장되며 JSON으로 백업하거나 다른 브라우저로 옮길 수 있습니다.</p></div><button class="icon-button" type="button" data-dialog-close="collection-dialog" aria-label="닫기">×</button></div><div class="collection-summary"><div class="collection-metric"><strong>${ids.length.toLocaleString("ko-KR")}</strong><span>저장한 캐릭터</span></div><div class="collection-metric"><strong>${progress}%</strong><span>전체 수집률</span></div><div class="collection-metric"><strong>${new Set(ids.map(id=>catalog[id].archetype)).size}</strong><span>수집한 계열</span></div></div><div class="rarity-bars">${RARITIES.slice().reverse().map(name=>{const count=counts[name],width=ids.length?Math.max(2,count/ids.length*100):0;return `<div class="rarity-row"><span>${name}</span><div class="rarity-track"><div class="rarity-fill" style="width:${width}%"></div></div><strong>${count}</strong></div>`}).join("")}</div>${preview.length?`<div class="collection-preview">${preview.map(id=>`<button type="button" data-collection-open="${id}" aria-label="${esc(catalog[id].serial)} 열기">${svgFor(catalog[id],{title:false})}</button>`).join("")}</div>`:`<div class="empty-state" style="min-height:180px"><div><strong>아직 저장한 캐릭터가 없습니다.</strong>마음에 드는 캐릭터의 ♥ 버튼을 눌러 보세요.</div></div>`}<div class="utility-actions"><button class="secondary-button" type="button" data-collection-export>JSON 백업</button><button class="secondary-button" type="button" data-collection-import>JSON 가져오기</button><button class="secondary-button" type="button" data-collection-show>즐겨찾기만 보기</button><button class="secondary-button" type="button" data-collection-clear>전체 비우기</button></div></div>`}
+    function renderCollection(){document.getElementById("collection-dialog").innerHTML=collectionMarkup()}
+    function exportFavorites(){const payload={app:"Botland Hologram Gallery",version:BUILD_VERSION,exportedAt:new Date().toISOString(),favorites:[...favorites].sort((a,b)=>a-b).map(id=>({id,serial:catalog[id].serial,name:catalog[id].name}))};downloadText(`botland-favorites-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(payload,null,2),"application/json");showToast("즐겨찾기 백업 파일을 만들었습니다.")}
+    async function importFavoritesFile(file){const text=await file.text(),data=safeJson(text,null);if(!data)throw new Error("JSON 형식을 확인해 주세요.");const source=Array.isArray(data)?data:Array.isArray(data.favorites)?data.favorites:[];const imported=new Set();for(const item of source){const id=typeof item==="number"?item:typeof item?.id==="number"?item.id:parseCharacterNumber(item?.serial??item);if(Number.isInteger(id)&&id>=0&&id<CHARACTER_COUNT)imported.add(id)}if(!imported.size)throw new Error("가져올 캐릭터 번호가 없습니다.");for(const id of imported)favorites.add(id);saveFavorites();renderGallery();renderCollection();showToast(`${imported.size.toLocaleString("ko-KR")}개를 컬렉션에 합쳤습니다.`)}
+    function persistFilterState(){storage.set(filterKey,JSON.stringify({query:state.query,archetype:state.archetype,species:state.species,color:state.color,rarity:state.rarity,sort:state.sort,pageSize:state.pageSize}))}
+    function restoreFilterState(){const saved=safeJson(storage.get(filterKey)||"{}",{});if(typeof saved.query==="string")state.query=saved.query;if(Number.isInteger(saved.archetype))state.archetype=saved.archetype;if(saved.species!==undefined)state.species=saved.species;if(Number.isInteger(saved.color))state.color=saved.color;if(typeof saved.rarity==="string")state.rarity=saved.rarity;if(typeof saved.sort==="string")state.sort=saved.sort;if([24,36,48,60,96].includes(Number(saved.pageSize))&&!mobileDefault)state.pageSize=Number(saved.pageSize)}
+    function syncFilterControls(){document.getElementById("search-input").value=state.query;document.getElementById("archetype-filter").value=state.archetype===null?"":String(state.archetype);syncSpeciesOptions();document.getElementById("color-filter").value=state.color===null?"":String(state.color);document.getElementById("rarity-filter").value=state.rarity??"";document.getElementById("sort-filter").value=state.sort;document.getElementById("page-size").value=String(state.pageSize)}
+    function updateNetworkStatus(){const el=document.getElementById("network-status");if(!el)return;const online=navigator.onLine!==false;el.textContent=online?`SELF-CONTAINED · V${BUILD_VERSION}`:`OFFLINE MODE · V${BUILD_VERSION}`;el.classList.toggle("is-offline",!online)}
+
+    function applyFilters(){state.archetype=document.getElementById("archetype-filter").value===""?null:Number(document.getElementById("archetype-filter").value);const sv=document.getElementById("species-filter").value;state.species=sv===""?null:(state.archetype===null?sv:Number(sv));state.color=document.getElementById("color-filter").value===""?null:Number(document.getElementById("color-filter").value);state.rarity=document.getElementById("rarity-filter").value||null;state.sort=document.getElementById("sort-filter").value;state.pageSize=Number(document.getElementById("page-size").value);settings.pageSize=state.pageSize;saveSettings();state.page=1;if(state.sort==="shuffle")state.shuffleSalt=Date.now()>>>0;persistFilterState();renderGallery()}
+
+    let queryTimer=0;document.getElementById("search-input").addEventListener("input",e=>{clearTimeout(queryTimer);queryTimer=setTimeout(()=>{state.query=e.target.value;state.page=1;persistFilterState();renderGallery()},120)});
+    document.getElementById("archetype-filter").addEventListener("change",()=>{state.archetype=document.getElementById("archetype-filter").value===""?null:Number(document.getElementById("archetype-filter").value);state.species=null;syncSpeciesOptions();state.page=1;persistFilterState();renderGallery()});
+    ["species-filter","color-filter","rarity-filter","sort-filter","page-size"].forEach(id=>document.getElementById(id).addEventListener("change",applyFilters));
+    document.getElementById("filter-form").addEventListener("submit",e=>e.preventDefault());
+    function toggleFavoritesOnly(){state.favoritesOnly=!state.favoritesOnly;state.page=1;renderGallery()}
+    document.getElementById("favorites-filter").addEventListener("click",toggleFavoritesOnly);
+    document.getElementById("header-favorites").addEventListener("click",()=>openUtilityDialog("collection-dialog"));
+    document.getElementById("reset-filter").addEventListener("click",()=>{const size=mobileDefault?24:60;Object.assign(state,{query:"",archetype:null,species:null,color:null,rarity:null,favoritesOnly:false,sort:"id-asc",page:1,pageSize:size});settings.pageSize=size;saveSettings();storage.remove(filterKey);syncFilterControls();renderGallery();showToast("필터를 초기화했습니다.")});
+    document.getElementById("theme-toggle").addEventListener("click",()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark"));
+    document.getElementById("random-character").addEventListener("click",()=>openDetail(Math.floor(Math.random()*CHARACTER_COUNT)));
+    document.getElementById("gallery-grid").addEventListener("click",e=>{const fav=e.target.closest("[data-favorite]");if(fav){toggleFavorite(Number(fav.dataset.favorite));return}const open=e.target.closest("[data-open]");if(open)openDetail(Number(open.dataset.open))});
+    document.getElementById("pagination").addEventListener("click",e=>{const b=e.target.closest("[data-page]");if(!b||b.disabled)return;state.page=Number(b.dataset.page);renderGallery({focus:true})});
+    document.getElementById("detail-dialog").addEventListener("click",e=>{const d=e.currentTarget;if(e.target===d){closeDetail();return}const b=e.target.closest("button");if(!b)return;if(b.hasAttribute("data-close"))closeDetail();else if(b.dataset.detailFavorite)toggleFavorite(Number(b.dataset.detailFavorite));else if(b.dataset.share)shareCharacter(Number(b.dataset.share));else if(b.dataset.copy)copyLink(Number(b.dataset.copy));else if(b.dataset.svg)downloadSvg(Number(b.dataset.svg));else if(b.dataset.png)downloadPng(Number(b.dataset.png)).catch(()=>showToast("PNG 생성에 실패했습니다."));else if(b.dataset.nav)openDetail(Number(b.dataset.nav));else if(b.hasAttribute("data-jump-open")){closeDetail({clearHash:false});openUtilityDialog("jump-dialog")}});
+    document.getElementById("detail-dialog").addEventListener("cancel",e=>{e.preventDefault();closeDetail()});
+    addEventListener("hashchange",syncHash);
+    addEventListener("keydown",e=>{const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"");if(selectedId!==null){if(e.key==="ArrowLeft")openDetail((selectedId-1+CHARACTER_COUNT)%CHARACTER_COUNT);if(e.key==="ArrowRight")openDetail((selectedId+1)%CHARACTER_COUNT);return}if(typing)return;if(e.key==="/"){e.preventDefault();document.getElementById("gallery").scrollIntoView({behavior:"smooth"});setTimeout(()=>document.getElementById("search-input").focus(),250)}else if(e.key.toLowerCase()==="r")openDetail(Math.floor(Math.random()*CHARACTER_COUNT));else if(e.key.toLowerCase()==="d")openDetail(dailyCharacterId());else if(e.key.toLowerCase()==="j")openUtilityDialog("jump-dialog");else if(e.key.toLowerCase()==="f")openUtilityDialog("collection-dialog");else if(e.key==="?")openUtilityDialog("settings-dialog")});
+
+    function renderHero(){const ids=[dailyCharacterId(),4666,9027];[["hero-left",ids[1]],["hero-right",ids[2]],["hero-main",ids[0]]].forEach(([elementId,id])=>{const el=document.getElementById(elementId);el.innerHTML=svgFor(catalog[id],{title:false});el.setAttribute("aria-label",`${catalog[id].serial} 상세 보기`);el.addEventListener("click",()=>openDetail(id))})}
+
+    document.getElementById("settings-button").addEventListener("click",()=>openUtilityDialog("settings-dialog"));
+    document.getElementById("daily-character").addEventListener("click",()=>openDetail(dailyCharacterId()));
+    ["jump-character","toolbar-jump"].forEach(id=>document.getElementById(id).addEventListener("click",()=>openUtilityDialog("jump-dialog")));
+    document.getElementById("toolbar-collection").addEventListener("click",()=>openUtilityDialog("collection-dialog"));
+    document.querySelectorAll("[data-dialog-close]").forEach(button=>button.addEventListener("click",()=>closeUtilityDialog(button.dataset.dialogClose)));
+    document.getElementById("jump-form").addEventListener("submit",event=>{event.preventDefault();const id=parseCharacterNumber(document.getElementById("jump-input").value),message=document.getElementById("jump-message");if(id===null){message.textContent="1부터 10,000 사이의 번호를 입력해 주세요.";return}message.textContent=`${catalog[id].serial}을 여는 중입니다.`;closeUtilityDialog("jump-dialog");openDetail(id)});
+    document.getElementById("collection-dialog").addEventListener("click",event=>{if(event.target===event.currentTarget){event.currentTarget.close();return}const button=event.target.closest("button");if(!button)return;if(button.dataset.dialogClose)closeUtilityDialog(button.dataset.dialogClose);else if(button.dataset.collectionOpen){closeUtilityDialog("collection-dialog");openDetail(Number(button.dataset.collectionOpen))}else if(button.hasAttribute("data-collection-export"))exportFavorites();else if(button.hasAttribute("data-collection-import"))document.getElementById("favorites-import").click();else if(button.hasAttribute("data-collection-show")){state.favoritesOnly=true;state.page=1;closeUtilityDialog("collection-dialog");renderGallery({focus:true})}else if(button.hasAttribute("data-collection-clear")&&favorites.size&&confirm("저장한 즐겨찾기를 모두 지울까요?")){favorites.clear();saveFavorites();renderGallery();renderCollection();showToast("컬렉션을 비웠습니다.")}});
+    document.getElementById("favorites-import").addEventListener("change",event=>{const file=event.target.files?.[0];if(file)importFavoritesFile(file).catch(error=>showToast(error.message||"가져오기에 실패했습니다.",3200));event.target.value=""});
+    document.getElementById("settings-dialog").addEventListener("click",event=>{if(event.target===event.currentTarget)event.currentTarget.close()});
+    document.getElementById("setting-tilt").addEventListener("input",event=>{settings.tilt=Number(event.target.value);applySettings();saveSettings()});
+    document.getElementById("setting-holo").addEventListener("input",event=>{settings.holo=Number(event.target.value);applySettings();saveSettings()});
+    document.getElementById("setting-motion").addEventListener("change",event=>{settings.motion=event.target.checked;applySettings();saveSettings()});
+    document.getElementById("setting-scanlines").addEventListener("change",event=>{settings.scanlines=event.target.checked;applySettings();saveSettings()});
+    document.getElementById("setting-density").addEventListener("change",event=>{settings.density=event.target.value;applySettings();saveSettings()});
+    document.getElementById("setting-page-size").addEventListener("change",event=>{settings.pageSize=Number(event.target.value);state.pageSize=settings.pageSize;state.page=1;applySettings();saveSettings();renderGallery()});
+    document.getElementById("reset-settings").addEventListener("click",()=>{settings=defaultSettings();applySettings();saveSettings();renderGallery();showToast("표시 설정을 기본값으로 복원했습니다.")});
+    document.querySelector(".mobile-nav").addEventListener("click",event=>{const button=event.target.closest("button");if(!button)return;const action=button.dataset.mobileAction;if(action==="home")scrollTo({top:0,behavior:"smooth"});else if(action==="random")openDetail(Math.floor(Math.random()*CHARACTER_COUNT));else if(action==="search"){document.getElementById("gallery").scrollIntoView({behavior:"smooth"});setTimeout(()=>document.getElementById("search-input").focus(),250)}else if(action==="collection")openUtilityDialog("collection-dialog");else if(action==="settings")openUtilityDialog("settings-dialog")});
+    document.getElementById("detail-dialog").addEventListener("pointerdown",event=>{if(event.target.closest("[data-swipe-area]"))detailTouchStart={x:event.clientX,y:event.clientY}});
+    document.getElementById("detail-dialog").addEventListener("pointerup",event=>{if(!detailTouchStart||selectedId===null)return;const dx=event.clientX-detailTouchStart.x,dy=event.clientY-detailTouchStart.y;detailTouchStart=null;if(Math.abs(dx)>58&&Math.abs(dx)>Math.abs(dy)*1.35)openDetail(dx<0?(selectedId+1)%CHARACTER_COUNT:(selectedId-1+CHARACTER_COUNT)%CHARACTER_COUNT)});
+    addEventListener("online",updateNetworkStatus);addEventListener("offline",updateNetworkStatus);
+    addEventListener("error",event=>{console.error(event.error||event.message);showToast("일부 기능에서 오류가 발생했습니다. 새로고침 없이 계속 사용할 수 있습니다.",3200)});
+    addEventListener("unhandledrejection",event=>{console.error(event.reason);showToast("작업을 완료하지 못했습니다. 다시 시도해 주세요.",3000)});
+
+    restoreFilterState();setTheme(initialTheme());applySettings();syncFilterControls();renderHero();renderGallery();syncHash();updateNetworkStatus();
+    const unique=new Set(catalog.map(c=>c.coreSignature));
+    if(unique.size!==CHARACTER_COUNT)throw new Error(`catalog uniqueness failed: ${unique.size}`);
+    requestAnimationFrame(()=>document.documentElement.classList.add("app-ready"));
   </script>
 </body>
 </html>

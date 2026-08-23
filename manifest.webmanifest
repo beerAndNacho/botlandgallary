@@ -1,0 +1,18 @@
+{
+  "name": "Botland Hologram Gallery",
+  "short_name": "Botland",
+  "description": "3D로 움직이는 10,000개의 홀로그램 캐릭터 갤러리",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070814",
+  "theme_color": "#070814",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
