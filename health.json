@@ -1,10 +1,13 @@
 {
   "status": "ok",
-  "version": "6.0.0",
-  "characters": 10000,
+  "version": "7.1.0",
+  "homepage_creator": true,
+  "creator_species": 12,
+  "creator_palettes": 8,
+  "creator_png_svg_export": true,
+  "creator_local_storage": true,
   "pointer_3d": true,
   "touch_3d": true,
-  "parallax_layers": 5,
-  "runtime_fetch": false,
-  "sha256_html": "4dbb13f3b37a363ee4328b811f02c403824b94b8391df9803df831cf742a9e58"
+  "gallery_path": "/botlandgallary/gallery.html",
+  "catalog_characters": 10000
 }
