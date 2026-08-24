@@ -1,55 +1,46 @@
-# Botland Gallery
+# Botland Character Studio
 
 [![CI](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/ci.yml)
-[![Deploy Botland 3D Gallery](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
+[![Validate Pages](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml/badge.svg)](https://github.com/beerAndNacho/botlandgallary/actions/workflows/pages.yml)
 
-## [▶ Open Botland Gallery](https://beerandnacho.github.io/botlandgallary/?v=6)
+## [▶ Create a hologram character](https://beerandnacho.github.io/botlandgallary/?v=7.1.0)
 
-**Public URL:** https://beerandnacho.github.io/botlandgallary/
+## [▶ Browse the 10,000-character gallery](https://beerandnacho.github.io/botlandgallary/gallery.html?v=7.1.0)
 
-Botland Gallery is a deterministic collection of **10,000 original hologram characters**. Version 6 turns every gallery card into an interactive 3D object and expands the character generator with deeper silhouettes, layered accessories, expressions, emblems, companions, energy effects, and lore traits.
+Botland now has two connected browser experiences:
 
-## Version 6 highlights
+- **Character Studio homepage** — build an original cute hologram mascot by selecting its species, palette, eyes, expression, wings, accessory, element, rarity, name, and deterministic seed.
+- **10,000 Gallery** — search, filter, favorite, inspect, and export a deterministic collection of 10,000 original mascots.
 
-- Pointer-responsive 3D tilt on desktop
-- Touch-drag 3D tilt on phones and tablets
-- Five independent parallax layers: background, aura, character, companion, and foreground
-- Adjustable 3D strength from 0° to 18°
-- 18 body frames and 96 character species across 12 archetypes
-- Deterministic pose, expression, emblem, companion, energy style, equipment, origin, ability, and aura
-- Animated hologram glare, spectral sheen, scan lines, RGB separation, particles, and depth shadows
-- Detail-card swiping, previous/next navigation, favorites, search, filters, backup/restore, SVG export, and PNG export
-- Exactly 10,000 reproducible character IDs
-- No runtime `fetch`, Base64 decoding, decompression, or service-worker dependency
-- Self-contained application HTML for reliable mobile in-app browser support
+## Homepage creator
 
-## 3D interaction
+The creator includes:
 
-Move the pointer across a card, or press and drag a card on a touch screen. The card rotates in perspective while its hologram layers move by different amounts. Releasing the card returns it smoothly to its resting position. The same interaction is available in the character detail view.
+- 12 mascot species and 8 hologram palettes
+- live SVG preview
+- pointer and touch 3D card tilt
+- random generation and same-species variations
+- reproducible seed-based designs
+- browser storage for up to 24 creations
+- JSON recipe copying
+- original SVG and 1024×1024 PNG export
+- storage fallback for restricted in-app browsers
 
-The **Settings → 3D strength** control changes the maximum rotation angle. Reduced-motion preferences and the animation toggle disable motion automatically.
+The generated mascot always has two arms and two feet. Ears, tails, wings, horns, and decorative effects are rendered as separate non-limb traits.
 
-## Character generation
+## Gallery
 
-Every ID reconstructs the same character from a stable 32-bit seed. The generator combines:
+The gallery generates exactly 10,000 stable IDs in the browser and displays 48 cards per page. It supports name or number search, species and rarity filters, deterministic sorting, favorites, card detail views, 3D pointer movement, and SVG or PNG export.
 
-- 12 archetypes and 96 species
-- 18 body frames
-- eyes, top equipment, side equipment, finish, palette, element, and rarity
-- pose, expression, emblem, companion, and energy style
-- origin, ability, aura, title, name, and lore
+## Runtime design
 
-This design stores generation rules instead of 10,000 individual image files, keeping the repository compact while preserving the full catalog.
+The production site is served from the `gh-pages` branch. The creator loads only same-origin static HTML, CSS, and JavaScript. It does not fetch a compressed application payload or decode Base64 at runtime, avoiding the mobile in-app browser failures seen in earlier versions.
 
-## Deployment
-
-The production source is stored as checksum-verified compressed parts under `.holo-upgrade/v6-3d/`. The Pages workflow joins and decompresses those parts **during deployment**, validates the 3D and character-generation features, checks the inline JavaScript syntax, and publishes a self-contained page to `gh-pages`.
-
-The browser receives the finished HTML directly. It does not fetch or decode a secondary application payload.
+The homepage generator is a deterministic vector mascot engine. High-detail photorealistic image-model rendering would require a protected server-side image API and is not exposed from the static GitHub Pages client.
 
 ## Local development
 
-The original TypeScript/Vite implementation remains available in `src/`. The deployed v6 single-file edition can be reconstructed with the same commands used in `.github/workflows/pages.yml`.
+The original TypeScript/Vite project remains available in `src/`.
 
 ```bash
 npm install
