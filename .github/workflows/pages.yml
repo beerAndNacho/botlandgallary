@@ -1,23 +1,22 @@
-name: Deploy Botland 3D Hologram Gallery
+name: Validate Botland Pages
 
 on:
   push:
     branches: [main]
     paths:
-      - '.holo-upgrade/v6-3d/**'
       - '.github/workflows/pages.yml'
       - 'README.md'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: botland-pages-v6
+  group: botland-pages-validation
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
@@ -25,105 +24,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assemble the self-contained gallery
+      - name: Fetch the live Pages branch
+        run: git fetch origin gh-pages
+
+      - name: Validate creator homepage and gallery
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p pages-dist
-          cat .holo-upgrade/v6-3d/part-*.txt > /tmp/botland-v6.html.gz.b64
+          git show origin/gh-pages:index.html > /tmp/index.html
+          git show origin/gh-pages:creator.css > /tmp/creator.css
+          git show origin/gh-pages:creator.js > /tmp/creator.js
+          git show origin/gh-pages:gallery.html > /tmp/gallery.html
+          git show origin/gh-pages:health.json > /tmp/health.json
+
+          grep -q 'BOTLAND CHARACTER STUDIO' /tmp/index.html
+          grep -q 'id="creator"' /tmp/index.html
+          grep -q 'PNG 저장' /tmp/index.html
+          grep -q 'SVG 저장' /tmp/index.html
+          grep -q '10,000개의' /tmp/gallery.html
+          grep -q 'const N=10000' /tmp/gallery.html
+          grep -q 'creator_species' /tmp/health.json
+          node --check /tmp/creator.js
 
           python3 - <<'PY'
           from pathlib import Path
-          import base64
-          import gzip
-          import hashlib
           import json
-          import re
-
-          metadata = json.loads(Path('.holo-upgrade/v6-3d/metadata.json').read_text(encoding='utf-8'))
-          encoded = ''.join(Path('/tmp/botland-v6.html.gz.b64').read_text(encoding='ascii').split())
-          encoded += '=' * (-len(encoded) % 4)
-          compressed = base64.b64decode(encoded, validate=True)
-          html = gzip.decompress(compressed)
-
-          digest = hashlib.sha256(html).hexdigest()
-          if digest != metadata['sha256_html']:
-              raise SystemExit(f'HTML checksum mismatch: {digest}')
-
-          text = html.decode('utf-8')
-          required = [
-              'content="6.0.0"',
-              'const BUILD_VERSION = "6.0.0"',
-              'const CHARACTER_COUNT = 10000',
-              'function updateTilt',
-              'data-tilt-card',
-              'rotateX(var(--rx))',
-              'holo-character',
-              'holo-companion',
-              'const POSES',
-              'const EXPRESSIONS',
-              'const EMBLEMS',
-              'const COMPANIONS',
-              'const ENERGY_STYLES',
-              'PNG 저장',
-              'SVG 저장',
-          ]
-          missing = [token for token in required if token not in text]
-          if missing:
-              raise SystemExit(f'missing v6 features: {missing}')
-
-          forbidden = ['fetch(', 'atob(', 'DecompressionStream', 'serviceWorker.register']
-          found = [token for token in forbidden if token in text]
-          if found:
-              raise SystemExit(f'forbidden runtime dependency found: {found}')
-
-          if text.count('case ') < 18:
-              raise SystemExit('advanced character body cases are incomplete')
-
-          script = re.search(r'<script>([\s\S]*?)</script>', text)
-          if not script:
-              raise SystemExit('inline application script was not found')
-
-          output = Path('pages-dist')
-          (output / 'index.html').write_bytes(html)
-          (output / '404.html').write_bytes(html)
-          (output / '.nojekyll').write_text('', encoding='utf-8')
-          (output / 'health.json').write_text(json.dumps({
-              'status': 'ok',
-              'version': metadata['version'],
-              'characters': 10000,
-              'pointer_3d': True,
-              'touch_3d': True,
-              'parallax_layers': 5,
-              'runtime_fetch': False,
-              'sha256_html': digest,
-          }, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-          Path('/tmp/botland-v6.js').write_text(script.group(1), encoding='utf-8')
-          print(f'assembled Botland v{metadata["version"]}: {len(html):,} bytes')
+          health = json.loads(Path('/tmp/health.json').read_text(encoding='utf-8'))
+          assert health['status'] == 'ok'
+          assert health['homepage_creator'] is True
+          assert health['creator_species'] == 12
+          assert health['catalog_characters'] == 10000
+          print(health)
           PY
-
-          cp .holo-upgrade/v6-3d/manifest.webmanifest pages-dist/manifest.webmanifest
-          cp .holo-upgrade/v6-3d/icon.svg pages-dist/icon.svg
-          cp .holo-upgrade/v6-3d/og-image.svg pages-dist/og-image.svg
-          node --check /tmp/botland-v6.js
-
-      - name: Publish to gh-pages
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin gh-pages
-          rm -rf /tmp/botland-gh-pages
-          git worktree add --detach /tmp/botland-gh-pages origin/gh-pages
-          cd /tmp/botland-gh-pages
-          git switch -C gh-pages
-          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -a "$GITHUB_WORKSPACE/pages-dist/." .
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo 'gh-pages is already current'
-          else
-            git commit -m "deploy: Botland v6 3D hologram cards"
-            git push origin HEAD:gh-pages
-          fi
