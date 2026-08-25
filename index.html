@@ -4,27 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090a18">
-<meta name="description" content="귀여운 오리지널 홀로그램 마스코트를 직접 만들고 SVG·PNG로 저장하는 Botland Character Studio">
-<meta property="og:title" content="Botland Character Studio">
-<meta property="og:description" content="종족, 색상, 눈, 표정, 날개와 액세서리를 골라 나만의 홀로그램 캐릭터를 만드세요.">
+<meta name="description" content="종족마다 실루엣이 완전히 다른 귀여운 오리지널 홀로그램 마스코트를 직접 만들고 SVG·PNG로 저장하는 Botland Character Studio">
+<meta property="og:title" content="Botland Character Studio V7.2">
+<meta property="og:description" content="여우·고양이·토끼·수달·용·곰·강아지·라쿤·펭귄·개구리·아홀로틀·다람쥐를 서로 다른 체형으로 만드세요.">
 <meta property="og:type" content="website">
-<title>Botland Character Studio</title>
-<link rel="stylesheet" href="./creator.css">
+<title>Botland Character Studio V7.2</title>
+<link rel="stylesheet" href="./creator.css?v=7.2.0">
 </head>
 <body>
 <header class="top"><div class="wrap topin"><a class="brand" href="#top"><span class="mark">✦</span><span>BOTLAND <b>CHARACTER STUDIO</b></span></a><nav class="nav"><a href="#creator">캐릭터 만들기</a><a href="./gallery.html">10,000 갤러리 →</a></nav></div></header>
 <main id="top">
-<section class="hero wrap"><span class="eyebrow">✦ ORIGINAL HOLOGRAM MASCOT MAKER</span><h1>귀엽고 반짝이는<br><span class="grad">나만의 친구를 만들어요</span></h1><p>종족과 색상, 눈, 표정, 날개, 액세서리를 조합해 오리지널 홀로그램 마스코트를 만들고 SVG·PNG로 저장할 수 있습니다.</p></section>
+<section class="hero wrap"><span class="eyebrow">✦ 12 COMPLETELY DIFFERENT SILHOUETTES</span><h1>귀엽고 반짝이는<br><span class="grad">나만의 친구를 만들어요</span></h1><p>이제 색과 귀만 바뀌는 방식이 아닙니다. 여우·토끼·수달·용·펭귄·개구리 등 종족마다 머리형, 체형, 자세, 팔다리, 꼬리와 얼굴 배치가 완전히 다르게 생성됩니다.</p></section>
 <section class="studio wrap" id="creator">
-<article class="panel preview"><div class="previewhead"><div><h2>실시간 미리보기</h2><p class="sub">카드를 손가락으로 누른 채 움직여 보세요.</p></div><span class="tag" id="serial">BT-000001</span></div><div class="stage"><div class="hcard" id="hcard"><div class="cardinner"><div class="cardbg"></div><div class="rings"></div><div class="mascot" id="mascot"></div><div class="cardmeta"><span class="tag" id="rarityTag">RARE</span><span class="tag" id="speciesTag">별여우</span></div><div class="cardname"><div><h3 id="cardName">루미</h3><p id="cardSub">별빛 · 장난꾸러기 · 홀로그램</p></div><span class="element" id="elementIcon">✦</span></div></div></div></div><div class="previewactions"><button class="btn primary wide" id="generate">✨ 새 캐릭터 생성</button><button class="btn" id="save">♡ 보관</button><button class="btn" id="copy">설계도 복사</button></div></article>
+<article class="panel preview"><div class="previewhead"><div><h2>실시간 미리보기</h2><p class="sub">종족 버튼을 바꾼 뒤 카드를 손가락으로 눌러 움직여 보세요.</p></div><span class="tag" id="serial">BT-000001</span></div><div class="stage"><div class="hcard" id="hcard"><div class="cardinner"><div class="cardbg"></div><div class="rings"></div><div class="mascot" id="mascot"></div><div class="cardmeta"><span class="tag" id="rarityTag">RARE</span><span class="tag" id="speciesTag">별여우</span></div><div class="cardname"><div><h3 id="cardName">루미</h3><p id="cardSub">별빛 · 장난꾸러기 · 큰 삼각 귀</p></div><span class="element" id="elementIcon">✦</span></div></div></div></div><div class="previewactions"><button class="btn primary wide" id="generate">✨ 새 캐릭터 생성</button><button class="btn" id="save">♡ 보관</button><button class="btn" id="copy">설계도 복사</button></div></article>
 <aside class="panel controls"><h2>캐릭터 디자인</h2><p class="sub">같은 설정과 시드를 사용하면 언제든 같은 캐릭터가 만들어집니다.</p>
-<div class="section"><div class="label"><span>① 종족</span><small id="speciesCount">12종</small></div><div class="species" id="species"></div></div>
+<div class="section"><div class="label"><span>① 종족과 실루엣</span><small id="speciesCount">12종 · 전부 다른 체형</small></div><div class="species" id="species"></div></div>
 <div class="section"><div class="label"><span>② 메인 컬러</span></div><div class="colors" id="colors"></div></div>
 <div class="section grid2"><label class="field"><span>이름</span><input id="name" maxlength="12" value="루미"></label><label class="field"><span>시드</span><input id="seed" type="number" min="1" max="999999" value="1"></label><label class="field"><span>눈</span><select id="eyes"></select></label><label class="field"><span>표정</span><select id="face"></select></label><label class="field"><span>날개</span><select id="wings"></select></label><label class="field"><span>액세서리</span><select id="accessory"></select></label><label class="field"><span>속성</span><select id="element"></select></label><label class="field"><span>희귀도</span><select id="rarity"></select></label></div>
 <div class="section actiongrid"><button class="btn" id="random">🎲 전체 랜덤</button><button class="btn" id="variation">↻ 같은 종족 변형</button><button class="btn" id="png">PNG 저장</button><button class="btn" id="svg">SVG 저장</button></div>
-<div class="notice"><b>현재 홈페이지 생성 방식</b><br>브라우저 안에서 오리지널 벡터 마스코트를 즉시 조합하는 방식입니다. 외부 서버나 API 키 없이 동작하며, 결과를 상업용 프로젝트에 활용할 수 있도록 개별 설계도와 파일로 저장합니다.</div></aside>
+<div class="notice"><b>V7.2 생성 방식</b><br>12개 종족마다 별도의 SVG 조형 템플릿을 사용합니다. 여우는 풍성한 꼬리, 고양이는 앉은 체형, 수달은 긴 몸, 용은 뿔과 비늘 꼬리, 펭귄은 물방울 몸, 개구리는 넓은 뒷발, 아홀로틀은 외부 아가미를 가집니다.</div></aside>
 </section>
 <section class="showcase wrap"><div class="titleline"><div><h2>내가 만든 캐릭터</h2><p>보관한 캐릭터는 이 브라우저에 최대 24개까지 저장됩니다.</p></div><button class="btn" id="clear">모두 지우기</button></div><div class="saved" id="saved"></div><div class="gallerycta"><div><h3>완성된 10,000개 컬렉션도 둘러보세요</h3><p>검색, 희귀도 필터, 즐겨찾기와 3D 홀로그램 카드가 준비되어 있습니다.</p></div><a class="btn primary" href="./gallery.html">갤러리 열기 →</a></div></section>
-</main><footer><div class="wrap">BOTLAND · Original browser-generated hologram mascots · No copyrighted character replicas</div></footer><div class="toast" id="toast"></div>
-<script src="./creator.js"></script>
+</main><footer><div class="wrap">BOTLAND V7.2 · 12 distinct species silhouettes · Original browser-generated hologram mascots</div></footer><div class="toast" id="toast"></div>
+<script src="./creator.js?v=7.2.0"></script>
 </body></html>
