@@ -1,13 +1,16 @@
 {
   "status": "ok",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "homepage_creator": true,
   "creator_species": 12,
+  "distinct_species_renderers": 12,
+  "shared_body_template": false,
   "creator_palettes": 8,
   "creator_png_svg_export": true,
   "creator_local_storage": true,
   "pointer_3d": true,
   "touch_3d": true,
+  "anatomy_rule": "two arms and two feet for upright mascots; species appendages are separate",
   "gallery_path": "/botlandgallary/gallery.html",
   "catalog_characters": 10000
 }
