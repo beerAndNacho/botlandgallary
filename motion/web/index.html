@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#070913">
+  <meta name="description" content="CMU BVH 모션캡처를 19개 관절로 변환하고 끊김 없는 연속 동작을 만드는 Botland Motion Studio">
+  <title>Botland Motion Studio</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../"><span>✦</span> BOTLAND <b>MOTION STUDIO</b></a>
+    <nav><a href="#studio">스튜디오</a><a href="#catalog">CMU 인덱스</a><a href="../">캐릭터 제작기</a></nav>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div>
+        <p class="eyebrow">CMU BVH · 19 JOINTS · DETERMINISTIC 2D RENDERING</p>
+        <h1>실제 모션캡처를<br><em>끊김 없는 연속 동작</em>으로</h1>
+        <p class="lead">BVH 순운동학, 19개 관절 리타겟, 자동 루프, 제자리화, 속도·위상 일치, Fritsch–Carlson 경로와 관절별 이음새 블렌드를 한 시스템으로 묶었습니다.</p>
+      </div>
+      <div class="hero-stats">
+        <div><strong>19</strong><span>보존 관절</span></div>
+        <div><strong>30</strong><span>기본 FPS</span></div>
+        <div><strong>0.35s</strong><span>기본 블렌드</span></div>
+        <div><strong>100%</strong><span>결정적 재생</span></div>
+      </div>
+    </section>
+
+    <section class="workspace shell" id="studio">
+      <article class="stage-panel panel">
+        <div class="panel-head">
+          <div><h2>2D 모션 렌더러</h2><p>캡슐 뼈·원형 관절·3단계 깊이 정렬</p></div>
+          <div class="status"><span id="clipStatus">클립 불러오는 중</span><code id="renderHash">--------</code></div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="stage" width="960" height="720" aria-label="모션캡처 렌더링"></canvas>
+          <canvas id="map" width="240" height="170" aria-label="경로 미니맵"></canvas>
+          <div class="canvas-note">뒤쪽 팔다리 / 몸통 / 앞쪽 팔다리 · 깊이 밴드 ±0.10 m</div>
+        </div>
+        <div class="transport">
+          <button id="play" class="primary">▶ 재생</button>
+          <button id="restart">↺ 처음</button>
+          <input id="time" type="range" min="0" max="12" value="0" step="0.001">
+          <output id="timeLabel">0.00 / 12.00 s</output>
+          <label>속도 <select id="playback"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></label>
+        </div>
+      </article>
+
+      <aside class="control-panel panel">
+        <div class="panel-head"><div><h2>연속 동작 설계</h2><p>프리셋을 고르거나 JSON을 직접 수정하세요.</p></div></div>
+        <label class="field"><span>검수 프리셋</span><select id="preset"><option value="walk">직선 걷기 10초</option><option value="sequence">서기 → 걷기 → 앉기/일어서기 → 서기</option><option value="speed">속도가 다른 두 구간 + 위상 연속</option><option value="turn270">270° 이상 방향 회전</option><option value="crawl">기어가기 경로</option></select></label>
+        <div class="button-grid">
+          <button id="applyPreset" class="primary">프리셋 적용</button>
+          <button id="matchRates">경로 속도에 rate 맞춤</button>
+          <button id="phaseFix">경계 위상 연속 처리</button>
+          <button id="validate">검수 실행</button>
+        </div>
+        <div id="validation" class="validation"></div>
+        <details open><summary>seq[]</summary><textarea id="seqEditor" spellcheck="false"></textarea></details>
+        <details><summary>path[]</summary><textarea id="pathEditor" spellcheck="false"></textarea></details>
+        <details><summary>face[] <small>라디안, 빈 배열이면 경로 속도에서 계산</small></summary><textarea id="faceEditor" spellcheck="false"></textarea></details>
+        <button id="applyJson" class="wide">JSON 변경 적용</button>
+      </aside>
+    </section>
+
+    <section class="info-grid shell">
+      <article class="panel prose">
+        <h2>BVH → 19관절 변환기</h2>
+        <p>의존성 없는 순수 파이썬 CLI가 BVH 계층을 파싱하고 순운동학으로 월드 좌표를 계산합니다. 손·발 네 점으로 압축하지 않고 골반, 척추, 가슴, 목, 머리, 무릎과 팔꿈치를 모두 보존합니다.</p>
+        <pre><code>python tools/bvh_to_mocap.py \
+  https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data/141/141_19.bvh \
+  walk.json --target-leg 0.87 --fps 30 --yaw 180 \
+  --autoloop --inplace --smoothloop 10</code></pre>
+        <ul>
+          <li><code>--start --dur --fps --yaw --mirror</code></li>
+          <li><code>--autoloop --inplace --smoothloop N</code></li>
+          <li>머리 중심 +0.125 m, 발목 바닥 안착, 첫 골반 x·z 원점</li>
+        </ul>
+      </article>
+      <article class="panel prose">
+        <h2>연속 동작 규칙</h2>
+        <ol>
+          <li>경로를 쓰는 클립은 반드시 <code>--inplace</code> 변환본이어야 합니다.</li>
+          <li><code>rate = 경로 속도 / mps</code>로 맞춰 발 미끄러짐을 줄입니다.</li>
+          <li>속도 경계는 <code>phaseAt</code>에 위상 연속 공식을 적용합니다.</li>
+          <li>yaw는 언랩한 누적 값으로 보간합니다.</li>
+          <li><code>render(t)</code>는 t와 고정 파라미터만 사용합니다.</li>
+        </ol>
+        <div class="formula">phaseAt<sub>k+1</sub> = t<sub>b</sub> − (t<sub>b</sub> − phaseAt<sub>k</sub>) · r<sub>k</sub> / r<sub>k+1</sub></div>
+      </article>
+    </section>
+
+    <section class="catalog shell" id="catalog">
+      <div class="section-head"><div><p class="eyebrow">CMU MOTION INDEX</p><h2>동작 검색</h2><p>전체 인덱스에서 필요한 캡처를 찾고 변환 명령을 복사할 수 있습니다.</p></div><input id="search" placeholder="walk / crawl / wave / 앉기 ..."></div>
+      <div id="catalogGrid" class="catalog-grid"><p>인덱스를 불러오는 중입니다.</p></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">
+      <strong>Source & Attribution</strong>
+      <p><em>The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217.</em></p>
+      <p>BVH conversion mirror: una-dinosauria/cmu-mocap · Browser renderer and sequencing system: Botland Motion Studio</p>
+    </div>
+  </footer>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
