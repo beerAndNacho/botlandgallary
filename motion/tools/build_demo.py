@@ -11,11 +11,12 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from bvh_to_mocap import convert  # noqa: E402
+from bvh_to_mocap import ORDER, convert, settle_and_origin, smooth_loop  # noqa: E402
 from cmu_index import INDEX_URL, parse_index, read_text  # noqa: E402
 
 CMU_ROOT = "https://raw.githubusercontent.com/una-dinosauria/cmu-mocap/master/data"
 ATTRIBUTION = "The data used in this project was obtained from mocap.cs.cmu.edu. The database was created with funding from NSF EIA-0196217."
+STRIDE = len(ORDER) * 3
 
 CLIPS = [
     {
@@ -31,12 +32,12 @@ CLIPS = [
         "dur": 10.0, "autoloop": True, "inplace": True, "smoothloop": 8, "loop": True, "tags": ["run", "달리기", "locomotion"],
     },
     {
-        "id": "crawl", "sourceId": "133_01", "name": "Walk Crawl / 기어가기", "description": "Baby styled walk-crawl capture",
-        "dur": 12.0, "autoloop": True, "inplace": True, "smoothloop": 10, "loop": True, "tags": ["crawl", "기어가기", "spine"],
+        "id": "crawl", "sourceId": "133_02", "name": "Walk Crawl / 기어가기", "description": "Baby styled walk-crawl capture",
+        "dur": 12.0, "autoloop": False, "inplace": True, "smoothloop": 0, "loop": False, "tags": ["crawl", "기어가기", "spine"],
     },
     {
         "id": "sneak", "sourceId": "142_22", "name": "Sneaky / 살금살금", "description": "Stylized sneaky walk",
-        "dur": 12.0, "autoloop": True, "inplace": True, "smoothloop": 10, "loop": True, "tags": ["sneak", "stealth", "살금살금"],
+        "dur": 12.0, "autoloop": False, "inplace": True, "smoothloop": 0, "loop": False, "tags": ["sneak", "stealth", "살금살금"],
     },
     {
         "id": "wave", "sourceId": "141_16", "name": "Wave Hello / 손 흔들기", "description": "General subject wave hello",
@@ -56,6 +57,28 @@ CLIPS = [
 def source_url(source_id: str) -> str:
     subject = int(source_id.split("_", 1)[0])
     return f"{CMU_ROOT}/{subject:03d}/{source_id}.bvh"
+
+
+def apply_local_loop_smoothing(clip: dict, count: int) -> None:
+    """Smooth an in-place stream without corrupting its recorded mps.
+
+    The converter records mps from the original root trajectory. Folding a translating
+    root toward the loop start before --inplace inflates that speed, so the demo applies
+    seam smoothing only after root translation has been removed.
+    """
+    if count <= 0 or clip["n"] < 4:
+        return
+    frames = []
+    for frame_index in range(clip["n"]):
+        offset = frame_index * STRIDE
+        frame = []
+        for joint_index in range(len(ORDER)):
+            start = offset + joint_index * 3
+            frame.append([float(value) for value in clip["j"][start:start + 3]])
+        frames.append(frame)
+    smooth_loop(frames, count)
+    settle_and_origin(frames)
+    clip["j"] = [round(value, 3) for frame in frames for point in frame for value in point]
 
 
 def build(output: pathlib.Path) -> None:
@@ -89,9 +112,10 @@ def build(output: pathlib.Path) -> None:
             mirror=False,
             auto_loop=config["autoloop"],
             inplace=config["inplace"],
-            smoothloop=config["smoothloop"],
+            smoothloop=0,
             src_label=url,
         )
+        apply_local_loop_smoothing(clip, config["smoothloop"])
         filename = f"{config['id']}.json"
         (clips_dir / filename).write_text(json.dumps(clip, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
         indexed = index_by_id.get(config["sourceId"], {})
