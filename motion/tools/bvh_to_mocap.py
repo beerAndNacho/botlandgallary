@@ -516,10 +516,13 @@ def convert(
     resampled = resample(source_frames, 1.0 / bvh.frame_time, fps, start, duration)
     if auto_loop:
         resampled, _ = autoloop(resampled, fps)
-    if smoothloop:
-        smooth_loop(resampled, smoothloop)
+    # Measure the original horizontal root trajectory before any loop seam blend.
+    # Blending a translating root toward frame zero inflates mps and causes foot slip.
     settle_and_origin(resampled)
     mps = make_inplace(resampled, fps) if inplace else None
+    if smoothloop:
+        smooth_loop(resampled, smoothloop)
+        settle_and_origin(resampled)
     flat: list[float] = []
     for frame in resampled:
         for point in frame:

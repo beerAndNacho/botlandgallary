@@ -136,8 +136,9 @@ export function canonicalizePose(pose, out = new Float64Array(STRIDE)) {
   const px = pose[0];
   const pz = pose[2];
   const heading = poseHeading(pose);
-  const c = Math.cos(-heading);
-  const s = Math.sin(-heading);
+  // poseHeading is the rotation that takes the captured facing direction back to canonical -z.
+  const c = Math.cos(heading);
+  const s = Math.sin(heading);
   for (let i = 0; i < ORDER.length; i += 1) {
     const o = i * 3;
     const x = pose[o] - px;
