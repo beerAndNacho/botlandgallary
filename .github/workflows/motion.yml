@@ -69,23 +69,25 @@ jobs:
 
           converter_path = Path('motion/tools/bvh_to_mocap.py')
           converter = converter_path.read_text(encoding='utf-8')
-          old_converter = '''    if auto_loop:
-        resampled, _ = autoloop(resampled, fps)
-    if smoothloop:
-        smooth_loop(resampled, smoothloop)
-    settle_and_origin(resampled)
-    mps = make_inplace(resampled, fps) if inplace else None
-'''
-          new_converter = '''    if auto_loop:
-        resampled, _ = autoloop(resampled, fps)
-    # Measure the original horizontal root trajectory before any loop seam blend.
-    # Blending a translating root toward frame zero inflates mps and causes foot slip.
-    settle_and_origin(resampled)
-    mps = make_inplace(resampled, fps) if inplace else None
-    if smoothloop:
-        smooth_loop(resampled, smoothloop)
-        settle_and_origin(resampled)
-'''
+          old_converter = (
+              "    if auto_loop:\n"
+              "        resampled, _ = autoloop(resampled, fps)\n"
+              "    if smoothloop:\n"
+              "        smooth_loop(resampled, smoothloop)\n"
+              "    settle_and_origin(resampled)\n"
+              "    mps = make_inplace(resampled, fps) if inplace else None\n"
+          )
+          new_converter = (
+              "    if auto_loop:\n"
+              "        resampled, _ = autoloop(resampled, fps)\n"
+              "    # Measure the original horizontal root trajectory before any loop seam blend.\n"
+              "    # Blending a translating root toward frame zero inflates mps and causes foot slip.\n"
+              "    settle_and_origin(resampled)\n"
+              "    mps = make_inplace(resampled, fps) if inplace else None\n"
+              "    if smoothloop:\n"
+              "        smooth_loop(resampled, smoothloop)\n"
+              "        settle_and_origin(resampled)\n"
+          )
           if old_converter in converter:
               converter = converter.replace(old_converter, new_converter, 1)
               converter_path.write_text(converter, encoding='utf-8')
