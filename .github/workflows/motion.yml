@@ -47,6 +47,63 @@ jobs:
             echo 'Readable Motion Studio source is already present.'
           fi
 
+      - name: Normalize clip heading and preserve mps before seam smoothing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          changes = []
+
+          core_path = Path('motion/web/mocap-core.js')
+          core = core_path.read_text(encoding='utf-8')
+          old_core = "  const c = Math.cos(-heading);\n  const s = Math.sin(-heading);"
+          new_core = "  // poseHeading is the rotation that takes the captured facing direction back to canonical -z.\n  const c = Math.cos(heading);\n  const s = Math.sin(heading);"
+          if old_core in core:
+              core = core.replace(old_core, new_core, 1)
+              core_path.write_text(core, encoding='utf-8')
+              changes.append(str(core_path))
+          elif new_core not in core:
+              raise SystemExit('canonicalizePose heading block was not recognized')
+
+          converter_path = Path('motion/tools/bvh_to_mocap.py')
+          converter = converter_path.read_text(encoding='utf-8')
+          old_converter = '''    if auto_loop:
+        resampled, _ = autoloop(resampled, fps)
+    if smoothloop:
+        smooth_loop(resampled, smoothloop)
+    settle_and_origin(resampled)
+    mps = make_inplace(resampled, fps) if inplace else None
+'''
+          new_converter = '''    if auto_loop:
+        resampled, _ = autoloop(resampled, fps)
+    # Measure the original horizontal root trajectory before any loop seam blend.
+    # Blending a translating root toward frame zero inflates mps and causes foot slip.
+    settle_and_origin(resampled)
+    mps = make_inplace(resampled, fps) if inplace else None
+    if smoothloop:
+        smooth_loop(resampled, smoothloop)
+        settle_and_origin(resampled)
+'''
+          if old_converter in converter:
+              converter = converter.replace(old_converter, new_converter, 1)
+              converter_path.write_text(converter, encoding='utf-8')
+              changes.append(str(converter_path))
+          elif new_converter not in converter:
+              raise SystemExit('converter post-processing block was not recognized')
+
+          print('source corrections:', ', '.join(changes) if changes else 'already applied')
+          PY
+
+          if ! git diff --quiet -- motion/web/mocap-core.js motion/tools/bvh_to_mocap.py; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add motion/web/mocap-core.js motion/tools/bvh_to_mocap.py
+            git commit -m 'fix: align CMU heading and retain original locomotion speed [skip ci]'
+            git push origin HEAD:main
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
