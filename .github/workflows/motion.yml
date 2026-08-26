@@ -125,6 +125,11 @@ jobs:
       - name: Build real CMU demo clips
         run: python motion/tools/build_demo.py motion/dist/motion
 
+      - name: Print real walk contact diagnostics
+        env:
+          MOTION_CLIPS_DIR: motion/dist/motion/clips
+        run: node motion/tests/diagnose_walk.mjs
+
       - name: Run real-data acceptance tests
         env:
           MOTION_CLIPS_DIR: motion/dist/motion/clips
